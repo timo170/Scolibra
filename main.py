@@ -21,7 +21,7 @@ cursor.execute(sql,[random.randrange(0,11)])
 citate=cursor.fetchall()    
 citate = ','.join(map(str, citate[0]))
 
-
+#aici incerc ceva special o modificare
 
 
 
