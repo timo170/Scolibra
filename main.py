@@ -17,9 +17,9 @@ cursor=mydb.cursor()
 
 #importare citate din baza de date in variabila citate
 sql="Select Citate from CITATE where Numar=%s"
-cursor.execute(sql,[random.randrange(0,10)])
-citat=cursor.fetchall()       
-citate = ','.join(map(str, citat))
+cursor.execute(sql,[random.randrange(0,11)])
+citate=cursor.fetchall()    
+citate = ','.join(map(str, citate[0]))
 
 
 
@@ -308,8 +308,11 @@ def inserare():
 #FEREASTRA PRINCIPALA
 
 root=Tk()
-root.geometry('1960x1080')
-root.resizable(1,1)
+root.geometry('1920x1080')
+
+root.resizable(0,0)
+
+
 
 #imaginea pentru fundalul canvas_principala
 photo=Image.open("background.jpg")
@@ -322,35 +325,33 @@ canvas.create_image(0,0,image=img,anchor=NW)
 
 
 
-frame=Frame(canvas)
-frame.pack()
+frame0=Frame(canvas,height=400,width=800,bg="yellow")
+frame0.place(relx=0,rely=0,anchor=NW)
 
-new=Label(frame, bg="blue")
-new.place(relx=0.8,rely=0.1,anchor=NE)
-
-welcome=Label(frame,text=" Biblioteca LNI \n \n \n Bine ați venit!",bg="yellow",height=12,width=50,  font=("Helvetica",18))
-welcome.pack(anchor=NW,side=LEFT)
-
-citat=Label(frame,text=citate[2:len(citate)-3],height =20,width=130,bg="white",font=("Helvetica",12) )                   
-citat.pack(anchor=NE,side=RIGHT)
+welcome=Label(frame0,text=" Biblioteca LNI \n \n \n Bine ați venit!",bg="yellow", font=("Helvetica",40))
+welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
+frame=Frame(canvas,height=400,width=800,)
+frame.place(rely=0,relx=1,anchor=NE)
 
-frame1=Frame(canvas)
-frame1.pack(side=LEFT,)
-
-imprumut=Button(frame1,text="Carti imprumutate",height=6,width=100, bg="#F5EBE0",font=("Cambria_Math",10))
-imprumut.pack(anchor=NW,)
-
-carti=Button(frame1,text="Lista carti",height=6,width=100,bg="#F5EBE0",font=("Cambria_Math",10),command=search)
-carti.pack(anchor=W,)
-
-elevi=Button(frame1,text="Lista elevi",height=6,width=100,bg="#F5EBE0",font=("Cambria_Math",10))
-elevi.pack(anchor=SW,)
+citat=Label(frame,text=citate,height=400,width=800,font=("Helvetica",14) )               
+citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-frame2=Frame(canvas)
-frame2.pack()
+frame1=Frame(canvas,width=850,height=450)
+frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
+
+imprumut=Button(frame1,text="Carti imprumutate",width=80,height=6, bg="#F5EBE0",font=("Cambria_Math",15))
+imprumut.place(relx=0,rely=0,anchor=NW,)
+
+carti=Button(frame1,text="Lista carti",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=search)
+carti.place(relx=0,rely=0.5,anchor=W,)
+
+elevi=Button(frame1,text="Lista elevi",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15))
+elevi.place(relx=0,rely=1,anchor=SW)
+
+
 
 #buton_cautare=Button(frame2,text="Cautare",command=search)
 #buton_cautare.pack( ipadx=50, ipady=50)
