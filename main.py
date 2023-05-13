@@ -28,7 +28,7 @@ citate = ','.join(map(str, citate[0]))
 def search():
     window=Tk()
     window.resizable(1,1)
-    window.geometry('1000x600')
+    window.geometry('1500x1000')
 
 
     frame3=Frame(window)
@@ -62,12 +62,11 @@ def search():
     
     caseta=Entry(window,font=("Helvetica",20),width=100)
     caseta.pack(anchor=NW,padx=5)
-
-    lista=Listbox(window, width=190,height=100,font=("Helvetica",18),selectmode=EXTENDED)
-    lista.pack()
-
+    
     
 
+    
+    '''
     def schimbare(event):
         global criteriu
         criteriu=filtru.get()
@@ -96,41 +95,10 @@ def search():
     
     filtru.bind('<<ComboboxSelected>>',schimbare )
 
-    def actualizare(data):
-        #golim lista
-        lista.delete(0,END)
-
-        for item in data:
-            lista.insert(END,item)
+    '''
     
-    #actualizare caseta de intrare cu lista selectata
-    def golire(e):
-        #Golire caseta de intrare
-        caseta.delete(0,END)
-
-        #Adaugare
-        caseta.insert(0,lista.get(ANCHOR))
-
-    #verificare caseta cu lista
-
-    def verificare(e):
-        introdus=caseta.get()
-        if introdus == '':
-            data = date
-        else:
-            data=[]
-            for item in date:
-                if criteriu in (1,2,3,6):
-                    if introdus.lower() in item[criteriu].lower():
-                        data.append(item)
-                else:
-                    
-                    if int(introdus)==item[criteriu]:
-                        
-                        data.append(item)
-        
-        actualizare(data)
-
+    criteriu=filtru.get()
+    print(criteriu)
     
 
     q="Select * from carti"
@@ -149,10 +117,9 @@ def search():
     
 
 
-    actualizare(date)
-    lista.bind("<Return>",golire)
+    
 
-    caseta.bind("<Return>",verificare)
+    
     result=StringVar()
     def preluare_element(event):
         selectat = event.widget.curselection()
@@ -163,7 +130,55 @@ def search():
         print(value)
 
 
-    lista.bind('<<ListboxSelect>>', preluare_element)
+    
+
+    coloane=(0,1,2,3,4,5,6)
+    tree=ttk.Treeview(window,columns=coloane,show='headings')
+    tree.pack()
+
+    tree.heading(0,text='COD')
+    tree.heading(1,text='AUTOR')
+    tree.heading(2,text='TITLU')
+    tree.heading(3,text='EDITURA')
+    tree.heading(4,text='AN')
+    tree.heading(5,text='PRET')
+    tree.heading(6,text='STARE')
+
+    
+    '''
+    for rand in date:
+        tree.insert('',END,values=rand)
+    '''
+    def cauta(event):
+        cuvant=caseta.get()
+        
+        print(cuvant)
+        print(criteriu)
+        cuv=str("'%" +cuvant + "'%")
+        print(cuv)
+        
+        cursor.execute("SELECT * FROM carti WHERE %s LIKE '%s%' ;", criteriu,cuvant, )
+        records = cursor.fetchall()
+        print(records)
+        recor=[]
+        for x in records:
+            list1=(x[0],x[1], x[2],
+               x[3],
+               x[4],
+               x[5],
+               x[6])
+            recor.append(list1)
+        mydb.commit()
+	
+        for record in records:
+            tree.insert('', 0, values=record)
+            
+
+
+        
+    
+    caseta.bind( '<Return>',cauta)
+
 
     window.mainloop()
 
