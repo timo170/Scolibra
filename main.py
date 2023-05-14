@@ -37,7 +37,7 @@ def search():
     label=Label(frame3,text="Caută după:",font=("Helvetica",15))
     label.pack(side=LEFT)
 
-    sterge=Button(frame3,width=10,text="Șterge carte")
+    sterge=Button(frame3,width=10,text="Șterge carte",command=stergere)
     sterge.pack(side=RIGHT)
 
     adauga=Button(frame3,width=10,text="Adaugă carte",command=inserare)
@@ -120,18 +120,11 @@ def search():
     
 
     
-    result=StringVar()
-    def preluare_element(event):
-        selectat = event.widget.curselection()
-        index = selectat[0]
-        value = event.widget.get(index)
-  
-        result.set(value)
-        print(value)
-
-
+    
     
 
+    
+    global tree
     coloane=(0,1,2,3,4,5,6)
     tree=ttk.Treeview(window,columns=coloane,show='headings')
     tree.pack()
@@ -145,10 +138,10 @@ def search():
     tree.heading(6,text='STARE')
 
     
-    '''
+    
     for rand in date:
         tree.insert('',END,values=rand)
-    '''
+    
     def cauta(event):
         cuvant=caseta.get()
         
@@ -175,13 +168,26 @@ def search():
             
 
 
-        
+    
     
     caseta.bind( '<Return>',cauta)
 
+    
 
     window.mainloop()
 
+#functia care sterge o carte din baza de date
+def stergere():
+    
+    ite=tree.item(tree.focus())
+    cell=ite['values'][0]
+    sql="delete from carti where Cod=%s;"
+    cursor.execute(sql,cell)
+    cell=str(cell)
+    showinfo("info","Ati sters cartea cu codul "+cell )
+    mydb.commit()
+
+#functia de inserare in tabelul cartilor
 
 def inserare():
     geam=Tk()
