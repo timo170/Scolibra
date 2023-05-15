@@ -323,6 +323,113 @@ def inserare():
 
     geam.mainloop()
 
+#functia care deschide FEREASTRA IMPRUMUTURI
+def imprumut():
+    window=Tk()
+    window.geometry("1500x600")
+    root.resizable(0,0)
+    coloane=[0,1,2,3,4,5]
+    tabel=ttk.Treeview(window,columns=coloane,show="headings")
+    tabel.pack()
+
+    
+
+
+    tabel.heading(0,text='COD IMPRUMUT')
+    tabel.heading(1,text='NUME')
+    tabel.heading(2,text='CLASA')
+    tabel.heading(3,text='TITLU CARTII')
+    tabel.heading(4,text='DATA IMPRUMUTULUI')
+    tabel.heading(5,text='DATA RETURNARII')
+
+    q="Select * from imprumuturi"
+    cursor.execute(q)
+    result=cursor.fetchall()
+
+    date=[]
+    for x in result:
+        list1=(x[0],x[1], x[2],
+              x[3],
+              x[4],
+              x[5])
+        date.append(list1)
+    for rand in date:
+        tabel.insert('',END,values=rand)
+    
+#functia care deschide LISTA DE ELEVI ABONATI
+def abonati():
+    window=Tk()
+    window.geometry("1500x1000")
+    root.resizable(1,1)
+    coloane=[0,1,2,3,4,5]
+    tabel=ttk.Treeview(window,columns=coloane,show="headings")
+    tabel.pack()
+
+    tabel.heading(0,text='COD ELEV')
+    tabel.heading(1,text='NUME')
+    tabel.heading(2,text='PRENUME')
+    tabel.heading(3,text='CLASA')
+    tabel.heading(4,text='DATA ABONARII')
+    
+
+    q="Select * from abonati"
+    cursor.execute(q)
+    result=cursor.fetchall()
+
+    date=[]
+    for x in result:
+        list1=(x[0],x[1], x[2],
+              x[3],
+              x[4],)
+        date.append(list1)
+    for rand in date:
+        tabel.insert('',END,values=rand)
+
+    
+
+    def imprumut_nou():
+        ite=tabel.item(tabel.focus())
+        cod=ite['values'][0]
+        nume=ite['values'][1]
+        clasa=ite['values'][3]
+        from datetime import date,timedelta
+        win=Tk()
+        
+        Titlu=Label(win,text="Cod carte:")
+        Titlu.pack()
+
+        Titlu_entry=Entry(win,)
+        Titlu_entry.pack()
+        
+        cod_carte=Titlu_entry.get()
+
+        data_azi=str(date.today())
+        data_return=str(date.today() +timedelta(days=14))
+        
+        
+        def save_imprumut():
+            sql="insert into imprumuturi values( {},{},{},{},{},{});"
+            cursor.execute(sql,format(cod,nume,clasa,cod_carte,data_azi,data_return))
+            mydb.commit()
+        
+
+        
+
+
+    
+    
+
+        salvare_btn=Button(win,text='Salvare',bg='red',fg='white',command=save_imprumut)
+        salvare_btn.pack()
+
+        win.mainloop()
+
+    adauga=Button(window,text="Adauga imprumut",width=10,height=5,command=imprumut_nou)
+    adauga.pack()
+
+    window.mainloop()
+
+        
 
 
 #FEREASTRA PRINCIPALA
@@ -362,13 +469,13 @@ citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 frame1=Frame(canvas,width=850,height=450)
 frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
 
-imprumut=Button(frame1,text="Carti imprumutate",width=80,height=6, bg="#F5EBE0",font=("Cambria_Math",15))
-imprumut.place(relx=0,rely=0,anchor=NW,)
+imprumuturi=Button(frame1,text="Carti imprumutate",width=80,height=6, bg="#F5EBE0",font=("Cambria_Math",15),command=imprumut)
+imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
 carti=Button(frame1,text="Lista carti",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=search)
 carti.place(relx=0,rely=0.5,anchor=W,)
 
-elevi=Button(frame1,text="Lista elevi",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15))
+elevi=Button(frame1,text="Lista elevi",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
 
