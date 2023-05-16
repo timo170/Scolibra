@@ -24,8 +24,22 @@ citate = ','.join(map(str, citate[0]))
 
 
 
+
+criteriu="some"
+
+def schimbare(event):
+    global criteriu
+    criteriu=filtru.get()
+    
+        
+
+
 #functia care deschide FEREASTRA DE CAUTARE
 def search():
+
+    global criteriu
+    print(criteriu)
+
     window=Tk()
     window.resizable(1,1)
     window.geometry('1500x1000')
@@ -45,6 +59,8 @@ def search():
 
 
     select=StringVar()
+
+    global filtru 
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))
     filtru.pack(padx=5,side=RIGHT)
 
@@ -54,12 +70,6 @@ def search():
     filtru['state']='readonly'
 
 
-
-    
-    
-    
-
-    
     caseta=Entry(window,font=("Helvetica",20),width=100)
     caseta.pack(anchor=NW,padx=5)
     
@@ -96,33 +106,19 @@ def search():
     filtru.bind('<<ComboboxSelected>>',schimbare )
 
     '''
-    
-    criteriu=filtru.get()
-    print(criteriu)
-    
 
-    q="Select * from carti"
-    cursor.execute(q)
-    result=cursor.fetchall()
-
-    date=[]
-    for x in result:
-        list1=(x[0],x[1], x[2],
-              x[3],
-              x[4],
-              x[5],
-              x[6])
-        date.append(list1)
     
-    
-
-
     
 
     
     
     
-
+        
+    
+    
+    
+    
+    
     
     global tree
     coloane=(0,1,2,3,4,5,6)
@@ -137,22 +133,49 @@ def search():
     tree.heading(5,text='PRET')
     tree.heading(6,text='STARE')
 
-    
+
+    q="Select * from carti"
+    cursor.execute(q)
+    result=cursor.fetchall()
+    date=[]
+    for x in result:
+        list1=(x[0],x[1], x[2],
+              x[3],
+              x[4],
+              x[5],
+              x[6])
+        date.append(list1)
     
     for rand in date:
         tree.insert('',END,values=rand)
     
+    
+    
+
+    
+    
+    
+    
+    
+        
+    
+    
+
     def cauta(event):
         cuvant=caseta.get()
         
-        print(cuvant)
-        print(criteriu)
-        cuv=str("'%" +cuvant + "'%")
-        print(cuv)
         
-        cursor.execute("SELECT * FROM carti WHERE %s LIKE '%s%' ;", criteriu,cuvant, )
+        
+        
+        #cuv=("%"+cuvant +"%")
+        
+        test=(criteriu,cuvant)
+        print(test)
+
+        sql="SELECT * FROM carti WHERE %s = '%s';"
+        cursor.execute(sql,test)
         records = cursor.fetchall()
-        print(records)
+        
         recor=[]
         for x in records:
             list1=(x[0],x[1], x[2],
@@ -162,6 +185,8 @@ def search():
                x[6])
             recor.append(list1)
         mydb.commit()
+
+        print(records)
 	
         for record in records:
             tree.insert('', 0, values=record)
@@ -171,6 +196,8 @@ def search():
     
     
     caseta.bind( '<Return>',cauta)
+    filtru.bind('<<ComboboxSelected>>',schimbare )
+   
 
     
 
@@ -401,15 +428,18 @@ def abonati():
         Titlu_entry=Entry(win,)
         Titlu_entry.pack()
         
-        cod_carte=Titlu_entry.get()
+        
 
         data_azi=str(date.today())
         data_return=str(date.today() +timedelta(days=14))
         
         
         def save_imprumut():
-            sql="insert into imprumuturi values( {},{},{},{},{},{});"
-            cursor.execute(sql,format(cod,nume,clasa,cod_carte,data_azi,data_return))
+            cod_carte=int(Titlu_entry.get())
+            sql="insert into imprumuturi values( %s,%s,%s,%s,%s,%s);"
+            
+            test=(cod,nume,clasa,cod_carte,data_azi,data_return)
+            cursor.execute(sql,test)
             mydb.commit()
         
 

@@ -9,7 +9,7 @@ root.geometry('620x200')
 
 data_azi=date.today()
 data_return=date.today() +timedelta(days=14)
-print(data_return)
+print(type(data_azi))
 
 # run the app
 root.mainloop()
