@@ -27,9 +27,7 @@ citate = ','.join(map(str, citate[0]))
 
 criteriu="some"
 
-def schimbare(event):
-    global criteriu
-    criteriu=filtru.get()
+
     
         
 
@@ -38,7 +36,7 @@ def schimbare(event):
 def search():
 
     global criteriu
-    print(criteriu)
+    
 
     window=Tk()
     window.resizable(1,1)
@@ -65,7 +63,7 @@ def search():
     filtru.pack(padx=5,side=RIGHT)
 
 
-    valori=["Cod","Autor","Titlu","Editura","An","Pret","Stare"]
+    valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","Stare"]
     filtru['values']=valori      
     filtru['state']='readonly'
 
@@ -129,7 +127,7 @@ def search():
     tree.heading(1,text='AUTOR')
     tree.heading(2,text='TITLU')
     tree.heading(3,text='EDITURA')
-    tree.heading(4,text='AN')
+    tree.heading(4,text='ANUL_APARITIEI')
     tree.heading(5,text='PRET')
     tree.heading(6,text='STARE')
 
@@ -156,24 +154,29 @@ def search():
     
     
     
-    
+    def schimbare(event):
+        global criteriu
+        criteriu=filtru.get()
         
     
-    
+    def stergere_elemente_arbore():
+        x = tree.get_children()
+        for item in x:
+            tree.delete(item)
+
 
     def cauta(event):
         cuvant=caseta.get()
         
         
         
+        cuv=("%"+cuvant +"%")
         
-        #cuv=("%"+cuvant +"%")
-        
-        test=(criteriu,cuvant)
-        print(test)
+        test=(criteriu,cuv)
+        print(criteriu)
 
-        sql="SELECT * FROM carti WHERE %s = '%s';"
-        cursor.execute(sql,test)
+        sql="SELECT * FROM carti WHERE {} LIKE '{}' ;".format(criteriu,cuv)
+        cursor.execute(sql,)
         records = cursor.fetchall()
         
         recor=[]
@@ -187,7 +190,8 @@ def search():
         mydb.commit()
 
         print(records)
-	
+        
+        stergere_elemente_arbore()
         for record in records:
             tree.insert('', 0, values=record)
             
