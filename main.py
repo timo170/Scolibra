@@ -187,7 +187,8 @@ def inserare():
 
 
 
-    # fereastra adaugare carti
+    # fereastra adaugare carti 1234
+    
     
     canvas=Canvas(geam,width=1920,height=1080)
     canvas.pack(expand=True,fill=BOTH)
