@@ -56,9 +56,9 @@ def search():
     adauga.pack(side=RIGHT)
 
 
-    select=StringVar()
+    
 
-    global filtru 
+     
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))
     filtru.pack(padx=5,side=RIGHT)
 
@@ -70,51 +70,6 @@ def search():
 
     caseta=Entry(window,font=("Helvetica",20),width=100)
     caseta.pack(anchor=NW,padx=5)
-    
-    
-
-    
-    '''
-    def schimbare(event):
-        global criteriu
-        criteriu=filtru.get()
-        if criteriu=="Cod":
-            criteriu=0
-        else:
-            if criteriu=="Autor":
-                criteriu=1
-            else:
-                if criteriu=="Titlu":
-                    criteriu=2
-                else:
-                    if criteriu=="Editura":
-                        criteriu=3
-                    else:
-                        if criteriu=="An":
-                            criteriu=4
-                        else:
-                            if criteriu=="Pret":
-                                criteriu=5
-                            else:
-                                if criteriu=="Stare":
-                                    criteriu=6
-    
-    
-    
-    filtru.bind('<<ComboboxSelected>>',schimbare )
-
-    '''
-
-    
-    
-
-    
-    
-    
-        
-    
-    
-    
     
     
     
@@ -164,7 +119,7 @@ def search():
         for item in x:
             tree.delete(item)
 
-
+    #functia care face cautarea in baza de date
     def cauta(event):
         cuvant=caseta.get()
         
@@ -189,7 +144,7 @@ def search():
             recor.append(list1)
         mydb.commit()
 
-        print(records)
+        
         
         stergere_elemente_arbore()
         for record in records:
@@ -212,8 +167,9 @@ def stergere():
     
     ite=tree.item(tree.focus())
     cell=ite['values'][0]
+    parametri=(cell,)
     sql="delete from carti where Cod=%s;"
-    cursor.execute(sql,cell)
+    cursor.execute(sql,parametri)
     cell=str(cell)
     showinfo("info","Ati sters cartea cu codul "+cell )
     mydb.commit()
@@ -234,13 +190,7 @@ def inserare():
     # fereastra adaugare carti
     
     canvas=Canvas(geam,width=1920,height=1080)
-
-
     canvas.pack(expand=True,fill=BOTH)
-    
-
-
-
     canvas.columnconfigure(0,weight=1)
     canvas.columnconfigure(1,weight=3)
 
@@ -356,22 +306,42 @@ def inserare():
 
 #functia care deschide FEREASTRA IMPRUMUTURI
 def imprumut():
+
+    def stergere_elemente_tabel():
+        x = tabel.get_children()
+        for item in x:
+            tabel.delete(item)
+
+    #functia care sterge un imprumut adus la timp
+    def returnata():
+        ite=tabel.item(tabel.focus())
+        cell=ite['values'][0]
+        parametri=(cell,)
+        sql="delete from imprumuturi where COD_IMPRUMUT=%s;"
+        cursor.execute(sql,parametri)
+        cell=str(cell)
+        showinfo("info","Cartea a fost restituita.")
+        mydb.commit()
+        imprumut.destroy
+        
+
     window=Tk()
     window.geometry("1500x600")
     root.resizable(0,0)
-    coloane=[0,1,2,3,4,5]
+    coloane=[0,1,2,3,4,5,6]
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
     tabel.pack()
 
-    
-
+    adus=Button(window,text="Returnata",bg="green",fg="white",font=("Helvetica",12),command=returnata)
+    adus.pack()
 
     tabel.heading(0,text='COD IMPRUMUT')
-    tabel.heading(1,text='NUME')
-    tabel.heading(2,text='CLASA')
-    tabel.heading(3,text='TITLU CARTII')
-    tabel.heading(4,text='DATA IMPRUMUTULUI')
-    tabel.heading(5,text='DATA RETURNARII')
+    tabel.heading(1,text='COD ABONAT')
+    tabel.heading(2,text='NUME')
+    tabel.heading(3,text='CLASA')
+    tabel.heading(4,text='COD CARTE')
+    tabel.heading(5,text='DATA IMPRUMUTULUI')
+    tabel.heading(6,text='DATA RETURNARII')
 
     q="Select * from imprumuturi"
     cursor.execute(q)
@@ -382,10 +352,16 @@ def imprumut():
         list1=(x[0],x[1], x[2],
               x[3],
               x[4],
-              x[5])
+              x[5],x[6],)
         date.append(list1)
+    
+    stergere_elemente_tabel()
     for rand in date:
         tabel.insert('',END,values=rand)
+    
+    
+
+    
     
 #functia care deschide LISTA DE ELEVI ABONATI
 def abonati():
