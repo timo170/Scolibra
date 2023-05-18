@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `carti` (
   PRIMARY KEY (`Cod`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.carti: ~89 rows (approximately)
+-- Dumping data for table biblioteca.carti: ~88 rows (approximately)
 DELETE FROM `carti`;
 /*!40000 ALTER TABLE `carti` DISABLE KEYS */;
 INSERT INTO `carti` (`Cod`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pret`, `Stare`) VALUES
@@ -135,8 +135,7 @@ INSERT INTO `carti` (`Cod`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pret
 	(40932, 'Gabriele D\'Annunzio', 'Poate că da, poate că nu', 'Art ', 2008, 16.050, 'libera'),
 	(40933, 'Gabriele D\'Annunzio', 'Poate că da, poate că nu', 'Art ', 2008, 16.050, 'libera'),
 	(40934, 'Gabriele D\'Annunzio', 'Poate că da, poate că nu', 'Art ', 2008, 16.050, 'libera'),
-	(40935, 'Gabriele D\'Annunzio', 'Poate că da, poate că nu', 'Art ', 2008, 16.050, 'libera'),
-	(40936, 'Gabriele D\'Annunzio', 'Poate că da, poate că nu', 'Art ', 2008, 16.050, 'libera');
+	(40935, 'Gabriele D\'Annunzio', 'Poate că da, poate că nu', 'Art ', 2008, 16.050, 'libera');
 /*!40000 ALTER TABLE `carti` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.citate
@@ -164,10 +163,11 @@ INSERT INTO `citate` (`Numar`, `Citate`) VALUES
 
 -- Dumping structure for table biblioteca.imprumuturi
 CREATE TABLE IF NOT EXISTS `imprumuturi` (
+  `COD_IMPRUMUT` int(11) DEFAULT NULL,
   `COD_ABONAT` tinyint(4) DEFAULT NULL,
   `NUME` varchar(10) DEFAULT NULL,
   `CLASA` varchar(3) DEFAULT NULL,
-  `COD_CARTE` smallint(6) DEFAULT NULL,
+  `COD_CARTE` mediumint(9) DEFAULT NULL,
   `DATA_IMPRUMUT` date DEFAULT NULL,
   `DATA_RETURNARII` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
