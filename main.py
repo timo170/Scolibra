@@ -40,6 +40,8 @@ def search():
 
     window=Tk()
     window.resizable(1,1)
+    window.iconbitmap('lista_carti.ico')
+    window.title('Listă cărți')
     window.geometry('1500x1000')
 
 
@@ -328,7 +330,10 @@ def imprumut():
 
     window=Tk()
     window.geometry("1500x600")
+    
     root.resizable(0,0)
+    window.iconbitmap('carti_i.ico')
+    window.title('Cărți împrumutate')
     coloane=[0,1,2,3,4,5,6]
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
     tabel.pack()
@@ -367,6 +372,10 @@ def imprumut():
 #functia care deschide LISTA DE ELEVI ABONATI
 def abonati():
     window=Tk()
+    window.iconbitmap('lista_elevi.ico')
+    window.attributes('-topmost', True)
+    window.update()
+    window.title('Listă elevi')
     window.geometry("1500x1000")
     root.resizable(1,1)
     coloane=[0,1,2,3,4,5]
@@ -435,7 +444,7 @@ def abonati():
 
         win.mainloop()
 
-    adauga=Button(window,text="Adauga imprumut",width=10,height=5,command=imprumut_nou)
+    adauga=Button(window,text="Adaugă împrumut",width=10,height=5,command=imprumut_nou)
     adauga.pack()
 
     window.mainloop()
@@ -446,6 +455,8 @@ def abonati():
 #FEREASTRA PRINCIPALA
 
 root=Tk()
+root.title('Școlibra')
+root.iconbitmap('iconbitmap_principal.ico')
 root.geometry('1920x1080')
 
 root.resizable(0,0)
@@ -480,13 +491,13 @@ citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 frame1=Frame(canvas,width=850,height=450)
 frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
 
-imprumuturi=Button(frame1,text="Carti imprumutate",width=80,height=6, bg="#F5EBE0",font=("Cambria_Math",15),command=imprumut)
+imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6, bg="#F5EBE0",font=("Cambria_Math",15),command=imprumut)
 imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
-carti=Button(frame1,text="Lista carti",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=search)
+carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=search)
 carti.place(relx=0,rely=0.5,anchor=W,)
 
-elevi=Button(frame1,text="Lista elevi",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=abonati)
+elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
 
