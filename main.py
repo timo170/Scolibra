@@ -4,7 +4,12 @@ import mysql.connector
 from tkinter import ttk
 from PIL import Image,ImageTk
 from tkinter import messagebox
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showinfo,showerror
+import pyqrcode
+import shutil
+import os
+import qrcode
+
 
 #conectare la baza de date
 mydb=mysql.connector.connect(
@@ -17,7 +22,7 @@ cursor=mydb.cursor()
 
 #importare citate din baza de date in variabila citate
 sql="Select Citate from CITATE where Numar=%s"
-cursor.execute(sql,[random.randrange(0,11)])
+cursor.execute(sql,[random.randrange(0,10)])
 citate=cursor.fetchall()    
 citate = ','.join(map(str, citate[0]))
 
@@ -51,11 +56,16 @@ def search():
     label=Label(frame3,text="Caută după:",font=("Helvetica",15))
     label.pack(side=LEFT)
 
+    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR)
+    genqr.pack(side=RIGHT)
+
     sterge=Button(frame3,width=10,text="Șterge carte",command=stergere)
     sterge.pack(side=RIGHT)
 
     adauga=Button(frame3,width=10,text="Adaugă carte",command=inserare)
     adauga.pack(side=RIGHT)
+
+    
 
 
     
@@ -103,7 +113,6 @@ def search():
     
     for rand in date:
         tree.insert('',END,values=rand)
-    
     
     
 
@@ -164,6 +173,23 @@ def search():
 
     window.mainloop()
 
+def generareQR():
+    ite=tree.item(tree.focus())
+    carte=""
+    carte=str(ite['values'][0])+'/'+str(ite['values'][1])+'/'+str(ite['values'][2])+'/'+str(ite['values'][3])+'/'+str(ite['values'][4])+'/'+str(ite['values'][5])+'/'+'Biblioteca LNI'
+    carte=str(carte)
+    nume=""
+    nume='qr_'+str(ite['values'][0])
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(carte.encode('utf-8'))
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save("C://Users/PC/De/'f{nume}'.png") #aici vreau sa modific numele fisierului
+    showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
+
+    
+
 #functia care sterge o carte din baza de date
 def stergere():
     
@@ -183,6 +209,7 @@ def inserare():
     geam.resizable(1,1)
     geam.geometry('800x600')
     geam.title("Adaugare")
+    
 
 
 
@@ -307,6 +334,8 @@ def inserare():
 
     geam.mainloop()
 
+
+
 #functia care deschide FEREASTRA IMPRUMUTURI
 def imprumut():
 
@@ -319,21 +348,27 @@ def imprumut():
     def returnata():
         ite=tabel.item(tabel.focus())
         cell=ite['values'][0]
+        cod_carte=int(ite["values"][4])
+        sql1="update carti set Stare='liberă' where Cod=%s;"
+        para=(cod_carte,)
+        cursor.execute(sql1,para)
+        cell=str(cell)
         parametri=(cell,)
         sql="delete from imprumuturi where COD_IMPRUMUT=%s;"
         cursor.execute(sql,parametri)
-        cell=str(cell)
+        
         showinfo("info","Cartea a fost restituita.")
+        window.destroy()
         mydb.commit()
-        imprumut.destroy
+        
         
 
     window=Tk()
     window.geometry("1500x600")
-    
     root.resizable(0,0)
     window.iconbitmap('carti_i.ico')
     window.title('Cărți împrumutate')
+   
     coloane=[0,1,2,3,4,5,6]
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
     tabel.pack()
@@ -372,12 +407,14 @@ def imprumut():
 #functia care deschide LISTA DE ELEVI ABONATI
 def abonati():
     window=Tk()
-    window.iconbitmap('lista_elevi.ico')
-    window.attributes('-topmost', True)
-    window.update()
-    window.title('Listă elevi')
     window.geometry("1500x1000")
-    root.resizable(1,1)
+    window.resizable(0,0)
+    window.iconbitmap('lista_elevi.ico')
+    window.title('Listă elevi')
+    
+    window.lift()
+    
+
     coloane=[0,1,2,3,4,5]
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
     tabel.pack()
@@ -406,7 +443,7 @@ def abonati():
 
     def imprumut_nou():
         ite=tabel.item(tabel.focus())
-        cod=ite['values'][0]
+        cod_abonat=ite['values'][0]
         nume=ite['values'][1]
         clasa=ite['values'][3]
         from datetime import date,timedelta
@@ -426,11 +463,26 @@ def abonati():
         
         def save_imprumut():
             cod_carte=int(Titlu_entry.get())
-            sql="insert into imprumuturi values( %s,%s,%s,%s,%s,%s);"
             
-            test=(cod,nume,clasa,cod_carte,data_azi,data_return)
-            cursor.execute(sql,test)
-            mydb.commit()
+            sql2="Select * from carti where Cod=%s and Stare='liberă';"
+            test2=(cod_carte,)
+            cursor.execute(sql2,test2)
+            re=cursor.fetchall()
+            if len(re)== 1:
+                cod_i=(cod_abonat+cod_carte)/2
+                sql="insert into imprumuturi values( %s,%s,%s,%s,%s,%s,%s);"
+            
+                test=(cod_i,cod_abonat,nume,clasa,cod_carte,data_azi,data_return)
+                cursor.execute(sql,test)
+
+                sql1="update carti set Stare='împrumutată'  where Cod=%s;"
+                test1=(cod_carte,)
+                cursor.execute(sql1,test1)
+                showinfo(title="Info",message="Împrumut adăugat.")
+                mydb.commit()
+                win.destroy()
+            else:
+                showerror(title='Eroare',message="Cartea este împrumutată!")
         
 
         
