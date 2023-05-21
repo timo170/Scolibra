@@ -455,10 +455,10 @@ def abonati():
 #FEREASTRA PRINCIPALA
 
 root=Tk()
+
+root.geometry('1920x1080')
 root.title('Școlibra')
 root.iconbitmap('iconbitmap_principal.ico')
-root.geometry('1920x1080')
-
 root.resizable(0,0)
 
 
