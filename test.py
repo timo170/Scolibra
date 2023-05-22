@@ -13,15 +13,9 @@ print(type(data_azi))
 
 
 
-import qrcode
-
-text = "ță.â.î.ș"
-qr = qrcode.QRCode(version=1, box_size=10, border=5)
-qr.add_data(text.encode('utf-8'))
-qr.make(fit=True)
-
-img = qr.make_image(fill_color="black", back_color="white")
-img.show()
+var="123/Harap-Alb/Corina"
+Cod=int(var.split('/')[0])
+print(Cod)
 
 
 # run the app
