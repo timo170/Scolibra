@@ -109,21 +109,22 @@ def search():
     window.iconbitmap('lista_carti.ico')
     window.title('Listă cărți')
     window.geometry('1500x1000')
+    window.configure(background="#ece5e0")
 
     #campurile ferestrei
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,text="Caută după:",font=("Helvetica",15))
+    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",17),bg="#ece5e0",fg="#323232")
     label.pack(side=LEFT)
 
-    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR) #buton pentru generare QR
+    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru generare QR
     genqr.pack(side=RIGHT)
 
-    sterge=Button(frame3,width=10,text="Șterge carte",command=stergere) #buton pentru ștergere carte
+    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru ștergere carte
     sterge.pack(side=RIGHT)
 
-    adauga=Button(frame3,width=10,text="Adaugă carte",command=inserare) #buton pentru inserare carte
+    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
 
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
@@ -198,7 +199,7 @@ def stergere():
     sql="delete from carti where Cod=%s;"
     cursor.execute(sql,parametri)
     cell=str(cell)
-    showinfo("info","Ati sters cartea cu codul "+cell )
+    showinfo("info","Ați șters cartea cu codul "+cell )
     mydb.commit()
 
 
@@ -207,7 +208,7 @@ def inserare():
     geam=Tk()   # fereastra adaugare carti
     geam.resizable(1,1)
     geam.geometry('800x600')
-    geam.title("Adaugare")
+    geam.title("Adăugare")
     
     canvas=Canvas(geam,width=1920,height=1080)
     canvas.pack(expand=True,fill=BOTH)
@@ -348,7 +349,7 @@ def imprumut():
 
     window=Tk()
     window.geometry("1500x600")
-    root.resizable(0,0)
+    window.resizable(0,0)
     window.iconbitmap('carti_i.ico')
     window.title('Cărți împrumutate')
    
@@ -434,6 +435,7 @@ def abonati():
         geam.resizable(1,1)
         geam.geometry('800x600')
         geam.title("Adaugare")
+    
     
         canvas=Canvas(geam,width=1920,height=1080)
         canvas.pack(expand=True,fill=BOTH)
