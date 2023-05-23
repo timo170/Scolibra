@@ -8,6 +8,7 @@ from tkinter.messagebox import showinfo,showerror
 import qrcode
 import cv2
 from pyzbar.pyzbar import decode 
+from datetime import date,timedelta
 
 
 #conectare la baza de date
@@ -396,9 +397,221 @@ def abonati():
     window.iconbitmap('lista_elevi.ico')
     window.title('Listă elevi')
     window.lift()
+
+    #funcția care generează un cod QR pentru cartea selectată
+    def generareQR():
+        ite=tabel.item(tabel.focus())
+        elev=""
+        elev=str(ite['values'][0])+'/'+str(ite['values'][1])+'/'+str(ite['values'][2])+'/'+str(ite['values'][3])+'/'+str(ite['values'][4])+'/'+'Biblioteca LNI'+'/'+'Elev'
+        elev=str(elev)
+        nume=""
+        nume='qr_'+str(ite['values'][0])
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(elev.encode('utf-8'))
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(f"C://Users/PC/Desktop/{nume}.png") 
+        showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
+        window.lift()
+
+    def stergere():     #functia care sterge o carte din baza de date
+    
+        ite=tabel.item(tabel.focus())
+        cell=ite['values'][0]
+        parametri=(cell,)
+        sql="delete from abonati where Cod_abonat=%s;"
+        cursor.execute(sql,parametri)
+        cell=str(cell)
+        showinfo("info","Ati sters elevul cu codul "+cell )
+        mydb.commit()
+        window.lift()
+
+
+
+    def inserare():    #functia care inserează o carte in tabelul cartilor
+        geam=Tk()   # fereastra adaugare carti
+        geam.resizable(1,1)
+        geam.geometry('800x600')
+        geam.title("Adaugare")
+    
+        canvas=Canvas(geam,width=1920,height=1080)
+        canvas.pack(expand=True,fill=BOTH)
+        canvas.columnconfigure(0,weight=1)
+        canvas.columnconfigure(1,weight=3)
+
+        
+        def preluare():       #functia de preluare a informatiilor despre un abonat
+            Cod_entry.focus()
+            def log(event):
+                Nume_entry.focus()
+                def log1(event):
+                    Prenume_entry.focus()
+                    def log2(event):
+                        Clasa_entry.focus()
+                        
+
+                    Prenume_entry.bind('<Return>',log2)
+
+                Nume_entry.bind('<Return>',log1)
+        
+            Cod_entry.bind('<Return>',log)
+
+
+        def salvare():      #functia care salvează datele unui abonat in baza de date
+
+            data_azi=str(date.today())
+            sql="INSERT INTO abonati(Cod_abonat,Nume,Prenume,Clasa,Data_abonarii) VALUES(%s,%s,%s,%s,%s);"
+            values=(Cod_entry.get(), Nume_entry.get(), Prenume_entry.get(), Clasa_entry.get(),data_azi )
+            try:
+                cursor.execute(sql,values)
+                mydb.commit()
+                showinfo(title="Info",message="Datele au fost introduse in baza de date.")
+                window.lift()
+                
+
+            except Exception:   # afisarea erorii
+                messagebox.showerror(title="Eroare",message = "Codul introdus este deja inregistrat in baza de date")
+                window.lift()
+        
+            Cod_entry.focus()
+            
+             
+
+
+
+                                  
+        geam.lift() 
+        #campurile ferestrei
+        Cod=Label(canvas,text="Cod:")
+        Cod.grid(column=0,row=0,sticky=EW)
+
+        Cod_entry=Entry(canvas,)
+        Cod_entry.grid(column=1,row=0,sticky=W)
+
+        Nume=Label(canvas,text="Nume:")
+        Nume.grid(column=0,row=1,sticky=EW)
+
+        Nume_entry=Entry(canvas,)
+        Nume_entry.grid(column=1,row=1,sticky=W)
+
+        Prenume=Label(canvas,text="Prenume:")
+        Prenume.grid(column=0,row=2,sticky=EW)
+
+        Prenume_entry=Entry(canvas,)
+        Prenume_entry.grid(column=1,row=2,sticky=W)
+
+        Clasa=Label(canvas,text="Clasa:")
+        Clasa.grid(column=0,row=3,sticky=EW)
+
+        Clasa_entry=Entry(canvas,)
+        Clasa_entry.grid(column=1,row=3,sticky=W)
+
     
 
-    coloane=[0,1,2,3,4,5]
+        salvare_btn=Button(canvas,text='Salvare',bg='red',fg='white',command=salvare)
+        salvare_btn.grid(column=1,row=6,sticky=W)
+
+        
+        preluare()
+
+
+        geam.mainloop()
+
+    def schimbare(event):  #funcția care actualizează filtrul
+            global criteriu
+            criteriu=filtru.get()
+            if criteriu=="QR":
+                cauta_QR()
+        
+    
+    def stergere_elemente_arbore():  #funcția care șterge toate rândurile din tabel
+            
+            x = tabel.get_children()
+            for item in x:
+                tabel.delete(item)
+
+    
+    def cauta(event):      #functia care face cautarea in baza de date în funcție de bara de căutare
+            cuvant=caseta.get()
+
+            cuv=("%"+cuvant +"%")
+            sql="SELECT * FROM abonati WHERE {} LIKE '{}' ;".format(criteriu,cuv)
+            cursor.execute(sql,)
+            records = cursor.fetchall()
+        
+            recor=[]
+            for x in records:
+                list1=(x[0],x[1], x[2],x[3],x[4])
+                recor.append(list1)
+            mydb.commit()
+
+            stergere_elemente_arbore()
+            for record in records:
+                tabel.insert('', 0, values=record)
+
+
+        
+    def cauta_QR():    #funcția care face căutarea în funcție de codul stocat în codul QR
+            var=""
+            def reader_cam_qr(): #funcția care scanează codul QR prin intermediul camerei web
+                cam =cv2.VideoCapture(0)
+                cam.set(5, 640)
+                cam.set(6, 480)
+
+                camera = True
+                while camera == True:
+                    suceess, frame= cam.read()
+                    for i in decode(frame):
+                        return i.data.decode('utf-8')
+        
+            
+            var=reader_cam_qr()
+            Cod=int(var.split('/')[0])
+        
+
+            sql="SELECT * FROM abonati WHERE Cod={} ;".format(Cod)
+            cursor.execute(sql,)
+            records = cursor.fetchall()
+        
+            recor=[]
+            for x in records:
+                list1=(x[0],x[1], x[2],x[3],x[4])
+                recor.append(list1)
+            mydb.commit()
+
+            stergere_elemente_arbore()
+        
+            for record in records:
+                tabel.insert('', 0, values=record)
+
+    
+
+    global criteriu
+    
+    frame3=Frame(window)
+    frame3.pack(side=TOP)
+
+    label=Label(frame3,text="Caută după:",font=("Helvetica",15))
+    label.pack(side=LEFT)
+
+    filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
+    filtru.pack(side=LEFT)
+
+    inser=Button(frame3,text="Inserare elevi",command=inserare).pack(side=LEFT)
+    sterg=Button(frame3,text="Stergere elevi",command=stergere).pack(side=LEFT)
+    generare=Button(frame3,text="Genereaza cod QR",command=generareQR).pack(side=LEFT)
+
+    valori=["Cod_abonat","Nume","Prenume","Clasa","QR"]
+    filtru['values']=valori      
+    filtru['state']='readonly'
+
+
+    caseta=Entry(window,font=("Helvetica",20),width=100)  #bara de căutare
+    caseta.pack(side=TOP,padx=5)
+
+    global tabel
+    coloane=[0,1,2,3,4]
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
     tabel.pack()
 
@@ -413,14 +626,19 @@ def abonati():
     cursor.execute(q)
     result=cursor.fetchall()
 
-    date=[]
+    datele=[]
     for x in result:
         list1=(x[0],x[1], x[2],
               x[3],
               x[4],)
-        date.append(list1)
-    for rand in date:
+        datele.append(list1)
+    for rand in datele:
         tabel.insert('',END,values=rand)
+
+    
+            
+    caseta.bind( '<Return>',cauta)
+    filtru.bind('<<ComboboxSelected>>',schimbare )
 
     
 
@@ -430,7 +648,7 @@ def abonati():
         nume=ite['values'][1]
         clasa=ite['values'][3]
 
-        from datetime import date,timedelta
+        
 
         data_azi=str(date.today())
         data_return=str(date.today() +timedelta(days=14))
