@@ -750,7 +750,7 @@ root.iconbitmap('iconbitmap_principal.ico')
 root.resizable(0,0)
 
 
-add_folder_image = ImageTk.PhotoImage(Image.open(r"C:\Users\George\Downloads\test1.png").resize((620,200), Image.ANTIALIAS))
+add_folder_image = ImageTk.PhotoImage(Image.open(r"test1.png").resize((620,200), Image.ANTIALIAS))
 #button_1 = customtkinter.CTkButton(master=root, image=add_folder_image, text="Add Folder", width=190, height=40, compound="top")
 #button_1.pack(pady=20, padx=20)
 
