@@ -9,6 +9,7 @@ import qrcode
 import cv2
 from pyzbar.pyzbar import decode 
 from datetime import date,timedelta
+import customtkinter
 
 
 #conectare la baza de date
@@ -108,14 +109,17 @@ def search():
     window.resizable(1,1)
     window.iconbitmap('lista_carti.ico')
     window.title('Listă cărți')
-    window.geometry('1500x1000')
+    window.geometry('1500x1000') 
+    
     window.configure(background="#ece5e0")
+    window.resizable(0,0)
+   
 
     #campurile ferestrei
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",17),bg="#ece5e0",fg="#323232")
+    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",17),bg="#ece5e0",fg="#323232",anchor=E)
     label.pack(side=LEFT)
 
     genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru generare QR
@@ -127,7 +131,11 @@ def search():
     adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
 
-    filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
+    style = ttk.Style()
+    style.configure('Custom.TCombobox', background='green', foreground='green')
+    style.theme_use('clam')
+
+    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16),style='Custom.TCombobox')  #filtru (caută după)
     filtru.pack(padx=5,side=RIGHT)
 
 
@@ -136,14 +144,14 @@ def search():
     filtru['state']='readonly'
 
 
-    caseta=Entry(window,font=("Helvetica",20),width=100)  #bara de căutare
-    caseta.pack(anchor=NW,padx=5)
+    caseta=Entry(window,font=("Helvetica",20),fg="#323232",width=93)  #bara de căutare
+    caseta.pack(anchor=CENTER,padx=5)
     
     
     
     global tree
     coloane=(0,1,2,3,4,5,6)
-    tree=ttk.Treeview(window,columns=coloane,show='headings') #tabelul cu afișări
+    tree=ttk.Treeview(window,columns=coloane,show='headings',height=43) #tabelul cu afișări
     tree.pack()
 
     tree.heading(0,text='COD')
@@ -397,6 +405,7 @@ def abonati():
     window.resizable(0,0)
     window.iconbitmap('lista_elevi.ico')
     window.title('Listă elevi')
+    window.configure(background="#ece5e0")
     window.lift()
 
     #funcția care generează un cod QR pentru cartea selectată
@@ -594,22 +603,22 @@ def abonati():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,text="Caută după:",font=("Helvetica",15))
+    label=Label(frame3,text="Caută după:",font=("Helvetica",17),bg="#ece5e0",fg="#323232")
     label.pack(side=LEFT)
 
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
     filtru.pack(side=LEFT)
 
-    inser=Button(frame3,text="Inserare elevi",command=inserare).pack(side=LEFT)
-    sterg=Button(frame3,text="Stergere elevi",command=stergere).pack(side=LEFT)
-    generare=Button(frame3,text="Genereaza cod QR",command=generareQR).pack(side=LEFT)
+    inser=Button(frame3,text="Inserare elevi",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
+    sterg=Button(frame3,text="Stergere elevi",command=stergere,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
+    generare=Button(frame3,text="Genereaza cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
 
     valori=["Cod_abonat","Nume","Prenume","Clasa","QR"]
     filtru['values']=valori      
     filtru['state']='readonly'
 
 
-    caseta=Entry(window,font=("Helvetica",20),width=100)  #bara de căutare
+    caseta=Entry(window,font=("Helvetica",20),fg="#323232",width=66)  #bara de căutare
     caseta.pack(side=TOP,padx=5)
 
     global tabel
@@ -734,12 +743,16 @@ def abonati():
 
 #FEREASTRA PRINCIPALA
 
-root=Tk()
+root = customtkinter.CTk()
 root.geometry('1920x1080')
 root.title('Școlibra')
 root.iconbitmap('iconbitmap_principal.ico')
 root.resizable(0,0)
 
+
+add_folder_image = ImageTk.PhotoImage(Image.open(r"C:\Users\George\Downloads\test1.png").resize((620,200), Image.ANTIALIAS))
+#button_1 = customtkinter.CTkButton(master=root, image=add_folder_image, text="Add Folder", width=190, height=40, compound="top")
+#button_1.pack(pady=20, padx=20)
 
 
 #imaginea pentru fundalul canvas_principala
@@ -757,27 +770,28 @@ canvas.create_image(0,0,image=img,anchor=NW)
 frame0=Frame(canvas,height=400,width=800,bg="#F5EBE0")
 frame0.place(relx=0,rely=0,anchor=NW)
 
-welcome=Label(frame0,text=" Biblioteca LNI \n \n \n Bine ați venit!",bg="#F5EBE0",fg="brown", font=("Helvetica",40))
+welcome=Label(frame0,text=" Biblioteca LNI \n  \n Bine ați venit!",bg="#F5EBE0",fg="brown", font=("Comic Sans MS",40))
 welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
 frame=Frame(canvas,height=400,width=800,)
 frame.place(rely=0,relx=1,anchor=NE)
 
-citat=Label(frame,text=citate,height=400,width=800,font=("Helvetica",16),bg="#F5EBE0",fg="brown" )               
+citat=Label(frame,text=citate,height=400,width=800,font=("Comic Sans MS",16),bg="#F5EBE0",fg="brown" )               
 citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-frame1=Frame(canvas,width=850,height=450)
+frame1=Frame(canvas,width=600,height=350)
 frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
 
-imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6, bg="#F5EBE0",font=("Cambria_Math",15),fg="brown",command=imprumut)
+#imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
+imprumuturi=customtkinter.CTkButton(master=frame1, image=add_folder_image ,text="Cărți împrumutate",width=500,height=150,font=("Comic Sans",15),compound="right",command=imprumut)
 imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
-carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),fg="brown",command=search)
+carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=search)
 carti.place(relx=0,rely=0.5,anchor=W,)
 
-elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#F5EBE0",font=("Cambria_Math",15),fg="brown",command=abonati)
+elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
 
