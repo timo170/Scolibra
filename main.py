@@ -205,8 +205,8 @@ def generareQR():
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
-    img.save(f"C:\\Users\\PC\\Desktop/{nume}.png") 
-    showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
+    img.save(f"{nume}.png") 
+    showinfo(title="Info",message="Fisierul a fost salvat.")
     
 
     
@@ -288,7 +288,7 @@ def inserare():
 
     
     def salvare():      #functia care salvează datele unei cărți in baza de date
-        sql="INSERT INTO carti(Cod,Autor,Titlu,Editura,Anul_aparitiei,Pret,Stare) VALUES(%s,%s,%s,%s,%s,%s,'libera');"
+        sql="INSERT INTO carti(Cod,Autor,Titlu,Editura,Anul_aparitiei,Pret,Stare) VALUES(%s,%s,%s,%s,%s,%s,'liberă');"
         values=(Cod_entry.get(), Autor_entry.get(), Titlu_entry.get(), Editura_entry.get(), An_entry.get(), Pret_entry.get() )
         try:
             cursor.execute(sql,values)
@@ -466,7 +466,7 @@ def abonati():
 
         img = qr.make_image(fill_color="black", back_color="white")
         img.save(f"C:\\Users\\PC\\Desktop/{nume}.png") 
-        showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
+        showinfo(title="Info",message="Fișierul a fost salvat.")
         window.lift()
 
     def stergere():     #functia care sterge o carte din baza de date
@@ -483,8 +483,8 @@ def abonati():
 
 
 
-    def inserare():    #functia care inserează o carte in tabelul cartilor
-        geam=Tk()   # fereastra adaugare carti
+    def inserare():    #functia care inserează un abonat in tabelul abonatilor
+        geam=Tk()   # fereastra adaugare abonati
         geam.resizable(1,1)
         geam.title("Adaugare")
 
