@@ -113,7 +113,18 @@ def search():
     
     window.configure(background="#ece5e0")
     window.resizable(0,0)
-   
+
+    w = 1500 
+    h = 1000
+
+    ws = window.winfo_screenwidth() 
+    hs = window.winfo_screenheight()
+
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+
 
     #campurile ferestrei
     frame3=Frame(window)
@@ -193,7 +204,7 @@ def generareQR():
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
-    img.save(f"C://Users/PC/Desktop/{nume}.png") 
+    img.save(f"Desktop/{nume}.png") 
     showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
 
     
@@ -215,8 +226,17 @@ def stergere():
 def inserare():
     geam=Tk()   # fereastra adaugare carti
     geam.resizable(1,1)
-    geam.geometry('800x600')
     geam.title("Adăugare")
+
+    w = 800 
+    h = 600
+
+    ws = geam.winfo_screenwidth() 
+    hs = geam.winfo_screenheight()
+
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    geam.geometry('%dx%d+%d+%d' % (w, h, x, y))
     
     canvas=Canvas(geam,width=1920,height=1080)
     canvas.pack(expand=True,fill=BOTH)
@@ -356,11 +376,21 @@ def imprumut():
         
 
     window=Tk()
-    window.geometry("1500x600")
+    
     window.resizable(0,0)
     window.iconbitmap('carti_i.ico')
     window.title('Cărți împrumutate')
-   
+    
+    w = 1500 
+    h = 1000
+
+    ws = window.winfo_screenwidth() 
+    hs = window.winfo_screenheight()
+
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6]
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
@@ -401,12 +431,22 @@ def imprumut():
 #functia care deschide LISTA DE ELEVI (ABONAȚI la bibliotecă)
 def abonati():
     window=Tk()
-    window.geometry("1500x1000")
+    
     window.resizable(0,0)
     window.iconbitmap('lista_elevi.ico')
     window.title('Listă elevi')
     window.configure(background="#ece5e0")
     window.lift()
+
+    w = 1500 
+    h = 1000
+
+    ws = window.winfo_screenwidth() 
+    hs = window.winfo_screenheight()
+
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     #funcția care generează un cod QR pentru cartea selectată
     def generareQR():
@@ -442,10 +482,18 @@ def abonati():
     def inserare():    #functia care inserează o carte in tabelul cartilor
         geam=Tk()   # fereastra adaugare carti
         geam.resizable(1,1)
-        geam.geometry('800x600')
         geam.title("Adaugare")
-    
-    
+
+        w = 800 
+        h = 600
+
+        ws = window.winfo_screenwidth() 
+        hs = window.winfo_screenheight()
+
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        geam.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
         canvas=Canvas(geam,width=1920,height=1080)
         canvas.pack(expand=True,fill=BOTH)
         canvas.columnconfigure(0,weight=1)
@@ -609,21 +657,19 @@ def abonati():
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
     filtru.pack(side=LEFT)
 
-    inser=Button(frame3,text="Inserare elevi",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
-    sterg=Button(frame3,text="Stergere elevi",command=stergere,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
-    generare=Button(frame3,text="Genereaza cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
+    
 
     valori=["Cod_abonat","Nume","Prenume","Clasa","QR"]
     filtru['values']=valori      
     filtru['state']='readonly'
 
 
-    caseta=Entry(window,font=("Helvetica",20),fg="#323232",width=66)  #bara de căutare
+    caseta=Entry(window,font=("Helvetica",20),fg="#323232",width=67)  #bara de căutare
     caseta.pack(side=TOP,padx=5)
 
     global tabel
     coloane=[0,1,2,3,4]
-    tabel=ttk.Treeview(window,columns=coloane,show="headings")
+    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
     tabel.pack()
 
     tabel.heading(0,text='COD ELEV')
@@ -665,6 +711,17 @@ def abonati():
         data_return=str(date.today() +timedelta(days=14))
         
         win=Tk()
+
+        w = 200
+        h = 100
+
+        ws = root.winfo_screenwidth() 
+        hs = root.winfo_screenheight()
+
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        win.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
         global cod_carte
         
         def reader_cam_qr(): #funcția care scanează codul QR de pe o carte
@@ -734,8 +791,11 @@ def abonati():
 
         win.mainloop()
 
-    adauga=Button(window,text="Adaugă împrumut",width=10,height=5,command=imprumut_nou)
-    adauga.pack()
+    inser=Button(frame3,text="Inserare elevi",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
+    sterg=Button(frame3,text="Stergere elevi",command=stergere,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
+    generare=Button(frame3,text="Genereaza cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
+    adauga=Button(frame3,text="Adaugă împrumut",font=("Helvetica",13),bg="#ece5e0",fg="#323232",command=imprumut_nou).pack(side=LEFT)
+    
     window.mainloop()
 
         
@@ -743,16 +803,24 @@ def abonati():
 
 #FEREASTRA PRINCIPALA
 
+
+
 root = customtkinter.CTk()
-root.geometry('1920x1080')
+
 root.title('Școlibra')
 root.iconbitmap('iconbitmap_principal.ico')
 root.resizable(0,0)
 
+w = 1920 
+h = 1080
 
-add_folder_image = ImageTk.PhotoImage(Image.open(r"test1.png").resize((620,200), Image.ANTIALIAS))
-#button_1 = customtkinter.CTkButton(master=root, image=add_folder_image, text="Add Folder", width=190, height=40, compound="top")
-#button_1.pack(pady=20, padx=20)
+ws = root.winfo_screenwidth() 
+hs = root.winfo_screenheight()
+
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
+root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
 
 
 #imaginea pentru fundalul canvas_principala
@@ -781,11 +849,10 @@ citat=Label(frame,text=citate,height=400,width=800,font=("Comic Sans MS",16),bg=
 citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-frame1=Frame(canvas,width=600,height=350)
+frame1=Frame(canvas,width=850,height=450)
 frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
 
-#imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
-imprumuturi=customtkinter.CTkButton(master=frame1, image=add_folder_image ,text="Cărți împrumutate",width=500,height=150,font=("Comic Sans",15),compound="right",command=imprumut)
+imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
 imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
 carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=search)
