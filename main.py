@@ -29,7 +29,7 @@ citate = ','.join(map(str, citate[0]))
 
 
 
-#Functia care deschide FEREASTRA DE CAUTARE
+#Functia care deschide LISTĂ CĂRȚI
 def search():
 
     def schimbare(event):  #funcția care actualizează filtrul
@@ -188,10 +188,11 @@ def search():
             
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
-
     window.mainloop()
 
-#funcția care generează un cod QR pentru cartea selectată
+    
+
+    #funcția care generează un cod QR pentru cartea selectată
 def generareQR():
     ite=tree.item(tree.focus())
     carte=""
@@ -204,8 +205,9 @@ def generareQR():
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
-    img.save(f"Desktop/{nume}.png") 
+    img.save(f"C:\\Users\\PC\\Desktop/{nume}.png") 
     showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
+    
 
     
 
@@ -348,6 +350,7 @@ def inserare():
 
 
 
+
 #functia care deschide FEREASTRA CĂRȚI ÎMPRUMUTATE
 def imprumut():
 
@@ -436,7 +439,7 @@ def abonati():
     window.resizable(0,0)
     window.iconbitmap('lista_elevi.ico')
     window.title('Listă elevi')
-    window.configure(background="#ece5e0")
+    window.configure(background="#FFDFBA")
     window.lift()
 
     w = 1500 
@@ -449,7 +452,7 @@ def abonati():
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-    #funcția care generează un cod QR pentru cartea selectată
+    #funcția care generează un cod QR pentru elevul selectat
     def generareQR():
         ite=tabel.item(tabel.focus())
         elev=""
@@ -462,7 +465,7 @@ def abonati():
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
-        img.save(f"C://Users/PC/Desktop/{nume}.png") 
+        img.save(f"C:\\Users\\PC\\Desktop/{nume}.png") 
         showinfo(title="Info",message="Fișierul qr.png conține codul QR și este pe Desktop.")
         window.lift()
 
@@ -499,6 +502,7 @@ def abonati():
         canvas.pack(expand=True,fill=BOTH)
         canvas.columnconfigure(0,weight=1)
         canvas.columnconfigure(1,weight=3)
+        
 
         
         def preluare():       #functia de preluare a informatiilor despre un abonat
@@ -527,13 +531,15 @@ def abonati():
                 cursor.execute(sql,values)
                 mydb.commit()
                 showinfo(title="Info",message="Datele au fost introduse in baza de date.")
-                window.lift()
+                
                 
 
             except Exception:   # afisarea erorii
                 messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat in baza de date")
-                window.lift()
-        
+                
+                
+            window.lift()
+            geam.lift()
             Cod_entry.focus()
             
              
@@ -652,7 +658,7 @@ def abonati():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,text="Caută după:",font=("Helvetica",17),bg="#ece5e0",fg="#323232")
+    label=Label(frame3,text="Caută după:",font=("Helvetica",17),bg="#FFDFBA",fg="#5E3205")
     label.pack(side=LEFT)
 
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
@@ -666,7 +672,7 @@ def abonati():
 
 
     caseta=Entry(window,font=("Helvetica",20),fg="#323232",width=67)  #bara de căutare
-    caseta.pack(side=TOP,padx=5)
+    caseta.pack(side=TOP,padx=5,pady=5)
 
     global tabel
     coloane=[0,1,2,3,4]
@@ -777,7 +783,7 @@ def abonati():
         
 
         
-        #câmpurile ferestrei LISTA ELEVI
+        #câmpurile ferestrei IMPRUMUT NOU
 
         Titlu=Label(win,text="Cod carte:")
         Titlu.pack()
@@ -792,10 +798,10 @@ def abonati():
 
         win.mainloop()
 
-    inser=Button(frame3,text="Inserare elevi",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
-    sterg=Button(frame3,text="Stergere elevi",command=stergere,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
-    generare=Button(frame3,text="Genereaza cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232").pack(side=LEFT)
-    adauga=Button(frame3,text="Adaugă împrumut",font=("Helvetica",13),bg="#ece5e0",fg="#323232",command=imprumut_nou).pack(side=LEFT)
+    inser=Button(frame3,text="Inserare elevi",command=inserare,font=("Helvetica",13),bg="#F1BDB0",fg="#5E3205").pack(side=LEFT,)
+    sterg=Button(frame3,text="Stergere elevi",command=stergere,font=("Helvetica",13),bg="#F1BDB0",fg="#5E3205").pack(side=LEFT,padx=3)
+    generare=Button(frame3,text="Genereaza cod QR",command=generareQR,font=("Helvetica",13),bg="#F1BDB0",fg="#5E3205").pack(side=LEFT,)
+    adauga=Button(frame3,text="Adaugă împrumut",font=("Helvetica",13),bg="#F1BDB0",fg="#5E3205",command=imprumut_nou).pack(side=LEFT,padx=3)
     
     window.mainloop()
 
@@ -860,6 +866,9 @@ carti.place(relx=0,rely=0.5,anchor=W,)
 elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
+data_azi=str(date.today())
+data_ora=Label(canvas,text=data_azi,width=10,height=3,font=("Helvetica",20),bg="#d4a878",fg="brown")
+data_ora.place(relx=0.9,rely=0.99,anchor=SW,)
 
 
 
