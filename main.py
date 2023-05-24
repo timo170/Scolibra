@@ -218,7 +218,7 @@ def stergere():
     sql="delete from carti where Cod=%s;"
     cursor.execute(sql,parametri)
     cell=str(cell)
-    showinfo("I nfo","Ați șters cartea cu codul "+cell )
+    showinfo("Info","Ați șters cartea cu codul "+cell )
     mydb.commit()
 
 
@@ -378,6 +378,7 @@ def imprumut():
     window=Tk()
     
     window.resizable(0,0)
+    window.config(background="#ece5e0")
     window.iconbitmap('carti_i.ico')
     window.title('Cărți împrumutate')
     
@@ -851,7 +852,6 @@ frame1=Frame(canvas,width=850,height=450)
 frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
 
 imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
-#imprumuturi=customtkinter.CTkButton(master=frame1, image=add_folder_image ,text=" ",width=80,height=6,font=("Comic Sans",15),compound="top",command=imprumut)
 imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
 carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=search)
@@ -860,9 +860,7 @@ carti.place(relx=0,rely=0.5,anchor=W,)
 elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
-#Image = ImageTk.PhotoImage(Image.open("lista_e.png").resize((1180,440),Image.ANTIALIAS))
-#Button = canvas.create_image(960, 540 , image=Image)
-#canvas.tag_bind(Button, "<Button-1>", )
+
 
 
 root.mainloop()
