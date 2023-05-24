@@ -207,7 +207,7 @@ def stergere():
     sql="delete from carti where Cod=%s;"
     cursor.execute(sql,parametri)
     cell=str(cell)
-    showinfo("info","Ați șters cartea cu codul "+cell )
+    showinfo("I nfo","Ați șters cartea cu codul "+cell )
     mydb.commit()
 
 
@@ -349,7 +349,7 @@ def imprumut():
         sql="delete from imprumuturi where COD_IMPRUMUT=%s;"
         cursor.execute(sql,parametri)
         
-        showinfo("info","Cartea a fost restituita.")
+        showinfo("info","Cartea a fost restituită.")
         window.destroy()
         mydb.commit()
         
@@ -366,7 +366,7 @@ def imprumut():
     tabel=ttk.Treeview(window,columns=coloane,show="headings")
     tabel.pack()
 
-    adus=Button(window,text="Returnata",bg="green",fg="white",font=("Helvetica",12),command=returnata)
+    adus=Button(window,text="Returnată",bg="green",fg="white",font=("Helvetica",12),command=returnata)
     adus.pack()
 
     tabel.heading(0,text='COD IMPRUMUT')
@@ -433,7 +433,7 @@ def abonati():
         sql="delete from abonati where Cod_abonat=%s;"
         cursor.execute(sql,parametri)
         cell=str(cell)
-        showinfo("info","Ati sters elevul cu codul "+cell )
+        showinfo("Info","Ați șters elevul cu codul "+cell )
         mydb.commit()
         window.lift()
 
@@ -482,7 +482,7 @@ def abonati():
                 
 
             except Exception:   # afisarea erorii
-                messagebox.showerror(title="Eroare",message = "Codul introdus este deja inregistrat in baza de date")
+                messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat in baza de date")
                 window.lift()
         
             Cod_entry.focus()
@@ -743,14 +743,16 @@ def abonati():
 
 #FEREASTRA PRINCIPALA
 
-root = customtkinter.CTk()
+root = Tk()
 root.geometry('1920x1080')
 root.title('Școlibra')
 root.iconbitmap('iconbitmap_principal.ico')
 root.resizable(0,0)
 
+def quitGame(event):
+    print("ce frumos easste")
 
-add_folder_image = ImageTk.PhotoImage(Image.open(r"test1.png").resize((620,200), Image.ANTIALIAS))
+add_folder_image = ImageTk.PhotoImage(Image.open(r"test1.png").resize((880,180), Image.ANTIALIAS))
 #button_1 = customtkinter.CTkButton(master=root, image=add_folder_image, text="Add Folder", width=190, height=40, compound="top")
 #button_1.pack(pady=20, padx=20)
 
@@ -781,11 +783,11 @@ citat=Label(frame,text=citate,height=400,width=800,font=("Comic Sans MS",16),bg=
 citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-frame1=Frame(canvas,width=600,height=350)
+frame1=Frame(canvas,width=850,height=450)
 frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
 
-#imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
-imprumuturi=customtkinter.CTkButton(master=frame1, image=add_folder_image ,text="Cărți împrumutate",width=500,height=150,font=("Comic Sans",15),compound="right",command=imprumut)
+imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
+#imprumuturi=customtkinter.CTkButton(master=frame1, image=add_folder_image ,text=" ",width=80,height=6,font=("Comic Sans",15),compound="top",command=imprumut)
 imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
 carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=search)
@@ -794,7 +796,9 @@ carti.place(relx=0,rely=0.5,anchor=W,)
 elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
-
+#Image = ImageTk.PhotoImage(Image.open("lista_e.png").resize((1180,440),Image.ANTIALIAS))
+#Button = canvas.create_image(960, 540 , image=Image)
+#canvas.tag_bind(Button, "<Button-1>", )
 
 
 root.mainloop()
