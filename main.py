@@ -636,7 +636,7 @@ def abonati():
             Cod=int(var.split('/')[0])
         
 
-            sql="SELECT * FROM abonati WHERE Cod={} ;".format(Cod)
+            sql="SELECT * FROM abonati WHERE Cod_abonat={} ;".format(Cod)
             cursor.execute(sql,)
             records = cursor.fetchall()
         
