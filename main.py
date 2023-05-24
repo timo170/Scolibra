@@ -383,10 +383,11 @@ def imprumut():
     window.resizable(0,0)
     window.config(background="#ece5e0")
     window.iconbitmap('carti_i.ico')
+    window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
     
     w = 1500 
-    h = 1000
+    h = 750
 
     ws = window.winfo_screenwidth() 
     hs = window.winfo_screenheight()
@@ -397,10 +398,10 @@ def imprumut():
 
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6]
-    tabel=ttk.Treeview(window,columns=coloane,show="headings")
+    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
     tabel.pack()
 
-    adus=Button(window,text="Returnată",bg="green",fg="white",font=("Helvetica",12),command=returnata)
+    adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",20),command=returnata)
     adus.pack()
 
     tabel.heading(0,text='COD IMPRUMUT')
