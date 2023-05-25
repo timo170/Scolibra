@@ -838,7 +838,7 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
 
 #imaginea pentru fundalul canvas_principala
-photo=Image.open("biblioteca.jpeg")
+photo=Image.open("biblioteca1.jpeg")
 photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
@@ -846,40 +846,40 @@ canvas=Canvas(root,width=1920,height=1080)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
 
-imglni=Image.open("lni.jpg")
+imglni=Image.open("bib.jpg")
 imglni=imglni.resize((800,400))
 imglni=ImageTk.PhotoImage(imglni)
 
 #câmpurile ferestrei
 
-frame0=Frame(canvas,height=400,width=800,bg="#F5EBE0")
+frame0=Frame(canvas,height=390,width=780,bg="#F5EBE0")
 frame0.place(relx=0,rely=0,anchor=NW)
 
-welcome=Label(frame0,image=imglni,)
+welcome=Label(frame0,image=imglni)
 welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
 frame=Frame(canvas,height=400,width=800,)
 frame.place(rely=0,relx=1,anchor=NE)
 
-citat=Label(frame,text=citate,height=400,width=800,font=("Comic Sans MS",16),bg="#F5EBE0",fg="brown" )               
+citat=Label(frame,text=citate,height=400,width=800,font=("Comic Sans MS",16),bg="#F6E1B5",fg="#805E19", )               
 citat.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-frame1=Frame(canvas,width=850,height=450)
-frame1.place(relx=0.5,rely=0.7,anchor=CENTER)
+frame1=Frame(canvas,width=780,height=400)
+frame1.place(relx=0.5,rely=0.79,anchor=CENTER)
 
-imprumuturi=Button(frame1,text="Cărți împrumutate",width=80,height=6,bg="#d4a878", activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=imprumut)
+imprumuturi=Button(frame1,text="Cărți împrumutate",width=70,height=6,bg="#F6E1B5" ,font=("Comic Sans",15),fg="#805E19",command=imprumut)
 imprumuturi.place(relx=0,rely=0,anchor=NW,)
 
-carti=Button(frame1,text="Listă cărți",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=search)
+carti=Button(frame1,text="Listă cărți",width=70,height=6,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=search)
 carti.place(relx=0,rely=0.5,anchor=W,)
 
-elevi=Button(frame1,text="Listă elevi",width=80,height=6,bg="#d4a878",activebackground="#F5EBE0",activeforeground="brown",font=("Comic Sans",15),fg="brown",command=abonati)
+elevi=Button(frame1,text="Listă elevi",width=70,height=6,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
 data_azi=str(date.today())
-data_ora=Label(canvas,text=data_azi,width=10,height=3,font=("Helvetica",20),bg="#d4a878",fg="brown")
+data_ora=Label(canvas,text=data_azi,width=10,height=3,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19")
 data_ora.place(relx=0.9,rely=0.99,anchor=SW,)
 
 
