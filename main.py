@@ -488,9 +488,10 @@ def abonati():
 
     def inserare():    #functia care inserează un abonat in tabelul abonatilor
         geam=Tk()   # fereastra adaugare abonati
-        geam.resizable(0,0)
         geam.configure(background="#FFDFBA")
-        geam.title("Adăugare")
+        geam.resizable(0,0)
+      
+        geam.title("Inserare elevi")
         
 
         w = 300
@@ -537,7 +538,7 @@ def abonati():
                 mydb.commit()
                 showinfo(title="Info",message="Datele au fost introduse in baza de date.")
                 
-                
+    
 
             except Exception:   # afisarea erorii
                 messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat in baza de date")
