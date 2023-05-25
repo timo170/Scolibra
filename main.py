@@ -838,7 +838,7 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
 
 #imaginea pentru fundalul canvas_principala
-photo=Image.open("background.jpg")
+photo=Image.open("biblioteca.jpeg")
 photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
