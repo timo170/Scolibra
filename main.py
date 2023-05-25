@@ -206,7 +206,7 @@ def generareQR():
 
     img = qr.make_image(fill_color="black", back_color="white")
     img.save(f"{nume}.png") 
-    showinfo(title="Info",message="Fisierul a fost salvat.")
+    showinfo(title="Info",message="Fișierul a fost salvat.")
     
 
     
@@ -227,11 +227,13 @@ def stergere():
 #functia care inserează o carte in tabelul cartilor
 def inserare():
     geam=Tk()   # fereastra adaugare carti
-    geam.resizable(1,1)
+  
+    geam.configure(background="#ece5e0")
+    geam.resizable(0,0)
     geam.title("Adăugare")
 
-    w = 800 
-    h = 600
+    w = 300 
+    h = 200
 
     ws = geam.winfo_screenwidth() 
     hs = geam.winfo_screenheight()
@@ -339,7 +341,7 @@ def inserare():
     Pret_entry=Entry(canvas,)
     Pret_entry.grid(column=1,row=5,sticky=W)
 
-    salvare_btn=Button(canvas,text='Salvare',bg='red',fg='white',command=salvare)
+    salvare_btn=Button(canvas,text='Salvare',font="Helveitica,20",bg='red',fg='white',command=salvare)
     salvare_btn.grid(column=1,row=6,sticky=W)
 
     preluare()
@@ -486,11 +488,13 @@ def abonati():
 
     def inserare():    #functia care inserează un abonat in tabelul abonatilor
         geam=Tk()   # fereastra adaugare abonati
-        geam.resizable(1,1)
-        geam.title("Adaugare")
+        geam.resizable(0,0)
+        geam.configure(background="#FFDFBA")
+        geam.title("Adăugare")
+        
 
-        w = 800 
-        h = 600
+        w = 300
+        h = 200
 
         ws = window.winfo_screenwidth() 
         hs = window.winfo_screenheight()
@@ -576,7 +580,7 @@ def abonati():
 
     
 
-        salvare_btn=Button(canvas,text='Salvare',bg='red',fg='white',command=salvare)
+        salvare_btn=Button(canvas,text='Salvare',font="helvetica,20",bg='red',fg='white',command=salvare)
         salvare_btn.grid(column=1,row=6,sticky=W)
 
         
@@ -719,9 +723,12 @@ def abonati():
         data_return=str(date.today() +timedelta(days=14))
         
         win=Tk()
+        win.title("Adăugare împrumut")
+        win.configure(background="#FFDFBA")
+        win.resizable(0,0)
 
-        w = 200
-        h = 100
+        w = 300
+        h = 150
 
         ws = root.winfo_screenwidth() 
         hs = root.winfo_screenheight()
@@ -786,7 +793,7 @@ def abonati():
         
         #câmpurile ferestrei IMPRUMUT NOU
 
-        Titlu=Label(win,text="Cod carte:")
+        Titlu=Label(win,text="Cod carte:", background="#FFDFBA")
         Titlu.pack()
         Titlu_entry=Entry(win,)
         Titlu_entry.pack()
@@ -834,10 +841,6 @@ photo=Image.open("background.jpg")
 photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
-imglni=Image.open("lni.jpg")
-imglni=imglni.resize((800,400))
-imglni=ImageTk.PhotoImage(imglni)
-
 canvas=Canvas(root,width=1920,height=1080)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
@@ -848,7 +851,7 @@ canvas.create_image(0,0,image=img,anchor=NW)
 frame0=Frame(canvas,height=400,width=800,bg="#F5EBE0")
 frame0.place(relx=0,rely=0,anchor=NW)
 
-welcome=Label(frame0,image=imglni,)
+welcome=Label(frame0,text=" Biblioteca LNI \n  \n Bine ați venit!",bg="#F5EBE0",fg="brown", font=("Comic Sans MS",40))
 welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
