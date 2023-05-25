@@ -111,7 +111,7 @@ def search():
     window.title('Listă cărți')
     window.geometry('1500x1000') 
     
-    window.configure(background="#ece5e0")
+    window.configure(background="#D9CAC0")
     window.resizable(0,0)
 
     w = 1500 
@@ -130,16 +130,16 @@ def search():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",17),bg="#ece5e0",fg="#323232",anchor=E)
+    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",17),bg="#D9CAC0",fg="#5B4147",anchor=E)
     label.pack(side=LEFT)
 
-    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru generare QR
+    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",13),bg="#BB9486",fg="#5B4147") #buton pentru generare QR
     genqr.pack(side=RIGHT)
 
-    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru ștergere carte
+    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",13),bg="#BB9486",fg="#5B4147") #buton pentru ștergere carte
     sterge.pack(side=RIGHT)
 
-    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",13),bg="#ece5e0",fg="#323232") #buton pentru inserare carte
+    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",13),bg="#BB9486",fg="#5B4147") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
 
     style = ttk.Style()
