@@ -834,6 +834,10 @@ photo=Image.open("background.jpg")
 photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
+imglni=Image.open("lni.jpg")
+imglni=imglni.resize((800,400))
+imglni=ImageTk.PhotoImage(imglni)
+
 canvas=Canvas(root,width=1920,height=1080)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
@@ -844,7 +848,7 @@ canvas.create_image(0,0,image=img,anchor=NW)
 frame0=Frame(canvas,height=400,width=800,bg="#F5EBE0")
 frame0.place(relx=0,rely=0,anchor=NW)
 
-welcome=Label(frame0,text=" Biblioteca LNI \n  \n Bine ați venit!",bg="#F5EBE0",fg="brown", font=("Comic Sans MS",40))
+welcome=Label(frame0,image=imglni,)
 welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
