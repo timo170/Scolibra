@@ -228,9 +228,9 @@ def stergere():
 def inserare():
     geam=Tk()   # fereastra adaugare carti
   
-    geam.configure(background="#ece5e0")
+    geam.configure(background="#c7d3d4")
     geam.resizable(0,0)
-    geam.title("Adăugare")
+    geam.title("Adaugă carte")
 
     w = 300 
     h = 200
@@ -242,7 +242,7 @@ def inserare():
     y = (hs/2) - (h/2)
     geam.geometry('%dx%d+%d+%d' % (w, h, x, y))
     
-    canvas=Canvas(geam,width=1920,height=1080)
+    canvas=Canvas(geam,width=1920,height=1080,background="#c7d3d4")
     canvas.pack(expand=True,fill=BOTH)
     canvas.columnconfigure(0,weight=1)
     canvas.columnconfigure(1,weight=3)
@@ -296,7 +296,7 @@ def inserare():
             cursor.execute(sql,values)
             mydb.commit()
         except Exception:   # afisarea erorii
-            messagebox.showerror(title="Eroare",message = "Codul introdus este deja inregistrat in baza de date")
+            messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat în baza de date.")
         
         Cod_entry.focus()
 
@@ -305,37 +305,37 @@ def inserare():
                                     
 
     #campurile ferestrei
-    Cod=Label(canvas,text="Cod:")
+    Cod=Label(canvas,text="Cod:",bg="#c7d3d4")
     Cod.grid(column=0,row=0,sticky=EW)
 
     Cod_entry=Entry(canvas,)
     Cod_entry.grid(column=1,row=0,sticky=W)
 
-    Autor=Label(canvas,text="Autor:")
+    Autor=Label(canvas,text="Autor:",bg="#c7d3d4")
     Autor.grid(column=0,row=1,sticky=EW)
 
     Autor_entry=Entry(canvas,)
     Autor_entry.grid(column=1,row=1,sticky=W)
 
-    Titlu=Label(canvas,text="Titlu:")
+    Titlu=Label(canvas,text="Titlu:",bg="#c7d3d4")
     Titlu.grid(column=0,row=2,sticky=EW)
 
     Titlu_entry=Entry(canvas,)
     Titlu_entry.grid(column=1,row=2,sticky=W)
 
-    Editura=Label(canvas,text="Editura:")
+    Editura=Label(canvas,text="Editura:",bg="#c7d3d4")
     Editura.grid(column=0,row=3,sticky=EW)
 
     Editura_entry=Entry(canvas,)
     Editura_entry.grid(column=1,row=3,sticky=W)
 
-    An=Label(canvas,text="An:")
+    An=Label(canvas,text="An:",bg="#c7d3d4")
     An.grid(column=0,row=4,sticky=EW)
 
     An_entry=Entry(canvas,)
     An_entry.grid(column=1,row=4,sticky=W)
 
-    Pret=Label(canvas,text="Pret:")
+    Pret=Label(canvas,text="Pret:",bg="#c7d3d4")
     Pret.grid(column=0,row=5,sticky=EW)
 
     Pret_entry=Entry(canvas,)
@@ -846,7 +846,7 @@ canvas=Canvas(root,width=1920,height=1080)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
 
-imglni=Image.open("bib.jpg")
+imglni=Image.open("lni.jpg")
 imglni=imglni.resize((800,400))
 imglni=ImageTk.PhotoImage(imglni)
 
