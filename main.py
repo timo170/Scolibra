@@ -111,7 +111,7 @@ def search():
     window.title('Listă cărți')
     window.geometry('1500x1000') 
     
-    window.configure(background="#D9CAC0")
+    window.configure(background="#c7d3d4")
     window.resizable(0,0)
 
     w = 1500 
@@ -130,16 +130,16 @@ def search():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",17),bg="#D9CAC0",fg="#5B4147",anchor=E)
+    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",21),bg="#c7d3d4",fg="black",anchor=E)
     label.pack(side=LEFT)
 
-    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",13),bg="#BB9486",fg="#5B4147") #buton pentru generare QR
+    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru generare QR
     genqr.pack(side=RIGHT)
 
-    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",13),bg="#BB9486",fg="#5B4147") #buton pentru ștergere carte
+    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru ștergere carte
     sterge.pack(side=RIGHT)
 
-    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",13),bg="#BB9486",fg="#5B4147") #buton pentru inserare carte
+    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
 
     style = ttk.Style()
@@ -155,7 +155,7 @@ def search():
     filtru['state']='readonly'
 
 
-    caseta=Entry(window,font=("Helvetica",20),fg="#323232",width=93)  #bara de căutare
+    caseta=Entry(window,font=("Helvetica",20),fg="black",width=93)  #bara de căutare
     caseta.pack(anchor=CENTER,padx=5)
     
     
@@ -664,7 +664,7 @@ def abonati():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,text="Caută după:",font=("Helvetica",17),bg="#FFDFBA",fg="#5E3205")
+    label=Label(frame3,text="Caută după:",font=("Helvetica",18),bg="#FFDFBA",fg="#5E3205")
     label.pack(side=LEFT)
 
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
@@ -794,15 +794,15 @@ def abonati():
         
         #câmpurile ferestrei IMPRUMUT NOU
 
-        Titlu=Label(win,text="Cod carte:", background="#FFDFBA")
+        Titlu=Label(win,text="Cod carte:", background="#FFDFBA",font="Helvetica,16")
         Titlu.pack()
-        Titlu_entry=Entry(win,)
+        Titlu_entry=Entry(win,font="Helvetica,20")
         Titlu_entry.pack()
 
-        codqr=Button(win,text="QR",bg="green",fg="white",command=verif)
+        codqr=Button(win,text="QR",font="Helvetica,16",bg="green",fg="white",command=verif)
         codqr.pack()
 
-        salvare_btn=Button(win,text='Salvare',bg='red',fg='white',command=save_imprumut)
+        salvare_btn=Button(win,text='Salvare',font="Helvetica,16",bg='red',fg='white',command=save_imprumut)
         salvare_btn.pack()
 
         win.mainloop()
