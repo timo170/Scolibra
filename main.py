@@ -875,7 +875,7 @@ imprumuturi.place(relx=0,rely=0,anchor=NW,)
 carti=Button(frame1,text="Listă cărți",width=70,height=6,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=search)
 carti.place(relx=0,rely=0.5,anchor=W,)
 
-elevi=Button(frame1,text="Listă elevi",width=70,height=6,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=abonati)
+elevi=Button(frame1,text="Listă elevi",width=70,height=5,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=abonati)
 elevi.place(relx=0,rely=1,anchor=SW)
 
 data_azi=str(date.today())
