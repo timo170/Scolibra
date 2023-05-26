@@ -468,7 +468,7 @@ def abonati():
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
-        img.save(f"C:\\Users\\PC\\Desktop/{nume}.png") 
+        img.save(f"{nume}.png") 
         showinfo(title="Info",message="Fișierul a fost salvat.")
         window.lift()
 
