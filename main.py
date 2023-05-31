@@ -7,9 +7,9 @@ from tkinter import messagebox
 from tkinter.messagebox import showinfo,showerror
 import qrcode
 import cv2
+import pywhatkit as kit
 from pyzbar.pyzbar import decode 
-from datetime import date,timedelta
-import customtkinter
+from datetime import datetime,date,timedelta
 
 
 #conectare la baza de date
@@ -163,6 +163,12 @@ def search():
     global tree
     coloane=(0,1,2,3,4,5,6)
     tree=ttk.Treeview(window,columns=coloane,show='headings',height=43) #tabelul cu afișări
+    scrollbar = Scrollbar(window)
+    scrollbar.pack(side=RIGHT,fill=Y)
+
+    # configurare Scrollbar
+    scrollbar.configure(command=tree.yview)
+    tree.configure(yscrollcommand=scrollbar.set)
     tree.pack()
 
     tree.heading(0,text='COD')
@@ -377,7 +383,21 @@ def imprumut():
         showinfo("info","Cartea a fost restituită.")
         window.destroy()
         mydb.commit()
-        
+    
+    def mesaj():
+        now = datetime.now()
+        minut = int(now.strftime("%M"))+1
+        ora = now.strftime("%H")
+        numere = ["+40738231065","+40756528688"]
+        for i in range(2):
+            try:
+                kit.sendwhatmsg(numere[i],"NU O DAI CU PGM",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
+                print(minut)
+                minut=int(minut)+1
+                print (minut)
+
+            except:
+                print("Teapa ca nu mere")  
         
 
     window=Tk()
@@ -405,6 +425,9 @@ def imprumut():
 
     adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",20),command=returnata)
     adus.pack()
+
+    msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",20),command=mesaj)
+    msj_elev.pack()
 
     tabel.heading(0,text='COD IMPRUMUT')
     tabel.heading(1,text='COD ABONAT')
@@ -537,6 +560,8 @@ def abonati():
                 cursor.execute(sql,values)
                 mydb.commit()
                 showinfo(title="Info",message="Datele au fost introduse in baza de date.")
+            
+                
                 
     
 
