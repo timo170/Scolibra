@@ -1,3 +1,4 @@
+from ctypes.wintypes import tagSIZE
 from tkinter import *
 import random
 import mysql.connector
@@ -10,6 +11,7 @@ import cv2
 import pywhatkit as kit
 from pyzbar.pyzbar import decode 
 from datetime import datetime,date,timedelta
+from sqlalchemy import create_engine
 
 
 #conectare la baza de date
@@ -52,7 +54,7 @@ def search():
         sql="SELECT * FROM carti WHERE {} LIKE '{}' ;".format(criteriu,cuv)
         cursor.execute(sql,)
         records = cursor.fetchall()
-        
+    
         recor=[]
         for x in records:
             list1=(x[0],x[1], x[2],
@@ -66,7 +68,7 @@ def search():
         stergere_elemente_arbore()
         for record in records:
             tree.insert('', 0, values=record)
-
+            
 
         
     def cauta_QR():    #funcția care face căutarea în funcție de codul stocat în codul QR
@@ -170,7 +172,7 @@ def search():
     scrollbar.configure(command=tree.yview)
     tree.configure(yscrollcommand=scrollbar.set)
     tree.pack()
-
+   
     tree.heading(0,text='COD')
     tree.heading(1,text='AUTOR')
     tree.heading(2,text='TITLU')
@@ -178,20 +180,25 @@ def search():
     tree.heading(4,text='ANUL_APARITIEI')
     tree.heading(5,text='PRET')
     tree.heading(6,text='STARE')
-
+    tabel.tag_configure('liberă',background='green')
+    tabel.tag_configure('împrumutată',background='red')
     #inserare în tabel din baza de date
     q="Select * from carti"
-    cursor.execute(q)
+    cursor.execute(q) 
+   
     result=cursor.fetchall()
     date=[]
     for x in result:
         list1=(x[0],x[1], x[2],x[3],x[4],x[5],x[6])
         date.append(list1)
     
+
+    my_tag = 'normal'
     for rand in date:
-        tree.insert('',END,values=rand)
+        my_tag ='liberă' if rand[6]=='liberă' else 'împrumutată' 
+        tree.insert("", 'end',
+               values =(rand[0],rand[1],rand[2],rand[3],rand[4],rand[5],rand[6]), tags=(my_tag))
     
-            
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
     window.mainloop()
@@ -436,7 +443,7 @@ def imprumut():
     tabel.heading(4,text='COD CARTE')
     tabel.heading(5,text='DATA IMPRUMUTULUI')
     tabel.heading(6,text='DATA RETURNARII')
-
+    
     q="Select * from imprumuturi"
     cursor.execute(q)
     result=cursor.fetchall()
@@ -716,18 +723,19 @@ def abonati():
     tabel.heading(3,text='CLASA')
     tabel.heading(4,text='DATA ABONARII')
     
+  
 
     q="Select * from abonati"
     cursor.execute(q)
     result=cursor.fetchall()
-
     datele=[]
     for x in result:
         list1=(x[0],x[1], x[2],
               x[3],
               x[4],)
         datele.append(list1)
-    for rand in datele:
+    for rand in datele: 
+        
         tabel.insert('',END,values=rand)
 
     
