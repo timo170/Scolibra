@@ -1,0 +1,22 @@
+import pywhatkit as kit
+
+numere=["+40756528688","+40750726482"]
+
+minut=23
+
+
+
+for i in range(2):
+    try:
+        kit.sendwhatmsg(numere[i],"Vorbeste frumos, puisor!",19,minut,wait_time=12,tab_close=True,close_time=2)
+        minut+=1
+
+        
+    except:
+        print("exception")
+
+#fereastra pop-up: Mesajele au fost trimise
+#scroll_bar
+#culori in treeview, fonturi text
+#buton in treeviwe care imi arata nr de bucati libere, iar prin apasare imi arata codurile acelor carti
+#culori pt cartile imprumutate care au depasit termenul
