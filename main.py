@@ -11,7 +11,6 @@ import cv2
 import pywhatkit as kit
 from pyzbar.pyzbar import decode 
 from datetime import datetime,date,timedelta
-from sqlalchemy import create_engine
 
 
 #conectare la baza de date
@@ -180,8 +179,7 @@ def search():
     tree.heading(4,text='ANUL_APARITIEI')
     tree.heading(5,text='PRET')
     tree.heading(6,text='STARE')
-    tabel.tag_configure('liberă',background='green')
-    tabel.tag_configure('împrumutată',background='red')
+    
     #inserare în tabel din baza de date
     q="Select * from carti"
     cursor.execute(q) 
@@ -192,12 +190,7 @@ def search():
         list1=(x[0],x[1], x[2],x[3],x[4],x[5],x[6])
         date.append(list1)
     
-
-    my_tag = 'normal'
-    for rand in date:
-        my_tag ='liberă' if rand[6]=='liberă' else 'împrumutată' 
-        tree.insert("", 'end',
-               values =(rand[0],rand[1],rand[2],rand[3],rand[4],rand[5],rand[6]), tags=(my_tag))
+    
     
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
@@ -443,23 +436,42 @@ def imprumut():
     tabel.heading(4,text='COD CARTE')
     tabel.heading(5,text='DATA IMPRUMUTULUI')
     tabel.heading(6,text='DATA RETURNARII')
+    tabel.tag_configure('limita',background='yellow',)
+    tabel.tag_configure('trecut',background='red',foreground="white")
     
+   
+    stergere_elemente_tabel()
+
     q="Select * from imprumuturi"
     cursor.execute(q)
     result=cursor.fetchall()
 
-    date=[]
+    datele=[]
     for x in result:
         list1=(x[0],x[1], x[2],
               x[3],
               x[4],
               x[5],x[6],)
-        date.append(list1)
-    
-    stergere_elemente_tabel()
+        datele.append(list1)
 
-    for rand in date:
-        tabel.insert('',END,values=rand)
+    
+
+    for rand in datele:
+        
+        if date.today()>rand[6]:
+            print("ai intarziat")
+            my_tag='trecut'
+        else: 
+            if date.today()+timedelta(days=4)> rand[6]:
+                print("cartea trebuie restituita pana in " + str(rand[6]))
+                my_tag='limita'
+            
+
+        tabel.insert('',END,values=rand,tags=my_tag)
+    
+    
+
+    
     
     
 
