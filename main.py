@@ -11,7 +11,6 @@ import cv2
 import pywhatkit as kit
 from pyzbar.pyzbar import decode 
 from datetime import datetime,date,timedelta
-from sqlalchemy import create_engine
 
 
 #conectare la baza de date
@@ -180,8 +179,7 @@ def search():
     tree.heading(4,text='ANUL_APARITIEI')
     tree.heading(5,text='PRET')
     tree.heading(6,text='STARE')
-    tabel.tag_configure('liberă',background='green')
-    tabel.tag_configure('împrumutată',background='red')
+    
     #inserare în tabel din baza de date
     q="Select * from carti"
     cursor.execute(q) 
@@ -192,12 +190,7 @@ def search():
         list1=(x[0],x[1], x[2],x[3],x[4],x[5],x[6])
         date.append(list1)
     
-
-    my_tag = 'normal'
-    for rand in date:
-        my_tag ='liberă' if rand[6]=='liberă' else 'împrumutată' 
-        tree.insert("", 'end',
-               values =(rand[0],rand[1],rand[2],rand[3],rand[4],rand[5],rand[6]), tags=(my_tag))
+    
     
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
@@ -396,15 +389,27 @@ def imprumut():
         minut = int(now.strftime("%M"))+1
         ora = now.strftime("%H")
         numere = ["+40738231065","+40756528688"]
-        for i in range(2):
+        for i in range(len(numere0)):
             try:
-                kit.sendwhatmsg(numere[i],"NU O DAI CU PGM",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
-                print(minut)
+                kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
                 minut=int(minut)+1
-                print (minut)
+                
 
             except:
-                print("Teapa ca nu mere")  
+                print("Teapa ca nu mere")
+                showerror(title='Eroare', message='A apărut o eroare la împrumuturile trecute de termen!')
+        
+        for i in range(len(numere1)):
+            try:
+                kit.sendwhatmsg(numere1[i][0],f"Data limită împrumutului este {numere1[i][1]}.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
+                minut=int(minut)+1
+                
+
+            except:
+                print("Teapa ca nu mere")
+                showerror(title='Eroare', message='A apărut o eroare la împrumuturile în perioadă!')
+        
+        showinfo(title="Info",message="Abonații au fost notificați.") 
         
 
     window=Tk()
@@ -415,7 +420,7 @@ def imprumut():
     window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
     
-    w = 1500 
+    w = 1600 
     h = 750
 
     ws = window.winfo_screenwidth() 
@@ -426,7 +431,7 @@ def imprumut():
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     #câmpurile ferestrei
-    coloane=[0,1,2,3,4,5,6]
+    coloane=[0,1,2,3,4,5,6,7]
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
     tabel.pack()
 
@@ -443,23 +448,51 @@ def imprumut():
     tabel.heading(4,text='COD CARTE')
     tabel.heading(5,text='DATA IMPRUMUTULUI')
     tabel.heading(6,text='DATA RETURNARII')
+    tabel.heading(7,text='TELEFON')
+    tabel.tag_configure('limita',background='yellow',)
+    tabel.tag_configure('trecut',background='red',foreground="white")
     
+   
+    stergere_elemente_tabel()
+
     q="Select * from imprumuturi"
     cursor.execute(q)
     result=cursor.fetchall()
 
-    date=[]
+    datele=[]
     for x in result:
         list1=(x[0],x[1], x[2],
               x[3],
               x[4],
-              x[5],x[6],)
-        date.append(list1)
-    
-    stergere_elemente_tabel()
+              x[5],x[6],x[7])
+        datele.append(list1)
 
-    for rand in date:
-        tabel.insert('',END,values=rand)
+    global numere0,numere1
+    numere0=[]
+    numere1=[]
+    for rand in datele:
+        
+        if date.today()>rand[6]:
+            print("ai intarziat")
+            my_tag='trecut'
+            numere0.append([rand[7],rand[6]])
+            
+        else: 
+            if date.today()+timedelta(days=4)> rand[6]:
+                print("cartea trebuie restituita pana in " + str(rand[6]))
+                my_tag='limita'
+                numere1.append([rand[7],rand[6]])
+            
+            else:
+                my_tag='normal'
+                
+            
+        
+        tabel.insert('',END,values=rand,tags=my_tag)
+    
+    
+
+    
     
     
 
@@ -510,7 +543,7 @@ def abonati():
         sql="delete from abonati where Cod_abonat=%s;"
         cursor.execute(sql,parametri)
         cell=str(cell)
-        showinfo("Info","Ați șters elevul cu codul "+cell )
+        showinfo("Info","Ați șters abonatul cu codul "+cell )
         mydb.commit()
         window.lift()
 
@@ -542,27 +575,29 @@ def abonati():
 
         
         def preluare():       #functia de preluare a informatiilor despre un abonat
-            Cod_entry.focus()
-            def log(event):
+            
+            
                 Nume_entry.focus()
                 def log1(event):
                     Prenume_entry.focus()
                     def log2(event):
                         Clasa_entry.focus()
-                        
+                        def log3(event):
+                            Telefon_entry.focus()
+                        Clasa_entry.bind('<Return>',log3)    
 
                     Prenume_entry.bind('<Return>',log2)
 
                 Nume_entry.bind('<Return>',log1)
         
-            Cod_entry.bind('<Return>',log)
+            
 
 
         def salvare():      #functia care salvează datele unui abonat in baza de date
 
             data_azi=str(date.today())
-            sql="INSERT INTO abonati(Cod_abonat,Nume,Prenume,Clasa,Data_abonarii) VALUES(%s,%s,%s,%s,%s);"
-            values=(Cod_entry.get(), Nume_entry.get(), Prenume_entry.get(), Clasa_entry.get(),data_azi )
+            sql="INSERT INTO abonati(Nume,Prenume,Clasa,Data_abonarii,Telefon) VALUES(%s,%s,%s,%s,%s);"
+            values=( Nume_entry.get(), Prenume_entry.get(), Clasa_entry.get(),data_azi,Telefon_entry.get() )
             try:
                 cursor.execute(sql,values)
                 mydb.commit()
@@ -578,7 +613,7 @@ def abonati():
                 
             window.lift()
             geam.lift()
-            Cod_entry.focus()
+            
             
              
 
@@ -587,11 +622,7 @@ def abonati():
                                   
         geam.lift() 
         #campurile ferestrei
-        Cod=Label(canvas,text="Cod:")
-        Cod.grid(column=0,row=0,sticky=EW)
-
-        Cod_entry=Entry(canvas,)
-        Cod_entry.grid(column=1,row=0,sticky=W)
+        
 
         Nume=Label(canvas,text="Nume:")
         Nume.grid(column=0,row=1,sticky=EW)
@@ -610,6 +641,12 @@ def abonati():
 
         Clasa_entry=Entry(canvas,)
         Clasa_entry.grid(column=1,row=3,sticky=W)
+
+        Telefon=Label(canvas,text="Telefon:")
+        Telefon.grid(column=0,row=4,sticky=EW)
+
+        Telefon_entry=Entry(canvas,)
+        Telefon_entry.grid(column=1,row=4,sticky=W)
 
     
 
@@ -713,7 +750,7 @@ def abonati():
     caseta.pack(side=TOP,padx=5,pady=5)
 
     global tabel
-    coloane=[0,1,2,3,4]
+    coloane=[0,1,2,3,4,5]
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
     tabel.pack()
 
@@ -722,6 +759,7 @@ def abonati():
     tabel.heading(2,text='PRENUME')
     tabel.heading(3,text='CLASA')
     tabel.heading(4,text='DATA ABONARII')
+    tabel.heading(5,text='TELEFON')
     
   
 
@@ -732,7 +770,7 @@ def abonati():
     for x in result:
         list1=(x[0],x[1], x[2],
               x[3],
-              x[4],)
+              x[4],x[5])
         datele.append(list1)
     for rand in datele: 
         
@@ -750,6 +788,7 @@ def abonati():
         cod_abonat=ite['values'][0]
         nume=ite['values'][1]
         clasa=ite['values'][3]
+        telefon=ite['values'][5]
 
         
 
@@ -805,10 +844,10 @@ def abonati():
             cursor.execute(sql2,test2)
             re=cursor.fetchall()
             if len(re)== 1:
-                cod_i=(cod_abonat+cod_carte)/2
-                sql="insert into imprumuturi values( %s,%s,%s,%s,%s,%s,%s);"
+                
+                sql="insert into imprumuturi (COD_ABONAT,NUME,CLASA,COD_CARTE,DATA_IMPRUMUT,DATA_RETURNARII,TELEFON) values(%s,%s,%s,%s,%s,%s,%s);"
             
-                test=(cod_i,cod_abonat,nume,clasa,cod_carte,data_azi,data_return)
+                test=(cod_abonat,nume,clasa,cod_carte,data_azi,data_return,telefon)
                 cursor.execute(sql,test)
 
                 sql1="update carti set Stare='împrumutată'  where Cod=%s;"

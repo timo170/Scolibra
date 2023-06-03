@@ -1,22 +1,26 @@
-import pywhatkit as kit
+from datetime import timedelta, date
 
-numere=["+40756528688","+40750726482"]
-
-minut=23
-
-
-
-for i in range(2):
-    try:
-        kit.sendwhatmsg(numere[i],"Vorbeste frumos, puisor!",19,minut,wait_time=12,tab_close=True,close_time=2)
-        minut+=1
-
-        
-    except:
-        print("exception")
 
 #fereastra pop-up: Mesajele au fost trimise
 #scroll_bar
 #culori in treeview, fonturi text
 #buton in treeviwe care imi arata nr de bucati libere, iar prin apasare imi arata codurile acelor carti
 #culori pt cartile imprumutate care au depasit termenul
+
+
+ret=date.today()+timedelta(1)
+print(type(ret))
+
+
+if date.today()>ret:
+        print("ai intarziat")
+else: 
+    if date.today()+timedelta(days=4)> ret:
+        print("cartea trebuie restituita pana in " + str(ret))
+    else:
+         print("ok")
+
+        
+    
+
+
