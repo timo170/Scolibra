@@ -14,24 +14,27 @@
 
 -- Dumping structure for table biblioteca.abonati
 CREATE TABLE IF NOT EXISTS `abonati` (
-  `Cod_abonat` int(11) NOT NULL,
+  `Cod_abonat` int(11) NOT NULL AUTO_INCREMENT,
   `Nume` varchar(10) DEFAULT NULL,
   `Prenume` varchar(20) DEFAULT NULL,
   `Clasa` varchar(50) DEFAULT NULL,
   `Data_abonarii` date DEFAULT NULL,
+  `Telefon` varchar(13) DEFAULT NULL,
+  PRIMARY KEY (`Cod_abonat`),
   UNIQUE KEY `Cod_abonat` (`Cod_abonat`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.abonati: ~6 rows (approximately)
+-- Dumping data for table biblioteca.abonati: ~7 rows (approximately)
 DELETE FROM `abonati`;
 /*!40000 ALTER TABLE `abonati` DISABLE KEYS */;
-INSERT INTO `abonati` (`Cod_abonat`, `Nume`, `Prenume`, `Clasa`, `Data_abonarii`) VALUES
-	(100, 'Moria', 'Vlad', '9C', '2023-04-10'),
-	(101, 'Conta', 'Maria', '9B', '2023-04-01'),
-	(102, 'Anur', 'Cora', '10B', '2023-04-05'),
-	(103, 'Faur', 'Vlad', '8D', '2023-05-24'),
-	(104, 'Comtim', 'Ale', '11A', '2023-05-24'),
-	(105, 'Riga', 'Onisifor', '7C', '2023-05-24');
+INSERT INTO `abonati` (`Cod_abonat`, `Nume`, `Prenume`, `Clasa`, `Data_abonarii`, `Telefon`) VALUES
+	(100, 'Moria', 'Vlad', '9C', '2023-04-10', '+40731321321'),
+	(101, 'Conta', 'Maria', '9B', '2023-04-01', '+40732432123'),
+	(102, 'Anur', 'Cora', '10B', '2023-04-05', '+40721123123'),
+	(103, 'Faur', 'Vlad', '8D', '2023-05-24', '+40734345456'),
+	(104, 'Comtim', 'Ale', '11A', '2023-05-24', '+40789456567'),
+	(105, 'Riga', 'Onisifor', '7C', '2023-05-24', '+40738456876'),
+	(106, 'Vranc', 'Moni', '9B', '2023-06-03', '+40723124567');
 /*!40000 ALTER TABLE `abonati` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.carti
@@ -43,19 +46,19 @@ CREATE TABLE IF NOT EXISTS `carti` (
   `Anul_aparitiei` smallint(6) DEFAULT NULL,
   `Pret` decimal(20,3) unsigned DEFAULT NULL,
   `Stare` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`Cod`)
+  PRIMARY KEY (`Cod`),
+  UNIQUE KEY `Cod` (`Cod`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.carti: ~93 rows (approximately)
+-- Dumping data for table biblioteca.carti: ~92 rows (approximately)
 DELETE FROM `carti`;
 /*!40000 ALTER TABLE `carti` DISABLE KEYS */;
 INSERT INTO `carti` (`Cod`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pret`, `Stare`) VALUES
 	(35608, 'Jules Verne', 'Steaua Sudului', 'Ion Creangă', 1984, 13.000, 'liberă'),
-	(39327, 'William Jewesbury', 'David Copperfield-adaptată', 'Macmillan', 1962, 15.000, 'liberă'),
 	(39577, 'Cristian Teodorescu', 'Tainele inimei', 'Cartea Românească', 2005, 22.500, 'liberă'),
-	(39666, 'Marin Preda', 'Cel mai iubit dintre pământeni vol.1', 'Cartex', 2006, 32.348, 'liberă'),
-	(39667, 'Marin Preda', 'Cel mai iubit dintre pământeni vol.2', 'Cartex', 2006, 32.348, 'liberă'),
-	(39668, 'Marin Preda', 'Cel mai iubit dintre pământeni vol.3', 'Cartex', 2006, 32.348, 'liberă'),
+	(39666, 'Marin Preda', 'Cel mai iubit dintre pământeni vol.1', 'Cartex', 2006, 32.348, 'împrumutată'),
+	(39667, 'Marin Preda', 'Cel mai iubit dintre pământeni vol.2', 'Cartex', 2006, 32.348, 'împrumutată'),
+	(39668, 'Marin Preda', 'Cel mai iubit dintre pământeni vol.3', 'Cartex', 2006, 32.348, 'împrumutată'),
 	(39694, 'Vasile Voiculescu', 'Nuvele și povestiri', 'Cartex', 2006, 9.027, 'liberă'),
 	(39724, 'Mihai Eminescu', 'Poezii', 'Cartex', 2006, 6.018, 'liberă'),
 	(39743, 'Mircea Eliade', 'Maitrey', 'Cartex', 2006, 10.908, 'liberă'),
@@ -67,9 +70,9 @@ INSERT INTO `carti` (`Cod`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pret
 	(39855, 'Ioan Slavici', 'Mara', 'Vox', 2006, 3.096, 'liberă'),
 	(39899, 'Mihai Eminescu', 'Pagini alese', 'Vox', 2006, 3.096, 'liberă'),
 	(39918, 'Alexandru Mitru', 'Din marile legende ale lumii vol.1', 'Vox', 2012, 12.042, 'liberă'),
-	(40328, 'Adrian Neculau', 'Educația Adulților', 'Polirom', 2004, 17.900, 'liberă'),
-	(40329, 'Robert J. Sternberg', 'Manual de creativitate', 'Polirom', 2005, 20.710, 'liberă'),
-	(40330, 'Robert J. Sternberg', 'Manual de creativitate', 'Polirom', 2005, 20.710, 'liberă'),
+	(40328, 'Adrian Neculau', 'Educația Adulților', 'Polirom', 2004, 17.900, 'împrumutată'),
+	(40329, 'Robert J. Sternberg', 'Manual de creativitate', 'Polirom', 2005, 20.710, 'împrumutată'),
+	(40330, 'Robert J. Sternberg', 'Manual de creativitate', 'Polirom', 2005, 20.710, 'împrumutată'),
 	(40331, 'Andre de Peretti', 'Tehnici de comunicare', 'Polirom', 2007, 32.900, 'liberă'),
 	(40332, 'Andre de Peretti', 'Tehnici de comunicare', 'Polirom', 2007, 32.900, 'liberă'),
 	(40335, 'Ioan Slavici', 'Nuvele', 'Corint', 2006, 11.990, 'liberă'),
@@ -156,31 +159,40 @@ DELETE FROM `citate`;
 /*!40000 ALTER TABLE `citate` DISABLE KEYS */;
 INSERT INTO `citate` (`Numar`, `Citate`) VALUES
 	(1, '"Cărţile sunt fiice ale cerului pogorâte pe pământ\r\nca să aline suferinţele neamului omenesc." \r\nBernardin de Saint-Pierre'),
-	(0, '"Cartea de căpătâi nu se alege, ci te îndrăgosteşti de ea." Jose Luis de Vilallonga'),
-	(2, '"Chiar şi cărţile rele sunt cărţi, prin urmare ele sunt sacre." Gunter Grass'),
-	(3, '"Cărţile sunt amantele singuraticilor." Teodor Burnar'),
+	(0, '"Cartea de căpătâi nu se alege, ci te îndrăgosteşti de ea." \r\nJose Luis de Vilallonga'),
+	(2, '"Chiar şi cărţile rele sunt cărţi, prin urmare ele sunt sacre." \r\nGunter Grass'),
+	(3, '"Cărţile sunt amantele singuraticilor." \r\nTeodor Burnar'),
 	(4, '"Cărţile sunt un refugiu, un fel de refugiu monahal,\r\nfaţă de vulgarităţile lumii reale." \r\nWalter Pater'),
-	(5, '"Cei înţelepţi sunt întotdeauna deasupra cărţilor." Samuel Daniel'),
+	(5, '"Cei înţelepţi sunt întotdeauna deasupra cărţilor." \r\nSamuel Daniel'),
 	(6, '"Nu există cărţi morale sau cărţi imorale.\r\nCărţile sunt bine scrise sau prost scrise. Asta e totul." \r\nOscar Wilde'),
-	(7, '"Cărţile te vindecă de oameni, iar oamenii de cărţi." Vladimir Ghika'),
+	(7, '"Cărţile te vindecă de oameni, iar oamenii de cărţi." \r\nVladimir Ghika'),
 	(8, '"Nimic nu este mai bun decât să aprinzi pofta şi iubirea de carte;\r\naltfel nu creşti decât măgari încărcaţi cu cărţi." \r\nMichel de Montaigne'),
-	(9, '"A şti carte nu înseamnă a şti înţelepciune." Nicolae Iorga');
+	(9, '"A şti carte nu înseamnă a şti înţelepciune." \r\nNicolae Iorga');
 /*!40000 ALTER TABLE `citate` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.imprumuturi
 CREATE TABLE IF NOT EXISTS `imprumuturi` (
-  `COD_IMPRUMUT` int(11) DEFAULT NULL,
+  `COD_IMPRUMUT` int(11) NOT NULL AUTO_INCREMENT,
   `COD_ABONAT` tinyint(4) DEFAULT NULL,
   `NUME` varchar(10) DEFAULT NULL,
   `CLASA` varchar(3) DEFAULT NULL,
   `COD_CARTE` mediumint(9) DEFAULT NULL,
   `DATA_IMPRUMUT` date DEFAULT NULL,
-  `DATA_RETURNARII` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `DATA_RETURNARII` date DEFAULT NULL,
+  `TELEFON` varchar(13) DEFAULT NULL,
+  PRIMARY KEY (`COD_IMPRUMUT`),
+  UNIQUE KEY `COD_IMPRUMUT` (`COD_IMPRUMUT`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.imprumuturi: ~0 rows (approximately)
+-- Dumping data for table biblioteca.imprumuturi: ~5 rows (approximately)
 DELETE FROM `imprumuturi`;
 /*!40000 ALTER TABLE `imprumuturi` DISABLE KEYS */;
+INSERT INTO `imprumuturi` (`COD_IMPRUMUT`, `COD_ABONAT`, `NUME`, `CLASA`, `COD_CARTE`, `DATA_IMPRUMUT`, `DATA_RETURNARII`, `TELEFON`) VALUES
+	(1, 104, 'Comtim', '11A', 39666, '2023-06-01', '2023-06-02', '+40738231065'),
+	(2, 101, 'Conta', '9B', 39667, '2023-06-01', '2023-06-03', '+40756528688'),
+	(3, 105, 'Riga', '7C', 40330, '2023-05-20', '2023-05-31', '+40738456876'),
+	(4, 102, 'Anur', '10B', 40328, '2023-06-03', '2023-06-17', '+40721123123'),
+	(5, 101, 'Conta', '9B', 40329, '2023-06-03', '2023-06-17', '+40732432123');
 /*!40000 ALTER TABLE `imprumuturi` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
