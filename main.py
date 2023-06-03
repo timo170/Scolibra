@@ -143,11 +143,8 @@ def search():
     adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
 
-    style = ttk.Style()
-    style.configure('Custom.TCombobox', background='green', foreground='green')
-    style.theme_use('clam')
 
-    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16),style='Custom.TCombobox')  #filtru (caută după)
+    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16))  #filtru (caută după)
     filtru.pack(padx=5,side=RIGHT)
 
 
@@ -157,20 +154,24 @@ def search():
 
 
     caseta=Entry(window,font=("Helvetica",20),fg="black",width=93)  #bara de căutare
-    caseta.pack(anchor=CENTER,padx=5)
+    caseta.pack(anchor=CENTER)
     
     
     
     global tree
     coloane=(0,1,2,3,4,5,6)
     tree=ttk.Treeview(window,columns=coloane,show='headings',height=43) #tabelul cu afișări
-    scrollbar = Scrollbar(window)
-    scrollbar.pack(side=RIGHT,fill=Y)
-
+    
+    
     # configurare Scrollbar
-    scrollbar.configure(command=tree.yview)
-    tree.configure(yscrollcommand=scrollbar.set)
-    tree.pack()
+    scrollbar = Scrollbar(window,orient='vertical',command=tree.yview,width=20)
+    
+    scrollbar.pack(side=RIGHT,fill='y')
+    tree.pack(side=RIGHT,padx=30,anchor=N)
+    
+    tree['yscrollcommand'] = scrollbar.set
+    
+    
    
     tree.heading(0,text='COD')
     tree.heading(1,text='AUTOR')
@@ -183,6 +184,7 @@ def search():
     #inserare în tabel din baza de date
     q="Select * from carti"
     cursor.execute(q) 
+    
    
     result=cursor.fetchall()
     date=[]
@@ -190,15 +192,17 @@ def search():
         list1=(x[0],x[1], x[2],x[3],x[4],x[5],x[6])
         date.append(list1)
     
-    
+    for rand in date:
+        tree.insert('',END,values=rand)
     
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
+   
     window.mainloop()
 
     
 
-    #funcția care generează un cod QR pentru cartea selectată
+#funcția care generează un cod QR pentru cartea selectată
 def generareQR():
     ite=tree.item(tree.focus())
     carte=""
@@ -306,10 +310,6 @@ def inserare():
         
         Cod_entry.focus()
 
-
-
-                                    
-
     #campurile ferestrei
     Cod=Label(canvas,text="Cod:",bg="#c7d3d4")
     Cod.grid(column=0,row=0,sticky=EW)
@@ -388,7 +388,7 @@ def imprumut():
         now = datetime.now()
         minut = int(now.strftime("%M"))+1
         ora = now.strftime("%H")
-        numere = ["+40738231065","+40756528688"]
+        
         for i in range(len(numere0)):
             try:
                 kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
@@ -396,7 +396,7 @@ def imprumut():
                 
 
             except:
-                print("Teapa ca nu mere")
+                
                 showerror(title='Eroare', message='A apărut o eroare la împrumuturile trecute de termen!')
         
         for i in range(len(numere1)):
@@ -406,7 +406,7 @@ def imprumut():
                 
 
             except:
-                print("Teapa ca nu mere")
+                
                 showerror(title='Eroare', message='A apărut o eroare la împrumuturile în perioadă!')
         
         showinfo(title="Info",message="Abonații au fost notificați.") 
@@ -473,13 +473,11 @@ def imprumut():
     for rand in datele:
         
         if date.today()>rand[6]:
-            print("ai intarziat")
             my_tag='trecut'
             numere0.append([rand[7],rand[6]])
             
         else: 
             if date.today()+timedelta(days=4)> rand[6]:
-                print("cartea trebuie restituita pana in " + str(rand[6]))
                 my_tag='limita'
                 numere1.append([rand[7],rand[6]])
             
