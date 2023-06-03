@@ -1,50 +1,15 @@
 Date: 1/6/2023
-Time: 13:10
+Time: 12:49
 Phone Number: +40738231065
 Message: NU O DAI CU PGM
 --------------------
 Date: 1/6/2023
-Time: 13:11
+Time: 12:50
 Phone Number: +40756528688
 Message: NU O DAI CU PGM
 --------------------
-Date: 3/6/2023
-Time: 14:17
+Date: 2/6/2023
+Time: 21:26
 Phone Number: +40738231065
 Message: NU O DAI CU PGM
---------------------
-Date: 3/6/2023
-Time: 14:18
-Phone Number: +40756528688
-Message: NU O DAI CU PGM
---------------------
-Date: 3/6/2023
-Time: 16:37
-Phone Number: +40789456567
-Message: Împrumutul a depășit data limită 2023-06-02 . Vă rog să returnați cartea/țile la bibliotecă.
---------------------
-Date: 3/6/2023
-Time: 16:38
-Phone Number: +40738456876
-Message: Împrumutul a depășit data limită 2023-05-31 . Vă rog să returnați cartea/țile la bibliotecă.
---------------------
-Date: 3/6/2023
-Time: 16:39
-Phone Number: +40732432123
-Message: Data limită împrumutului este 2023-06-03.
---------------------
-Date: 3/6/2023
-Time: 16:45
-Phone Number: +40738231065
-Message: Împrumutul a depășit data limită 2023-06-02 . Vă rog să returnați cartea/țile la bibliotecă.
---------------------
-Date: 3/6/2023
-Time: 16:46
-Phone Number: +40738456876
-Message: Împrumutul a depășit data limită 2023-05-31 . Vă rog să returnați cartea/țile la bibliotecă.
---------------------
-Date: 3/6/2023
-Time: 16:47
-Phone Number: +40756528688
-Message: Data limită împrumutului este 2023-06-03.
 --------------------

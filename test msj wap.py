@@ -1,6 +1,4 @@
 from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
 from tkinter.messagebox import showinfo,showerror
 import pywhatkit as kit
 from datetime import datetime,date,timedelta
