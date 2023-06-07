@@ -236,8 +236,6 @@ def search():
 
     result=cursor.fetchall()
 
-
-    coduri=[]
     date=[]
     for x in result:
         list1=(x[1], x[2],x[3],x[4],x[5],x[0])
@@ -353,6 +351,7 @@ def inserare():
         try:
             cursor.execute(sql,values)
             mydb.commit()
+            showinfo("Info","Cartea a fost inregistrata in baza de date.")
         except Exception:   # afisarea erorii
             messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat în baza de date.")
         

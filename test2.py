@@ -114,37 +114,32 @@ tree.heading(7,text='COD CĂRȚI LIBERE')
 tree.column('#0',minwidth=20,width=20)
     
 #inserare în tabel din baza de date
+def afisare_date():
+    com="Drop table carti2;"
 
-com="Drop table carti2;"
+    cursor.execute(com)
+    mydb.commit()
+    com="create table carti2 (SELECT COUNT(Cod),Autor,Titlu,Editura,Anul_aparitiei,Pret FROM carti GROUP BY Titlu,Autor,Editura,Anul_aparitiei,Pret);" 
+    cursor.execute(com)
+    mydb.commit()
+    com="Select * from carti2;"
+    cursor.execute(com)
 
-cursor.execute(com)
-mydb.commit()
-com="create table carti2 (SELECT COUNT(Cod),Autor,Titlu,Editura,Anul_aparitiei,Pret FROM carti GROUP BY Titlu,Autor,Editura,Anul_aparitiei,Pret);" 
-cursor.execute(com)
-mydb.commit()
-com="Select * from carti2;"
-cursor.execute(com)
-
-result=cursor.fetchall()
-
-
-coduri=[]
-date=[]
-for x in result:
-    list1=(x[1], x[2],x[3],x[4],x[5],x[0])
-    date.append(list1)
-
-
-for rand in date:
-
-    carte=tree.insert('',END,text="",values=rand)
-    
-    com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
-    val=[rand[0],rand[1],rand[2],rand[3]]
-    cursor.execute(com,val)
     result=cursor.fetchall()
-    for cod in result:
-        tree.insert(carte,END,values=("","","","","","",cod))
+    date=[]
+    for x in result:
+        list1=(x[1], x[2],x[3],x[4],x[5],x[0])
+        date.append(list1)
+
+
+    for rand in date:
+        carte=tree.insert('',END,text="",values=rand)
+        com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
+        val=[rand[0],rand[1],rand[2],rand[3]]
+        cursor.execute(com,val)
+        result=cursor.fetchall()
+        for cod in result:
+            tree.insert(carte,END,values=("","","","","","",cod))
 
 def selected(event):
     idd=tree.focus()
