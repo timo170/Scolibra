@@ -449,8 +449,8 @@ def imprumut():
     tabel.heading(5,text='DATA IMPRUMUTULUI')
     tabel.heading(6,text='DATA RETURNARII')
     tabel.heading(7,text='TELEFON')
-    tabel.tag_configure('limita',background='yellow',)
-    tabel.tag_configure('trecut',background='red',foreground="white")
+    tabel.tag_configure('limita',background='yellow',foreground='green')
+    tabel.tag_configure('trecut',background='#FF6A6A',foreground="white")
     
    
     stergere_elemente_tabel()
