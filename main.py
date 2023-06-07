@@ -29,7 +29,6 @@ citate=cursor.fetchall()
 citate = ','.join(map(str, citate[0]))
 
 
-
 #Functia care deschide LISTĂ CĂRȚI
 def search():
 
@@ -50,23 +49,31 @@ def search():
         cuvant=caseta.get()
 
         cuv=("%"+cuvant +"%")
-        sql="SELECT * FROM carti WHERE {} LIKE '{}' ;".format(criteriu,cuv)
+        sql="SELECT * FROM carti2 WHERE {} LIKE '{}' ;".format(criteriu,cuv)
         cursor.execute(sql,)
         records = cursor.fetchall()
     
-        recor=[]
+        date=[]
         for x in records:
-            list1=(x[0],x[1], x[2],
+            list1=(x[1], x[2],
                x[3],
                x[4],
                x[5],
-               x[6])
-            recor.append(list1)
+               x[0])
+            date.append(list1)
         mydb.commit()
 
         stergere_elemente_arbore()
-        for record in records:
-            tree.insert('', 0, values=record)
+        for rand in date:
+
+            carte=tree.insert('',END,text="",values=rand)
+    
+            com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
+            val=[rand[0],rand[1],rand[2],rand[3]]
+            cursor.execute(com,val)
+            result=cursor.fetchall()
+            for cod in result:
+                tree.insert(carte,END,values=("","","","","","",cod))
             
 
         
@@ -92,19 +99,51 @@ def search():
         cursor.execute(sql,)
         records = cursor.fetchall()
         
-        recor=[]
+        date=[]
         for x in records:
-            list1=(x[0],x[1], x[2],x[3],x[4],x[5],x[6])
-            recor.append(list1)
+            list1=(x[1], x[2],
+               x[3],
+               x[4],
+               x[5],"",
+               x[0])
+            date.append(list1)
         mydb.commit()
 
         stergere_elemente_arbore()
-        
-        for record in records:
-            tree.insert('', 0, values=record)
+        for rand in date:
+            tree.insert("",END,values=rand)
 
     global criteriu
     
+    #funcția care generează un cod QR pentru cartea selectată
+    def generareQR():
+        try:
+            id_cod=tree.focus()
+            id_carte=tree.parent(id_cod)
+            carte=tree.item(id_carte)
+            cod=tree.item(id_cod)["values"][6]
+            titlu=carte["values"][1]
+            autor=carte["values"][0]
+            editura=carte["values"][2]
+            an=carte["values"][3]
+            pret=carte["values"][4]
+            carte=str(cod)+'/'+str(autor)+'/'+str(titlu)+'/'+str(editura)+'/'+str(an)+'/'+str(pret)+'/'+'Biblioteca LNI'
+            carte=str(carte)
+            nume=""
+            nume='qr_'+str(cod)
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(carte.encode('utf-8'))
+            qr.make(fit=True)
+
+            img = qr.make_image(fill_color="black", back_color="white")
+            img.save(f"{nume}.png") 
+            showinfo(title="Info",message="Fișierul a fost salvat.")
+        
+        except:
+            showerror(title="Eroare",message="Selectați codul unei cărți, nu un titlu comun.")
+        window.lift()
+    
+
 
     window=Tk()
     window.resizable(1,1)
@@ -143,11 +182,8 @@ def search():
     adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
 
-    style = ttk.Style()
-    style.configure('Custom.TCombobox', background='green', foreground='green')
-    style.theme_use('clam')
 
-    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16),style='Custom.TCombobox')  #filtru (caută după)
+    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16))  #filtru (caută după)
     filtru.pack(padx=5,side=RIGHT)
 
 
@@ -157,77 +193,91 @@ def search():
 
 
     caseta=Entry(window,font=("Helvetica",20),fg="black",width=93)  #bara de căutare
-    caseta.pack(anchor=CENTER,padx=5)
+    caseta.pack(anchor=CENTER)
     
     
     
     global tree
-    coloane=(0,1,2,3,4,5,6)
-    tree=ttk.Treeview(window,columns=coloane,show='headings',height=43) #tabelul cu afișări
-    scrollbar = Scrollbar(window)
-    scrollbar.pack(side=RIGHT,fill=Y)
-
+    coloane=(1,2,3,4,5,6,7)
+    tree=ttk.Treeview(window,columns=coloane,height=43) #tabelul cu afișări
+    
+    
     # configurare Scrollbar
-    scrollbar.configure(command=tree.yview)
-    tree.configure(yscrollcommand=scrollbar.set)
-    tree.pack()
+    scrollbar = Scrollbar(window,orient='vertical',command=tree.yview,width=20)
+    scrollbar.pack(side=RIGHT,fill='y')
+    tree.pack(side=TOP,padx=30,anchor=N)
+    
+    tree['yscrollcommand'] = scrollbar.set
+    
+    
    
-    tree.heading(0,text='COD')
+    tree.heading("#0",text='')
     tree.heading(1,text='AUTOR')
     tree.heading(2,text='TITLU')
     tree.heading(3,text='EDITURA')
-    tree.heading(4,text='ANUL_APARITIEI')
-    tree.heading(5,text='PRET')
-    tree.heading(6,text='STARE')
+    tree.heading(4,text='ANUL_APARIȚIEI')
+    tree.heading(5,text='PREȚ')
+    tree.heading(6,text='NR BUCĂȚI')
+    tree.heading(7,text='COD CĂRȚI LIBERE')
+
+    tree.column('#0',minwidth=20,width=20)
     
     #inserare în tabel din baza de date
-    q="Select * from carti"
-    cursor.execute(q) 
-   
+
+    com="Drop table carti2;"
+
+    cursor.execute(com)
+    mydb.commit()
+    com="create table carti2 (SELECT COUNT(Cod),Autor,Titlu,Editura,Anul_aparitiei,Pret FROM carti GROUP BY Titlu,Autor,Editura,Anul_aparitiei,Pret);" 
+    cursor.execute(com)
+    mydb.commit()
+    com="Select * from carti2;"
+    cursor.execute(com)
+
     result=cursor.fetchall()
+
     date=[]
     for x in result:
-        list1=(x[0],x[1], x[2],x[3],x[4],x[5],x[6])
+        list1=(x[1], x[2],x[3],x[4],x[5],x[0])
         date.append(list1)
+
+
+    for rand in date:
+
+        carte=tree.insert('',END,text="",values=rand)
     
+        com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
+        val=[rand[0],rand[1],rand[2],rand[3]]
+        cursor.execute(com,val)
+        result=cursor.fetchall()
+        for cod in result:
+            tree.insert(carte,END,values=("","","","","","",cod))
     
     
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
+   
     window.mainloop()
 
-    
-
-    #funcția care generează un cod QR pentru cartea selectată
-def generareQR():
-    ite=tree.item(tree.focus())
-    carte=""
-    carte=str(ite['values'][0])+'/'+str(ite['values'][1])+'/'+str(ite['values'][2])+'/'+str(ite['values'][3])+'/'+str(ite['values'][4])+'/'+str(ite['values'][5])+'/'+'Biblioteca LNI'
-    carte=str(carte)
-    nume=""
-    nume='qr_'+str(ite['values'][0])
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(carte.encode('utf-8'))
-    qr.make(fit=True)
-
-    img = qr.make_image(fill_color="black", back_color="white")
-    img.save(f"{nume}.png") 
-    showinfo(title="Info",message="Fișierul a fost salvat.")
     
 
     
 
 #functia care sterge o carte din baza de date
 def stergere():
-    
-    ite=tree.item(tree.focus())
-    cell=ite['values'][0]
-    parametri=(cell,)
-    sql="delete from carti where Cod=%s;"
-    cursor.execute(sql,parametri)
-    cell=str(cell)
-    showinfo("Info","Ați șters cartea cu codul "+cell )
-    mydb.commit()
+    try:
+        id_cod=tree.focus()
+        cod=tree.item(id_cod)
+        cod=cod["values"][6]
+        parametri=(cod,)
+        print(cod)
+        sql="delete from carti where Cod=%s;"
+        cursor.execute(sql,parametri)
+        cod=str(cod)
+        showinfo("Info","Ați șters cartea cu codul "+cod )
+        mydb.commit()
+    except:
+        showerror('Eroare',"Selectați un cod, nu un titlu general.")
 
 
 #functia care inserează o carte in tabelul cartilor
@@ -301,14 +351,11 @@ def inserare():
         try:
             cursor.execute(sql,values)
             mydb.commit()
+            showinfo("Info","Cartea a fost inregistrata in baza de date.")
         except Exception:   # afisarea erorii
             messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat în baza de date.")
         
         Cod_entry.focus()
-
-
-
-                                    
 
     #campurile ferestrei
     Cod=Label(canvas,text="Cod:",bg="#c7d3d4")
@@ -388,7 +435,7 @@ def imprumut():
         now = datetime.now()
         minut = int(now.strftime("%M"))+1
         ora = now.strftime("%H")
-        numere = ["+40738231065","+40756528688"]
+        
         for i in range(len(numere0)):
             try:
                 kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
@@ -396,7 +443,7 @@ def imprumut():
                 
 
             except:
-                print("Teapa ca nu mere")
+                
                 showerror(title='Eroare', message='A apărut o eroare la împrumuturile trecute de termen!')
         
         for i in range(len(numere1)):
@@ -406,7 +453,7 @@ def imprumut():
                 
 
             except:
-                print("Teapa ca nu mere")
+                
                 showerror(title='Eroare', message='A apărut o eroare la împrumuturile în perioadă!')
         
         showinfo(title="Info",message="Abonații au fost notificați.") 
@@ -473,13 +520,11 @@ def imprumut():
     for rand in datele:
         
         if date.today()>rand[6]:
-            print("ai intarziat")
             my_tag='trecut'
             numere0.append([rand[7],rand[6]])
             
         else: 
             if date.today()+timedelta(days=4)> rand[6]:
-                print("cartea trebuie restituita pana in " + str(rand[6]))
                 my_tag='limita'
                 numere1.append([rand[7],rand[6]])
             
@@ -504,7 +549,7 @@ def abonati():
     
     window.resizable(0,0)
     window.iconbitmap('lista_elevi.ico')
-    window.title('Listă elevi')
+    window.title('Listă abonați')
     window.configure(background="#FFDFBA")
     window.lift()
 
@@ -522,7 +567,7 @@ def abonati():
     def generareQR():
         ite=tabel.item(tabel.focus())
         elev=""
-        elev=str(ite['values'][0])+'/'+str(ite['values'][1])+'/'+str(ite['values'][2])+'/'+str(ite['values'][3])+'/'+str(ite['values'][4])+'/'+'Biblioteca LNI'+'/'+'Elev'
+        elev=str(ite['values'][0])+'/'+str(ite['values'][1])+'/'+str(ite['values'][2])+'/'+str(ite['values'][3])+'/'+str(ite['values'][4])+'/'+str(ite['values'][5])+'/'+'Biblioteca LNI'+'/'+'Abonat'
         elev=str(elev)
         nume=""
         nume='qr_'+str(ite['values'][0])
@@ -554,7 +599,7 @@ def abonati():
         geam.configure(background="#FFDFBA")
         geam.resizable(0,0)
       
-        geam.title("Inserare elevi")
+        geam.title("Inserare abonat nou")
         
 
         w = 300
@@ -754,7 +799,7 @@ def abonati():
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
     tabel.pack()
 
-    tabel.heading(0,text='COD ELEV')
+    tabel.heading(0,text='COD ABONAT')
     tabel.heading(1,text='NUME')
     tabel.heading(2,text='PRENUME')
     tabel.heading(3,text='CLASA')
