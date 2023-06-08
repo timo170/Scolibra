@@ -143,6 +143,14 @@ def search():
             showerror(title="Eroare",message="Selectați codul unei cărți, nu un titlu comun.")
         window.lift()
     
+    #inserare în tabel din baza de date
+    # aici trebuie sa apara o functie
+
+    
+    
+
+
+
 
 
     window=Tk()
@@ -211,7 +219,7 @@ def search():
     
     
    
-    tree.heading("#0",text='')
+    tree.heading("#0",text='ID')
     tree.heading(1,text='AUTOR')
     tree.heading(2,text='TITLU')
     tree.heading(3,text='EDITURA')
@@ -220,38 +228,34 @@ def search():
     tree.heading(6,text='NR BUCĂȚI')
     tree.heading(7,text='COD CĂRȚI LIBERE')
 
-    tree.column('#0',minwidth=20,width=20)
+    tree.column('#0',minwidth=40,width=40,anchor=CENTER)
     
-    #inserare în tabel din baza de date
 
-    com="Drop table carti2;"
-
-    cursor.execute(com)
-    mydb.commit()
-    com="create table carti2 (SELECT COUNT(Cod),Autor,Titlu,Editura,Anul_aparitiei,Pret FROM carti GROUP BY Titlu,Autor,Editura,Anul_aparitiei,Pret);" 
-    cursor.execute(com)
-    mydb.commit()
-    com="Select * from carti2;"
-    cursor.execute(com)
-
+    q="Select * from cartile;"
+    cursor.execute(q)
     result=cursor.fetchall()
-
+   
     date=[]
-    for x in result:
-        list1=(x[1], x[2],x[3],x[4],x[5],x[0])
+    for rand in result:
+        list1=[rand[0],rand[1],rand[2],rand[3],rand[4],rand[5]]
         date.append(list1)
 
-
     for rand in date:
+        id=int(rand[0])
+        par=[id,]
+        q="SELECT COUNT(Id) FROM carticod Where Id=%s;"
+        cursor.execute(q,par)
+        nr=cursor.fetchall()
+        nr=nr[0]
 
-        carte=tree.insert('',END,text="",values=rand)
-    
-        com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
-        val=[rand[0],rand[1],rand[2],rand[3]]
-        cursor.execute(com,val)
+        ID=tree.insert("",END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr])
+        q="Select Cod from carticod where Id=%s and Stare='liberă';"
+        
+        cursor.execute(q,par)
         result=cursor.fetchall()
         for cod in result:
-            tree.insert(carte,END,values=("","","","","","",cod))
+            tree.insert(ID,END,values=["","","","","","",cod])
+
     
     
     caseta.bind( '<Return>',cauta)
@@ -271,7 +275,7 @@ def stergere():
         cod=cod["values"][6]
         parametri=(cod,)
         print(cod)
-        sql="delete from carti where Cod=%s;"
+        sql="delete from carticod where Cod=%s;"
         cursor.execute(sql,parametri)
         cod=str(cod)
         showinfo("Info","Ați șters cartea cu codul "+cod )
@@ -296,7 +300,7 @@ def inserare():
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
-    geam.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    geam.geometry('%dx%d+%d+%d' % (w, h, x, y)) 
     
     canvas=Canvas(geam,width=1920,height=1080,background="#c7d3d4")
     canvas.pack(expand=True,fill=BOTH)
@@ -308,7 +312,7 @@ def inserare():
         Cod_entry.focus()
         def log(event):
             global cod
-            cod=Cod_entry.get()
+            cod=Cod_entry.get() 
             Autor_entry.focus()
             def log1(event):
                 global autor
@@ -346,14 +350,61 @@ def inserare():
 
     
     def salvare():      #functia care salvează datele unei cărți in baza de date
-        sql="INSERT INTO carti(Cod,Autor,Titlu,Editura,Anul_aparitiei,Pret,Stare) VALUES(%s,%s,%s,%s,%s,%s,'liberă');"
-        values=(Cod_entry.get(), Autor_entry.get(), Titlu_entry.get(), Editura_entry.get(), An_entry.get(), Pret_entry.get() )
-        try:
+        cod=Cod_entry.get()
+        autor=Autor_entry.get()
+        titlu= Titlu_entry.get()
+        editura=Editura_entry.get()
+        an=An_entry.get()
+        pret=Pret_entry.get()
+        sql='SELECT Id  FROM cartile where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Pret=%s;'
+        par=[autor,titlu,editura,an,pret]
+        cursor.execute(sql,par)
+        iduri=cursor.fetchall()
+        
+        date=[]
+        for rand in iduri:
+            date.append(rand[0])
+
+        print(date)
+
+
+        
+        
+        
+        if date==[]:
+            sql="INSERT INTO cartile(Autor,Titlu,Editura,Anul_aparitiei,Pret) VALUES(%s,%s,%s,%s,%s);"
+            values=(autor,titlu,editura,an,pret)
+            sql1='SELECT Id  FROM cartile where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Pret=%s;'
             cursor.execute(sql,values)
             mydb.commit()
+            cursor.execute(sql1,values)
+            id=cursor.fetchall()
+            ids=[]
+            for rand in id:
+                ids.append(rand[0])
+
+            id=int(ids[0])
+            sql2=f'Insert into carticod values({cod},"liberă",{id});'
+            cursor.execute(sql2)
+            mydb.commit()
+            print('aici')
             showinfo("Info","Cartea a fost inregistrata in baza de date.")
-        except Exception:   # afisarea erorii
-            messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat în baza de date.")
+            
+        else:
+            sql=f"Select Count(Cod) from carticod where Cod={cod};"
+            cursor.execute(sql)
+            result=cursor.fetchall()
+            if result==():
+                idr=int(date[0])
+                sql='Insert into carticod values (%s,"liberă",%s)'
+                values=[cod,idr]
+                cursor.execute(sql,values)
+                mydb.commit()
+                print('sau aici')
+                showinfo("Info","Cartea a fost inregistrata in baza de date.")
+            else:
+                showerror(title="Eroare",message="Codul introdus există deja în baza de date.")
+        
         
         Cod_entry.focus()
 

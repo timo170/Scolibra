@@ -10,7 +10,7 @@ def mesaj():
     now = datetime.now()
     minut = int(now.strftime("%M"))+1
     ora = now.strftime("%H")
-    numere = ["+40738231065","+40756528688"]
+    numere = ["+40 738 231 065","+40 756 528 688"]
     for i in range(2):
         try:
             kit.sendwhatmsg(numere[i],"NU O DAI CU PGM",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
@@ -23,4 +23,5 @@ def mesaj():
            
 msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",20),command=mesaj)
 msj_elev.pack()
-        
+
+window.mainloop()
