@@ -49,28 +49,31 @@ def search():
         cuvant=caseta.get()
 
         cuv=("%"+cuvant +"%")
-        sql="SELECT * FROM carti2 WHERE {} LIKE '{}' ;".format(criteriu,cuv)
-        cursor.execute(sql,)
+        sql=f"SELECT * FROM cartile WHERE {criteriu} LIKE '{cuv}' ;"
+        cursor.execute(sql)
         records = cursor.fetchall()
     
         date=[]
         for x in records:
-            list1=(x[1], x[2],
+            list1=(x[0],x[1], x[2],
                x[3],
                x[4],
-               x[5],
-               x[0])
+               x[5],)
             date.append(list1)
-        mydb.commit()
+        
 
         stergere_elemente_arbore()
         for rand in date:
-
-            carte=tree.insert('',END,text="",values=rand)
+            id=rand[0]
+            q="SELECT COUNT(Cod) FROM carticod Where Id=%s;"
+            para=[id]
+            cursor.execute(q,para)
+            nr=cursor.fetchall()
+            nr=nr[0]
+            carte=tree.insert('',END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr])
     
-            com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
-            val=[rand[0],rand[1],rand[2],rand[3]]
-            cursor.execute(com,val)
+            com=f"Select Cod from carticod where Id={id} and Stare='liberă';"
+            cursor.execute(com)
             result=cursor.fetchall()
             for cod in result:
                 tree.insert(carte,END,values=("","","","","","",cod))
@@ -92,26 +95,47 @@ def search():
         
             
         var=reader_cam_qr()
-        Cod=int(var.split('/')[0])
+        cod=int(var.split('/')[0])
         
+        stergere_elemente_arbore()
 
-        sql="SELECT * FROM carti WHERE Cod={} ;".format(Cod)
-        cursor.execute(sql,)
+        sql=f"SELECT Id FROM carticod WHERE Cod={cod};"
+        cursor.execute(sql)
         records = cursor.fetchall()
         
         date=[]
-        for x in records:
-            list1=(x[1], x[2],
-               x[3],
-               x[4],
-               x[5],"",
-               x[0])
-            date.append(list1)
-        mydb.commit()
+        date.append(records[0])
+        for co in date:
+            id=co[0]
 
-        stergere_elemente_arbore()
+        
+        sql1=f"Select * from cartile where Id={id};"
+        cursor.execute(sql1)
+        result=cursor.fetchall()
+        
+        
+        q=f"SELECT COUNT(Id) FROM carticod Where Id={id};"
+        cursor.execute(q)
+        nr=cursor.fetchall()
+        nr=nr[0]
+
+        date=[]
+        for rand in result:
+            list1=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
+            date.append(list1)
+
         for rand in date:
-            tree.insert("",END,values=rand)
+            ID=tree.insert("",END,text=id,values=rand)
+        
+        #ATENTIE Aici fac sa imi arate toate codurile cartilor de acel tip, dar codurl cartii scanate sa fie colorat
+
+        tree.insert(ID,END,values=["","","","","","",cod])
+        
+        
+        
+
+        
+        
 
     global criteriu
     
@@ -143,8 +167,7 @@ def search():
             showerror(title="Eroare",message="Selectați codul unei cărți, nu un titlu comun.")
         window.lift()
     
-    #inserare în tabel din baza de date
-    # aici trebuie sa apara o functie
+    
 
     
     
@@ -195,7 +218,7 @@ def search():
     filtru.pack(padx=5,side=RIGHT)
 
 
-    valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","Stare","QR"]
+    valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","QR"]
     filtru['values']=valori      
     filtru['state']='readonly'
 
@@ -271,15 +294,26 @@ def search():
 def stergere():
     try:
         id_cod=tree.focus()
+        
         cod=tree.item(id_cod)
         cod=cod["values"][6]
         parametri=(cod,)
         print(cod)
         sql="delete from carticod where Cod=%s;"
         cursor.execute(sql,parametri)
+        mydb.commit()
+
+        sql1=f"Select Count(Cod) from carticod where Cod={cod};"
+        cursor.execute(sql1)
+        count=cursor.fetchall()
+        if count==0:  # aici trebuie aflat id-ul carti si reparat
+            sql2=f'Delete from cartile where Id={id_cod};'
+            cursor.execute(sql2)
+            mydb.commit()
+        
         cod=str(cod)
         showinfo("Info","Ați șters cartea cu codul "+cod )
-        mydb.commit()
+        
     except:
         showerror('Eroare',"Selectați un cod, nu un titlu general.")
 
@@ -356,6 +390,7 @@ def inserare():
         editura=Editura_entry.get()
         an=An_entry.get()
         pret=Pret_entry.get()
+
         sql='SELECT Id  FROM cartile where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Pret=%s;'
         par=[autor,titlu,editura,an,pret]
         cursor.execute(sql,par)
@@ -364,13 +399,7 @@ def inserare():
         date=[]
         for rand in iduri:
             date.append(rand[0])
-
-        print(date)
-
-
-        
-        
-        
+          
         if date==[]:
             sql="INSERT INTO cartile(Autor,Titlu,Editura,Anul_aparitiei,Pret) VALUES(%s,%s,%s,%s,%s);"
             values=(autor,titlu,editura,an,pret)
@@ -387,7 +416,7 @@ def inserare():
             sql2=f'Insert into carticod values({cod},"liberă",{id});'
             cursor.execute(sql2)
             mydb.commit()
-            print('aici')
+            
             showinfo("Info","Cartea a fost inregistrata in baza de date.")
             
         else:
@@ -400,7 +429,7 @@ def inserare():
                 values=[cod,idr]
                 cursor.execute(sql,values)
                 mydb.commit()
-                print('sau aici')
+                
                 showinfo("Info","Cartea a fost inregistrata in baza de date.")
             else:
                 showerror(title="Eroare",message="Codul introdus există deja în baza de date.")
@@ -547,8 +576,8 @@ def imprumut():
     tabel.heading(5,text='DATA IMPRUMUTULUI')
     tabel.heading(6,text='DATA RETURNARII')
     tabel.heading(7,text='TELEFON')
-    tabel.tag_configure('limita',background='yellow',foreground='green')
-    tabel.tag_configure('trecut',background='#FF6A6A',foreground="white")
+    tabel.tag_configure('limita',background='yellow',)
+    tabel.tag_configure('trecut',background='red',foreground="white")
     
    
     stergere_elemente_tabel()
@@ -631,7 +660,7 @@ def abonati():
         showinfo(title="Info",message="Fișierul a fost salvat.")
         window.lift()
 
-    def stergere():     #functia care sterge o carte din baza de date
+    def stergere():     #functia care sterge un abonat din baza de date
     
         ite=tabel.item(tabel.focus())
         cell=ite['values'][0]
