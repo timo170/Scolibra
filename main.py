@@ -127,9 +127,22 @@ def search():
         for rand in date:
             ID=tree.insert("",END,text=id,values=rand)
         
-        #ATENTIE Aici fac sa imi arate toate codurile cartilor de acel tip, dar codurl cartii scanate sa fie colorat
+        q=f"Select Cod from carticod where Id={id};"
+        cursor.execute(q)
+        result=cursor.fetchall()
+        date=[]
+        for rand in result:
+            
+            date.append(rand[0])
+        
 
-        tree.insert(ID,END,values=["","","","","","",cod])
+        for co in date:
+            if co==cod:
+                my_tag='cod_scanat'
+            else:
+                my_tag='normal'
+
+            tree.insert(ID,END,values=["","","","","","",co],tags=my_tag)
         
         
         
@@ -250,6 +263,8 @@ def search():
     tree.heading(5,text='PREȚ')
     tree.heading(6,text='NR BUCĂȚI')
     tree.heading(7,text='COD CĂRȚI LIBERE')
+
+    tree.tag_configure('cod_scanat',background='yellow')
 
     tree.column('#0',minwidth=40,width=40,anchor=CENTER)
     
@@ -516,6 +531,10 @@ def imprumut():
         minut = int(now.strftime("%M"))+1
         ora = now.strftime("%H")
         
+        
+        print(numere0)
+        print(numere1)
+
         for i in range(len(numere0)):
             try:
                 kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
@@ -826,8 +845,10 @@ def abonati():
                 cam.set(6, 480)
 
                 camera = True
+                
                 while camera == True:
-                    suceess, frame= cam.read()
+                    frame= cam.read()
+                    cv2.imshow("Camera View", frame)
                     for i in decode(frame):
                         return i.data.decode('utf-8')
         

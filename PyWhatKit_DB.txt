@@ -1,0 +1,20 @@
+Date: 15/6/2023
+Time: 18:44
+Phone Number: +40738231065
+Message: Împrumutul a depășit data limită 2023-06-02 . Vă rog să returnați cartea/țile la bibliotecă.
+--------------------
+Date: 15/6/2023
+Time: 18:45
+Phone Number: +40756528688
+Message: Împrumutul a depășit data limită 2023-06-03 . Vă rog să returnați cartea/țile la bibliotecă.
+--------------------
+Date: 15/6/2023
+Time: 18:46
+Phone Number: +40738456876
+Message: Împrumutul a depășit data limită 2023-05-31 . Vă rog să returnați cartea/țile la bibliotecă.
+--------------------
+Date: 15/6/2023
+Time: 18:47
+Phone Number: +40721123123
+Message: Data limită împrumutului este 2023-06-17.
+--------------------
