@@ -11,6 +11,7 @@ import cv2
 import pywhatkit as kit
 from pyzbar.pyzbar import decode 
 from datetime import datetime,date,timedelta
+import requests
 
 
 #conectare la baza de date
@@ -47,9 +48,20 @@ def search():
     
     def cauta(event):      #functia care face cautarea in baza de date în funcție de bara de căutare
         cuvant=caseta.get()
-
-        cuv=("%"+cuvant +"%")
-        sql=f"SELECT * FROM cartile WHERE {criteriu} LIKE '{cuv}' ;"
+        if criteriu=='Cod':
+            sql=f"Select Id from carticod where Cod={int(cuvant)};"
+            cursor.execute(sql)
+            records = cursor.fetchall()
+    
+            date=[]
+            for x in records:
+                date.append(x[0])
+            id=date[0]
+            sql=f"Select * from cartile where Id={id};"
+        else:
+            cuv=("%"+cuvant +"%")
+            sql=f"SELECT * FROM cartile WHERE {criteriu} LIKE '{cuv}' ;"
+        
         cursor.execute(sql)
         records = cursor.fetchall()
     
@@ -309,20 +321,26 @@ def search():
 def stergere():
     try:
         id_cod=tree.focus()
+        id_carte=tree.parent(id_cod)
+        id=tree.item(id_carte)["text"]
         
-        cod=tree.item(id_cod)
-        cod=cod["values"][6]
+        valori=tree.item(id_cod)
+        cod=valori["values"][6]
         parametri=(cod,)
         print(cod)
         sql="delete from carticod where Cod=%s;"
         cursor.execute(sql,parametri)
         mydb.commit()
+        
+        dic={'Id':id}
+        res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
+        print(res)
 
         sql1=f"Select Count(Cod) from carticod where Cod={cod};"
         cursor.execute(sql1)
         count=cursor.fetchall()
-        if count==0:  # aici trebuie aflat id-ul carti si reparat
-            sql2=f'Delete from cartile where Id={id_cod};'
+        if count==0:  
+            sql2=f'Delete from cartile where Id={id};'
             cursor.execute(sql2)
             mydb.commit()
         
@@ -416,6 +434,7 @@ def inserare():
             date.append(rand[0])
           
         if date==[]:
+            #cazul in care nu exista cartea respectiva in baza de date
             sql="INSERT INTO cartile(Autor,Titlu,Editura,Anul_aparitiei,Pret) VALUES(%s,%s,%s,%s,%s);"
             values=(autor,titlu,editura,an,pret)
             sql1='SELECT Id  FROM cartile where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Pret=%s;'
@@ -423,31 +442,41 @@ def inserare():
             mydb.commit()
             cursor.execute(sql1,values)
             id=cursor.fetchall()
-            ids=[]
-            for rand in id:
-                ids.append(rand[0])
-
-            id=int(ids[0])
+            id=list(id[0])
+            id=int(id[0])
             sql2=f'Insert into carticod values({cod},"liberă",{id});'
             cursor.execute(sql2)
             mydb.commit()
-            
+            nr=1
+            dic={'Id':id, 'Autor':autor, 'Titlu':titlu, 'Editura':editura, 'An':an,'Nr':nr}
+            res=requests.post(url='https://scolibra.000webhostapp.com/insertdata.php',json=dic)
+            print(res)
             showinfo("Info","Cartea a fost inregistrata in baza de date.")
             
-        else:
-            sql=f"Select Count(Cod) from carticod where Cod={cod};"
-            cursor.execute(sql)
-            result=cursor.fetchall()
-            if result==():
+        else:#cazul in care cartea este inregistrata in baza de date, dar adaugam o noua bucata cu un cod nou
                 idr=int(date[0])
-                sql='Insert into carticod values (%s,"liberă",%s)'
-                values=[cod,idr]
-                cursor.execute(sql,values)
-                mydb.commit()
-                
-                showinfo("Info","Cartea a fost inregistrata in baza de date.")
-            else:
-                showerror(title="Eroare",message="Codul introdus există deja în baza de date.")
+                sql1=f"Select Count(Cod) from carticod where Cod={cod} and Id={idr};"
+                cursor.execute(sql1)
+                result=cursor.fetchall()
+                result=list(result[0])
+                count=int(result[0])
+                if count==0:
+                    sql='Insert into carticod values (%s,"liberă",%s)'
+                    values=[cod,idr]
+                    cursor.execute(sql,values)
+                    mydb.commit()
+                    stare="liber_"
+                    sql=f"select Count(Cod) from carticod where Id={idr} and Stare like '{stare}';"
+                    cursor.execute(sql)
+                    result=cursor.fetchall()
+                    result=list(result[0])
+                    nr=int(result[0])
+                    dic={'Id':idr,'Nr':nr}
+                    res=requests.post(url='https://scolibra.000webhostapp.com/adaugbucata.php',json=dic)
+                    print(res)
+                    showinfo("Info","Cartea a fost inregistrata in baza de date.")
+                else:
+                    showerror(title="Eroare",message="Codul introdus există deja în baza de date.")
         
         
         Cod_entry.focus()
@@ -514,13 +543,30 @@ def imprumut():
         ite=tabel.item(tabel.focus())
         cell=ite['values'][0]
         cod_carte=int(ite["values"][4])
-        sql1="update carti set Stare='liberă' where Cod=%s;"
+        sql1="update carticod set Stare='liberă' where Cod=%s;"
         para=(cod_carte,)
         cursor.execute(sql1,para)
+        mydb.commit()
         cell=str(cell)
-        parametri=(cell,)
-        sql="delete from imprumuturi where COD_IMPRUMUT=%s;"
-        cursor.execute(sql,parametri)
+        
+        sql=f"delete from imprumuturi where COD_IMPRUMUT={cell};"
+        cursor.execute(sql)
+        mydb.commit()
+
+        sql=f'Select Id from carticod where Cod={cod_carte};'
+        cursor.execute(sql)
+        id=cursor.fetchall()
+        id=list(id[0])
+        id=int(id[0])
+        stare="liber_"
+        sql1=f"select Count(Cod) from carticod where Id={id} and Stare like '{stare}';"
+        cursor.execute(sql1)
+        result=cursor.fetchall()
+        result=list(result[0])
+        nr=int(result[0])
+        dic={'Id':id,'Nr':nr}
+        res=requests.post(url='https://scolibra.000webhostapp.com/adaugbucata.php',json=dic)
+        print(res)
         
         showinfo("info","Cartea a fost restituită.")
         window.destroy()
@@ -985,7 +1031,7 @@ def abonati():
         def save_imprumut():   #funcția care salvează împrumutul în baza de date
             cod_carte=int(Titlu_entry.get())
 
-            sql2="Select * from carti where Cod=%s and Stare='liberă';"
+            sql2="Select Cod from carticod where Cod=%s and Stare='liberă';"
             test2=(cod_carte,)
             cursor.execute(sql2,test2)
             re=cursor.fetchall()
@@ -996,11 +1042,22 @@ def abonati():
                 test=(cod_abonat,nume,clasa,cod_carte,data_azi,data_return,telefon)
                 cursor.execute(sql,test)
 
-                sql1="update carti set Stare='împrumutată'  where Cod=%s;"
-                test1=(cod_carte,)
-                cursor.execute(sql1,test1)
-                showinfo(title="Info",message="Împrumut adăugat.")
+                sql1=f"update carticod set Stare='împrumutată'  where Cod={cod_carte};"
+                
+                cursor.execute(sql1)
                 mydb.commit()
+                showinfo(title="Info",message="Împrumut adăugat.")
+                
+                sql=f"select Id from carticod where Cod={cod_carte};"
+                cursor.execute(sql)
+                id=cursor.fetchall()
+                id=list(id[0])
+                id=int(id[0])
+
+                dic={'Id':id}
+                res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
+                print(res)
+
                 win.destroy()
                 window.lift()
             else:
