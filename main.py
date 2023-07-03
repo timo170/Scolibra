@@ -480,25 +480,39 @@ def imprumut():
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6,7]
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
-    tabel.pack()
 
     adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",20),command=returnata)
-    adus.pack()
+    adus.pack(side=BOTTOM)
 
     msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",20),command=mesaj)
-    msj_elev.pack()
+    msj_elev.pack(side=BOTTOM)
 
-    tabel.heading(0,text='COD IMPRUMUT')
-    tabel.heading(1,text='COD ABONAT')
-    tabel.heading(2,text='NUME')
-    tabel.heading(3,text='CLASA')
-    tabel.heading(4,text='COD CARTE')
-    tabel.heading(5,text='DATA IMPRUMUTULUI')
-    tabel.heading(6,text='DATA RETURNARII')
-    tabel.heading(7,text='TELEFON')
+    # configurare Scrollbar
+    scrollbar = Scrollbar(window,orient='vertical',command=tabel.yview,width=20)
+    scrollbar.pack(side=RIGHT,fill='y')
+    tabel.pack(side=TOP,padx=30,anchor=CENTER)
+    
+    tabel['yscrollcommand'] = scrollbar.set
+
+    tabel.heading(0,text='COD ÎMPRUMUT',anchor=W)
+    tabel.heading(1,text='COD ABONAT',anchor=W)
+    tabel.heading(2,text='NUME',anchor=W)
+    tabel.heading(3,text='CLASĂ',anchor=W)
+    tabel.heading(4,text='COD CARTE',anchor=W)
+    tabel.heading(5,text='DATA ÎMPRUMUTULUI',anchor=W)
+    tabel.heading(6,text='DATA RETURNĂRII',anchor=W)
+    tabel.heading(7,text='TELEFON',anchor=W)
     tabel.tag_configure('limita',background='yellow',foreground='green')
     tabel.tag_configure('trecut',background='#FF6A6A',foreground="white")
-    
+    tabel.column(0,width=140,anchor=W,stretch=TRUE,)
+    tabel.column(1,width=140,anchor=W)
+    tabel.column(2,width=140,anchor=W)
+    tabel.column(3,width=140,anchor=W)
+    tabel.column(4,width=140,anchor=W)
+    tabel.column(5,width=180,anchor=W)
+    tabel.column(6,width=180,anchor=W)
+    tabel.column(7,width=140,anchor=W)
+
    
     stergere_elemente_tabel()
 
@@ -799,12 +813,18 @@ def abonati():
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
     tabel.pack()
 
-    tabel.heading(0,text='COD ABONAT')
-    tabel.heading(1,text='NUME')
-    tabel.heading(2,text='PRENUME')
-    tabel.heading(3,text='CLASA')
-    tabel.heading(4,text='DATA ABONARII')
+    tabel.heading(0,text='COD ABONAT',anchor=W)
+    tabel.heading(1,text='NUME',anchor=W)
+    tabel.heading(2,text='PRENUME',anchor=W)
+    tabel.heading(3,text='CLASĂ',anchor=W)
+    tabel.heading(4,text='DATA ABONĂRII',anchor=W)
     tabel.heading(5,text='TELEFON')
+    tabel.column(0,anchor=W)
+    tabel.column(1,anchor=W)
+    tabel.column(2,anchor=W)
+    tabel.column(3,anchor=W)
+    tabel.column(4,anchor=W)
+    tabel.column(5,anchor=W)
     
   
 
