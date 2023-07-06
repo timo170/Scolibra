@@ -111,7 +111,21 @@ def search():
 
         stergere_elemente_arbore()
         for rand in date:
+<<<<<<< HEAD
             tree.insert("",END,values=rand)
+=======
+            ID=tree.insert("",END,text=id,values=rand)
+        
+        #ATENTIE Aici fac sa imi arate toate codurile cartilor de acel tip, dar codurl cartii scanate sa fie colorat
+
+        tree.insert(ID,END,values=["","","","","","",cod])
+        
+        
+        
+
+        
+        
+>>>>>>> parent of aab390c (functia scanare cod carte rezolvata)
 
     global criteriu
     
@@ -220,7 +234,11 @@ def search():
     tree.heading(6,text='NR BUCĂȚI')
     tree.heading(7,text='COD CĂRȚI LIBERE')
 
+<<<<<<< HEAD
     tree.column('#0',minwidth=20,width=20)
+=======
+    tree.column('#0',minwidth=40,width=40,anchor=CENTER)
+>>>>>>> parent of aab390c (functia scanare cod carte rezolvata)
     
     #inserare în tabel din baza de date
 
