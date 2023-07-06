@@ -11,6 +11,7 @@ import cv2
 import pywhatkit as kit
 from pyzbar.pyzbar import decode 
 from datetime import datetime,date,timedelta
+import requests
 
 
 #conectare la baza de date
@@ -47,30 +48,44 @@ def search():
     
     def cauta(event):      #functia care face cautarea in baza de date în funcție de bara de căutare
         cuvant=caseta.get()
-
-        cuv=("%"+cuvant +"%")
-        sql="SELECT * FROM carti2 WHERE {} LIKE '{}' ;".format(criteriu,cuv)
-        cursor.execute(sql,)
+        if criteriu=='Cod':
+            sql=f"Select Id from carticod where Cod={int(cuvant)};"
+            cursor.execute(sql)
+            records = cursor.fetchall()
+    
+            date=[]
+            for x in records:
+                date.append(x[0])
+            id=date[0]
+            sql=f"Select * from cartile where Id={id};"
+        else:
+            cuv=("%"+cuvant +"%")
+            sql=f"SELECT * FROM cartile WHERE {criteriu} LIKE '{cuv}' ;"
+        
+        cursor.execute(sql)
         records = cursor.fetchall()
     
         date=[]
         for x in records:
-            list1=(x[1], x[2],
+            list1=(x[0],x[1], x[2],
                x[3],
                x[4],
-               x[5],
-               x[0])
+               x[5],)
             date.append(list1)
-        mydb.commit()
+        
 
         stergere_elemente_arbore()
         for rand in date:
-
-            carte=tree.insert('',END,text="",values=rand)
+            id=rand[0]
+            q="SELECT COUNT(Cod) FROM carticod Where Id=%s;"
+            para=[id]
+            cursor.execute(q,para)
+            nr=cursor.fetchall()
+            nr=nr[0]
+            carte=tree.insert('',END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr])
     
-            com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
-            val=[rand[0],rand[1],rand[2],rand[3]]
-            cursor.execute(com,val)
+            com=f"Select Cod from carticod where Id={id} and Stare='liberă';"
+            cursor.execute(com)
             result=cursor.fetchall()
             for cod in result:
                 tree.insert(carte,END,values=("","","","","","",cod))
@@ -92,40 +107,60 @@ def search():
         
             
         var=reader_cam_qr()
-        Cod=int(var.split('/')[0])
+        cod=int(var.split('/')[0])
         
+        stergere_elemente_arbore()
 
-        sql="SELECT * FROM carti WHERE Cod={} ;".format(Cod)
-        cursor.execute(sql,)
+        sql=f"SELECT Id FROM carticod WHERE Cod={cod};"
+        cursor.execute(sql)
         records = cursor.fetchall()
         
         date=[]
-        for x in records:
-            list1=(x[1], x[2],
-               x[3],
-               x[4],
-               x[5],"",
-               x[0])
-            date.append(list1)
-        mydb.commit()
+        date.append(records[0])
+        for co in date:
+            id=co[0]
 
-        stergere_elemente_arbore()
+        
+        sql1=f"Select * from cartile where Id={id};"
+        cursor.execute(sql1)
+        result=cursor.fetchall()
+        
+        
+        q=f"SELECT COUNT(Id) FROM carticod Where Id={id};"
+        cursor.execute(q)
+        nr=cursor.fetchall()
+        nr=nr[0]
+
+        date=[]
+        for rand in result:
+            list1=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
+            date.append(list1)
+
         for rand in date:
-<<<<<<< HEAD
-            tree.insert("",END,values=rand)
-=======
             ID=tree.insert("",END,text=id,values=rand)
         
-        #ATENTIE Aici fac sa imi arate toate codurile cartilor de acel tip, dar codurl cartii scanate sa fie colorat
+        q=f"Select Cod from carticod where Id={id};"
+        cursor.execute(q)
+        result=cursor.fetchall()
+        date=[]
+        for rand in result:
+            
+            date.append(rand[0])
+        
 
-        tree.insert(ID,END,values=["","","","","","",cod])
+        for co in date:
+            if co==cod:
+                my_tag='cod_scanat'
+            else:
+                my_tag='normal'
+
+            tree.insert(ID,END,values=["","","","","","",co],tags=my_tag)
         
         
         
 
         
         
->>>>>>> parent of aab390c (functia scanare cod carte rezolvata)
 
     global criteriu
     
@@ -136,12 +171,13 @@ def search():
             id_carte=tree.parent(id_cod)
             carte=tree.item(id_carte)
             cod=tree.item(id_cod)["values"][6]
+            id=carte["text"]
             titlu=carte["values"][1]
             autor=carte["values"][0]
             editura=carte["values"][2]
             an=carte["values"][3]
             pret=carte["values"][4]
-            carte=str(cod)+'/'+str(autor)+'/'+str(titlu)+'/'+str(editura)+'/'+str(an)+'/'+str(pret)+'/'+'Biblioteca LNI'
+            carte=str(cod)+'/'+str(autor)+'/'+str(titlu)+'/'+str(editura)+'/'+str(an)+'/'+str(pret)+'/'+str(id)+'/'+'Biblioteca LNI'
             carte=str(carte)
             nume=""
             nume='qr_'+str(cod)
@@ -157,6 +193,13 @@ def search():
             showerror(title="Eroare",message="Selectați codul unei cărți, nu un titlu comun.")
         window.lift()
     
+    
+
+    
+    
+
+
+
 
 
     window=Tk()
@@ -201,7 +244,7 @@ def search():
     filtru.pack(padx=5,side=RIGHT)
 
 
-    valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","Stare","QR"]
+    valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","QR"]
     filtru['values']=valori      
     filtru['state']='readonly'
 
@@ -225,7 +268,7 @@ def search():
     
     
    
-    tree.heading("#0",text='')
+    tree.heading("#0",text='ID')
     tree.heading(1,text='AUTOR')
     tree.heading(2,text='TITLU')
     tree.heading(3,text='EDITURA')
@@ -234,42 +277,36 @@ def search():
     tree.heading(6,text='NR BUCĂȚI')
     tree.heading(7,text='COD CĂRȚI LIBERE')
 
-<<<<<<< HEAD
-    tree.column('#0',minwidth=20,width=20)
-=======
+    tree.tag_configure('cod_scanat',background='yellow')
+
     tree.column('#0',minwidth=40,width=40,anchor=CENTER)
->>>>>>> parent of aab390c (functia scanare cod carte rezolvata)
     
-    #inserare în tabel din baza de date
 
-    com="Drop table carti2;"
-
-    cursor.execute(com)
-    mydb.commit()
-    com="create table carti2 (SELECT COUNT(Cod),Autor,Titlu,Editura,Anul_aparitiei,Pret FROM carti GROUP BY Titlu,Autor,Editura,Anul_aparitiei,Pret);" 
-    cursor.execute(com)
-    mydb.commit()
-    com="Select * from carti2;"
-    cursor.execute(com)
-
+    q="Select * from cartile;"
+    cursor.execute(q)
     result=cursor.fetchall()
-
+   
     date=[]
-    for x in result:
-        list1=(x[1], x[2],x[3],x[4],x[5],x[0])
+    for rand in result:
+        list1=[rand[0],rand[1],rand[2],rand[3],rand[4],rand[5]]
         date.append(list1)
 
-
     for rand in date:
+        id=int(rand[0])
+        par=[id,]
+        q="SELECT COUNT(Id) FROM carticod Where Id=%s;"
+        cursor.execute(q,par)
+        nr=cursor.fetchall()
+        nr=nr[0]
 
-        carte=tree.insert('',END,text="",values=rand)
-    
-        com="Select Cod from carti where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Stare='liberă';"
-        val=[rand[0],rand[1],rand[2],rand[3]]
-        cursor.execute(com,val)
+        ID=tree.insert("",END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr])
+        q="Select Cod from carticod where Id=%s and Stare='liberă';"
+        
+        cursor.execute(q,par)
         result=cursor.fetchall()
         for cod in result:
-            tree.insert(carte,END,values=("","","","","","",cod))
+            tree.insert(ID,END,values=["","","","","","",cod])
+
     
     
     caseta.bind( '<Return>',cauta)
@@ -285,17 +322,44 @@ def search():
 def stergere():
     try:
         id_cod=tree.focus()
-        cod=tree.item(id_cod)
-        cod=cod["values"][6]
+        id_carte=tree.parent(id_cod)
+        id=tree.item(id_carte)["text"]
+        
+        valori=tree.item(id_cod)
+        cod=valori["values"][6]
         parametri=(cod,)
         print(cod)
-        sql="delete from carti where Cod=%s;"
+        sql="delete from carticod where Cod=%s;"
         cursor.execute(sql,parametri)
+        mydb.commit()
+        
+        dic={'Id':id}
+        res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
+        print(res)
+
+        
+        
         cod=str(cod)
         showinfo("Info","Ați șters cartea cu codul "+cod )
-        mydb.commit()
+        
     except:
-        showerror('Eroare',"Selectați un cod, nu un titlu general.")
+        id_carte=tree.focus()
+        id=tree.item(id_carte)["text"]
+        sql=f"Select Count(Cod) from carticod where Id={id};"
+        cursor.execute(sql)
+        nr=cursor.fetchall()
+        nr=nr[0]
+        nr=nr[0]
+        if nr==0:
+            sql=f"Delete from cartile where Id={id};"
+            cursor.execute(sql)
+            mydb.commit()
+            dic={'Id':id}
+            res=requests.post(url='https://scolibra.000webhostapp.com/stergcarte.php',json=dic)
+            id=str(id)
+            showinfo("Info","Ați șters cartea cu Id-ul "+id)
+        
+
 
 
 #functia care inserează o carte in tabelul cartilor
@@ -314,7 +378,7 @@ def inserare():
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
-    geam.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    geam.geometry('%dx%d+%d+%d' % (w, h, x, y)) 
     
     canvas=Canvas(geam,width=1920,height=1080,background="#c7d3d4")
     canvas.pack(expand=True,fill=BOTH)
@@ -326,7 +390,7 @@ def inserare():
         Cod_entry.focus()
         def log(event):
             global cod
-            cod=Cod_entry.get()
+            cod=Cod_entry.get() 
             Autor_entry.focus()
             def log1(event):
                 global autor
@@ -364,14 +428,67 @@ def inserare():
 
     
     def salvare():      #functia care salvează datele unei cărți in baza de date
-        sql="INSERT INTO carti(Cod,Autor,Titlu,Editura,Anul_aparitiei,Pret,Stare) VALUES(%s,%s,%s,%s,%s,%s,'liberă');"
-        values=(Cod_entry.get(), Autor_entry.get(), Titlu_entry.get(), Editura_entry.get(), An_entry.get(), Pret_entry.get() )
-        try:
+        cod=Cod_entry.get()
+        autor=Autor_entry.get()
+        titlu= Titlu_entry.get()
+        editura=Editura_entry.get()
+        an=An_entry.get()
+        pret=Pret_entry.get()
+
+        sql='SELECT Id  FROM cartile where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Pret=%s;'
+        par=[autor,titlu,editura,an,pret]
+        cursor.execute(sql,par)
+        iduri=cursor.fetchall()
+        
+        date=[]
+        for rand in iduri:
+            date.append(rand[0])
+          
+        if date==[]:
+            #cazul in care nu exista cartea respectiva in baza de date
+            sql="INSERT INTO cartile(Autor,Titlu,Editura,Anul_aparitiei,Pret) VALUES(%s,%s,%s,%s,%s);"
+            values=(autor,titlu,editura,an,pret)
+            sql1='SELECT Id  FROM cartile where Autor=%s and Titlu=%s and Editura=%s and Anul_aparitiei=%s and Pret=%s;'
             cursor.execute(sql,values)
             mydb.commit()
+            cursor.execute(sql1,values)
+            id=cursor.fetchall()
+            id=list(id[0])
+            id=int(id[0])
+            sql2=f'Insert into carticod values({cod},"liberă",{id});'
+            cursor.execute(sql2)
+            mydb.commit()
+            nr=1
+            dic={'Id':id, 'Autor':autor, 'Titlu':titlu, 'Editura':editura, 'An':an,'Nr':nr}
+            res=requests.post(url='https://scolibra.000webhostapp.com/insertdata.php',json=dic)
+            print(res)
             showinfo("Info","Cartea a fost inregistrata in baza de date.")
-        except Exception:   # afisarea erorii
-            messagebox.showerror(title="Eroare",message = "Codul introdus este deja înregistrat în baza de date.")
+            
+        else:#cazul in care cartea este inregistrata in baza de date, dar adaugam o noua bucata cu un cod nou
+                idr=int(date[0])
+                sql1=f"Select Count(Cod) from carticod where Cod={cod} and Id={idr};"
+                cursor.execute(sql1)
+                result=cursor.fetchall()
+                result=list(result[0])
+                count=int(result[0])
+                if count==0:
+                    sql='Insert into carticod values (%s,"liberă",%s)'
+                    values=[cod,idr]
+                    cursor.execute(sql,values)
+                    mydb.commit()
+                    stare="liber_"
+                    sql=f"select Count(Cod) from carticod where Id={idr} and Stare like '{stare}';"
+                    cursor.execute(sql)
+                    result=cursor.fetchall()
+                    result=list(result[0])
+                    nr=int(result[0])
+                    dic={'Id':idr,'Nr':nr}
+                    res=requests.post(url='https://scolibra.000webhostapp.com/adaugbucata.php',json=dic)
+                    print(res)
+                    showinfo("Info","Cartea a fost inregistrata in baza de date.")
+                else:
+                    showerror(title="Eroare",message="Codul introdus există deja în baza de date.")
+        
         
         Cod_entry.focus()
 
@@ -437,13 +554,30 @@ def imprumut():
         ite=tabel.item(tabel.focus())
         cell=ite['values'][0]
         cod_carte=int(ite["values"][4])
-        sql1="update carti set Stare='liberă' where Cod=%s;"
+        sql1="update carticod set Stare='liberă' where Cod=%s;"
         para=(cod_carte,)
         cursor.execute(sql1,para)
+        mydb.commit()
         cell=str(cell)
-        parametri=(cell,)
-        sql="delete from imprumuturi where COD_IMPRUMUT=%s;"
-        cursor.execute(sql,parametri)
+        
+        sql=f"delete from imprumuturi where COD_IMPRUMUT={cell};"
+        cursor.execute(sql)
+        mydb.commit()
+
+        sql=f'Select Id from carticod where Cod={cod_carte};'
+        cursor.execute(sql)
+        id=cursor.fetchall()
+        id=list(id[0])
+        id=int(id[0])
+        stare="liber_"
+        sql1=f"select Count(Cod) from carticod where Id={id} and Stare like '{stare}';"
+        cursor.execute(sql1)
+        result=cursor.fetchall()
+        result=list(result[0])
+        nr=int(result[0])
+        dic={'Id':id,'Nr':nr}
+        res=requests.post(url='https://scolibra.000webhostapp.com/adaugbucata.php',json=dic)
+        print(res)
         
         showinfo("info","Cartea a fost restituită.")
         window.destroy()
@@ -454,6 +588,10 @@ def imprumut():
         minut = int(now.strftime("%M"))+1
         ora = now.strftime("%H")
         
+        
+        print(numere0)
+        print(numere1)
+
         for i in range(len(numere0)):
             try:
                 kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
@@ -498,39 +636,25 @@ def imprumut():
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6,7]
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
+    tabel.pack()
 
     adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",20),command=returnata)
-    adus.pack(side=BOTTOM)
+    adus.pack()
 
     msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",20),command=mesaj)
-    msj_elev.pack(side=BOTTOM)
+    msj_elev.pack()
 
-    # configurare Scrollbar
-    scrollbar = Scrollbar(window,orient='vertical',command=tabel.yview,width=20)
-    scrollbar.pack(side=RIGHT,fill='y')
-    tabel.pack(side=TOP,padx=30,anchor=CENTER)
+    tabel.heading(0,text='COD IMPRUMUT')
+    tabel.heading(1,text='COD ABONAT')
+    tabel.heading(2,text='NUME')
+    tabel.heading(3,text='CLASA')
+    tabel.heading(4,text='COD CARTE')
+    tabel.heading(5,text='DATA IMPRUMUTULUI')
+    tabel.heading(6,text='DATA RETURNARII')
+    tabel.heading(7,text='TELEFON')
+    tabel.tag_configure('limita',background='yellow',)
+    tabel.tag_configure('trecut',background='red',foreground="white")
     
-    tabel['yscrollcommand'] = scrollbar.set
-
-    tabel.heading(0,text='COD ÎMPRUMUT',anchor=W)
-    tabel.heading(1,text='COD ABONAT',anchor=W)
-    tabel.heading(2,text='NUME',anchor=W)
-    tabel.heading(3,text='CLASĂ',anchor=W)
-    tabel.heading(4,text='COD CARTE',anchor=W)
-    tabel.heading(5,text='DATA ÎMPRUMUTULUI',anchor=W)
-    tabel.heading(6,text='DATA RETURNĂRII',anchor=W)
-    tabel.heading(7,text='TELEFON',anchor=W)
-    tabel.tag_configure('limita',background='yellow',foreground='green')
-    tabel.tag_configure('trecut',background='#FF6A6A',foreground="white")
-    tabel.column(0,width=140,anchor=W,stretch=TRUE,)
-    tabel.column(1,width=140,anchor=W)
-    tabel.column(2,width=140,anchor=W)
-    tabel.column(3,width=140,anchor=W)
-    tabel.column(4,width=140,anchor=W)
-    tabel.column(5,width=180,anchor=W)
-    tabel.column(6,width=180,anchor=W)
-    tabel.column(7,width=140,anchor=W)
-
    
     stergere_elemente_tabel()
 
@@ -612,7 +736,7 @@ def abonati():
         showinfo(title="Info",message="Fișierul a fost salvat.")
         window.lift()
 
-    def stergere():     #functia care sterge o carte din baza de date
+    def stergere():     #functia care sterge un abonat din baza de date
     
         ite=tabel.item(tabel.focus())
         cell=ite['values'][0]
@@ -778,8 +902,10 @@ def abonati():
                 cam.set(6, 480)
 
                 camera = True
+                
                 while camera == True:
-                    suceess, frame= cam.read()
+                    frame= cam.read()
+                    cv2.imshow("Camera View", frame)
                     for i in decode(frame):
                         return i.data.decode('utf-8')
         
@@ -831,11 +957,11 @@ def abonati():
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
     tabel.pack()
 
-    tabel.heading(0,text='COD ABONAT',anchor=W)
-    tabel.heading(1,text='NUME',anchor=W)
-    tabel.heading(2,text='PRENUME',anchor=W)
-    tabel.heading(3,text='CLASĂ',anchor=W)
-    tabel.heading(4,text='DATA ABONĂRII',anchor=W)
+    tabel.heading(0,text='COD ABONAT')
+    tabel.heading(1,text='NUME')
+    tabel.heading(2,text='PRENUME')
+    tabel.heading(3,text='CLASA')
+    tabel.heading(4,text='DATA ABONARII')
     tabel.heading(5,text='TELEFON')
     tabel.column(0,anchor=W)
     tabel.column(1,anchor=W)
@@ -922,7 +1048,7 @@ def abonati():
         def save_imprumut():   #funcția care salvează împrumutul în baza de date
             cod_carte=int(Titlu_entry.get())
 
-            sql2="Select * from carti where Cod=%s and Stare='liberă';"
+            sql2="Select Cod from carticod where Cod=%s and Stare='liberă';"
             test2=(cod_carte,)
             cursor.execute(sql2,test2)
             re=cursor.fetchall()
@@ -933,11 +1059,22 @@ def abonati():
                 test=(cod_abonat,nume,clasa,cod_carte,data_azi,data_return,telefon)
                 cursor.execute(sql,test)
 
-                sql1="update carti set Stare='împrumutată'  where Cod=%s;"
-                test1=(cod_carte,)
-                cursor.execute(sql1,test1)
-                showinfo(title="Info",message="Împrumut adăugat.")
+                sql1=f"update carticod set Stare='împrumutată'  where Cod={cod_carte};"
+                
+                cursor.execute(sql1)
                 mydb.commit()
+                showinfo(title="Info",message="Împrumut adăugat.")
+                
+                sql=f"select Id from carticod where Cod={cod_carte};"
+                cursor.execute(sql)
+                id=cursor.fetchall()
+                id=list(id[0])
+                id=int(id[0])
+
+                dic={'Id':id}
+                res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
+                print(res)
+
                 win.destroy()
                 window.lift()
             else:
