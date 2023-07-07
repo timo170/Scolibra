@@ -1,4 +1,4 @@
-from ctypes.wintypes import tagSIZE
+
 from tkinter import *
 import random
 import mysql.connector
