@@ -895,39 +895,36 @@ def abonati():
 
         
     def cauta_QR():    #funcția care face căutarea în funcție de codul stocat în codul QR
-            var=""
-            def reader_cam_qr(): #funcția care scanează codul QR prin intermediul camerei web
-                cam =cv2.VideoCapture(0)
-                cam.set(5, 640)
-                cam.set(6, 480)
-
-                camera = True
-                
-                while camera == True:
-                    frame= cam.read()
-                    cv2.imshow("Camera View", frame)
-                    for i in decode(frame):
-                        return i.data.decode('utf-8')
+        var=""
+        cam =cv2.VideoCapture(0)
+        cam.set(5, 640)
+        cam.set(6, 480)
+            
+        camera = True
+        while camera == True:
+            suceess, frame= cam.read()
+            for i in decode(frame):
+                var=i.data.decode('utf-8')
+                camera=False
         
             
-            var=reader_cam_qr()
-            Cod=int(var.split('/')[0])
+    
+        Cod=int(var.split('/')[0])
+        sql=f"SELECT * FROM abonati WHERE Cod_abonat={Cod};"
+        cursor.execute(sql)
+        records = cursor.fetchall()
         
-
-            sql="SELECT * FROM abonati WHERE Cod_abonat={} ;".format(Cod)
-            cursor.execute(sql,)
-            records = cursor.fetchall()
         
-            recor=[]
-            for x in records:
+        recor=[]
+        for x in records:
                 list1=(x[0],x[1], x[2],x[3],x[4])
                 recor.append(list1)
-            mydb.commit()
+        mydb.commit()
 
-            stergere_elemente_arbore()
+        stergere_elemente_arbore()
         
-            for record in records:
-                tabel.insert('', 0, values=record)
+        for record in records:
+            tabel.insert('', 0, values=record)
 
     
 
