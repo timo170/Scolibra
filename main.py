@@ -12,6 +12,7 @@ import pywhatkit as kit
 from pyzbar.pyzbar import decode 
 from datetime import datetime,date,timedelta
 import requests
+import webbrowser
 
 
 #conectare la baza de date
@@ -1104,7 +1105,8 @@ def abonati():
     window.mainloop()
 
         
-
+def link():
+    return webbrowser.open("https://scolibra.000webhostapp.com/")
 
 #FEREASTRA PRINCIPALA
 
@@ -1170,6 +1172,9 @@ elevi.place(relx=0,rely=1,anchor=SW)
 data_azi=str(date.today())
 data_ora=Label(canvas,text=data_azi,width=10,height=3,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19")
 data_ora.place(relx=0.9,rely=0.99,anchor=SW,)
+
+link_buton=Button(canvas,text="Școlibra_website",width=13,height=3,font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link)
+link_buton.place(relx=0.1,rely=0.99,anchor=SE,)
 
 
 
