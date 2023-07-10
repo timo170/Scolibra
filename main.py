@@ -550,6 +550,24 @@ def imprumut():
         for item in x:
             tabel.delete(item)
 
+    def prelungire():
+        ite=tabel.item(tabel.focus())
+        cod_imprumut=int(ite['values'][0])
+        data_returnarii=ite["values"][6]
+        an=int(data_returnarii.split(sep='-')[0])
+        luna=int(data_returnarii.split(sep='-')[1])
+        zi=int(data_returnarii.split(sep='-')[2])
+        data_returnarii=date(year=an,month=luna,day=zi)
+        data_noua=str(data_returnarii +timedelta(days=14))
+        try:
+            query=f"Update imprumuturi set DATA_RETURNARII='{data_noua}' where COD_IMPRUMUT={cod_imprumut};"
+            mydb.commit()
+            showinfo(title="Info",message="Împrumutul a fost prelungit cu două săptămâni.")
+        except:
+            showerror(title="Eroare", message="Contactați creatorul aplicației !")
+        
+
+
     
     def returnata():   #functia care șterge un împrumut adus la timp (atunci când cartea este returnată)
         ite=tabel.item(tabel.focus())
@@ -639,11 +657,14 @@ def imprumut():
     tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
     tabel.pack()
 
-    adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",20),command=returnata)
+    adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=returnata)
     adus.pack()
 
-    msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",20),command=mesaj)
+    msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=mesaj)
     msj_elev.pack()
+
+    prelung=Button(window,text="Prelungire",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=prelungire)
+    prelung.pack()
 
     tabel.heading(0,text='COD IMPRUMUT')
     tabel.heading(1,text='COD ABONAT')
@@ -1173,7 +1194,7 @@ data_azi=str(date.today())
 data_ora=Label(canvas,text=data_azi,width=10,height=3,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19")
 data_ora.place(relx=0.9,rely=0.99,anchor=SW,)
 
-link_buton=Button(canvas,text="Școlibra_website",width=13,height=3,font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link)
+link_buton=Button(canvas,text="Școlibra website",width=13,height=3,font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link)
 link_buton.place(relx=0.1,rely=0.99,anchor=SE,)
 
 
