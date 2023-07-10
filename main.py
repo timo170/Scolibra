@@ -76,6 +76,8 @@ def search():
         
 
         stergere_elemente_arbore()
+        tag1='roz'
+        tag2='normal'
         for rand in date:
             id=rand[0]
             q="SELECT COUNT(Cod) FROM carticod Where Id=%s;"
@@ -83,13 +85,21 @@ def search():
             cursor.execute(q,para)
             nr=cursor.fetchall()
             nr=nr[0]
-            carte=tree.insert('',END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr])
+            if tag1=='roz':
+                tag1='porto'
+            else:
+                tag1='roz'
+            carte=tree.insert('',END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr],tags=tag1)
     
             com=f"Select Cod from carticod where Id={id} and Stare='liberă';"
             cursor.execute(com)
             result=cursor.fetchall()
             for cod in result:
-                tree.insert(carte,END,values=("","","","","","",cod))
+                if tag2=='normal':
+                    tag2='gri'
+                else:
+                    tag2='normal'
+                tree.insert(carte,END,values=("","","","","","",cod),tags=tag2)
             
 
         
@@ -137,7 +147,7 @@ def search():
             list1=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
             date.append(list1)
 
-        for rand in date:
+        
             ID=tree.insert("",END,text=id,values=rand)
         
         q=f"Select Cod from carticod where Id={id};"
@@ -154,6 +164,8 @@ def search():
                 my_tag='cod_scanat'
             else:
                 my_tag='normal'
+                
+
 
             tree.insert(ID,END,values=["","","","","","",co],tags=my_tag)
         
@@ -279,6 +291,9 @@ def search():
     tree.heading(7,text='COD CĂRȚI LIBERE')
 
     tree.tag_configure('cod_scanat',background='yellow')
+    tree.tag_configure('gri',background='#EEE6DE')
+    tree.tag_configure('roz',background="#FFE3E3")
+    tree.tag_configure('porto',background="#FFC0A4",)
 
     tree.column('#0',minwidth=40,width=40,anchor=CENTER)
     
@@ -291,6 +306,9 @@ def search():
     for rand in result:
         list1=[rand[0],rand[1],rand[2],rand[3],rand[4],rand[5]]
         date.append(list1)
+    tag1='roz'
+    tag2='normal'
+    
 
     for rand in date:
         id=int(rand[0])
@@ -300,13 +318,23 @@ def search():
         nr=cursor.fetchall()
         nr=nr[0]
 
-        ID=tree.insert("",END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr])
+        ID=tree.insert("",END,text=id,values=[rand[1],rand[2],rand[3],rand[4],rand[5],nr],tags=tag1)
+        if tag1=='roz':
+            tag1='porto'
+        else:
+            tag1='roz'
         q="Select Cod from carticod where Id=%s and Stare='liberă';"
         
         cursor.execute(q,par)
         result=cursor.fetchall()
+        
         for cod in result:
-            tree.insert(ID,END,values=["","","","","","",cod])
+            tree.insert(ID,END,values=["","","","","","",cod],tags=tag2)
+            if tag2=='normal':
+                tag2='gri'
+            else:
+                tag2='normal'
+            
 
     
     
@@ -676,6 +704,7 @@ def imprumut():
     tabel.heading(7,text='TELEFON')
     tabel.tag_configure('limita',background='yellow',)
     tabel.tag_configure('trecut',background='red',foreground="white")
+    tabel.tag_configure('gri',background='#EEE6DE')
     
    
     stergere_elemente_tabel()
@@ -695,6 +724,7 @@ def imprumut():
     global numere0,numere1
     numere0=[]
     numere1=[]
+    my_tag='normal'
     for rand in datele:
         
         if date.today()>rand[6]:
@@ -707,7 +737,10 @@ def imprumut():
                 numere1.append([rand[7],rand[6]])
             
             else:
-                my_tag='normal'
+                if my_tag=='normal':
+                    my_tag='gri'
+                else:
+                    my_tag="normal"
                 
             
         
@@ -911,8 +944,13 @@ def abonati():
             mydb.commit()
 
             stergere_elemente_arbore()
+            tag="normal"
             for record in records:
-                tabel.insert('', 0, values=record)
+                tabel.insert('', 0, values=record,tags=tag)
+                if tag=="normal":
+                    tag='gri'
+                else:
+                    tag='normal'
 
 
         
@@ -988,6 +1026,8 @@ def abonati():
     tabel.column(3,anchor=W)
     tabel.column(4,anchor=W)
     tabel.column(5,anchor=W)
+
+    tabel.tag_configure('gri',background="#EEE6DE")
     
   
 
@@ -1000,9 +1040,14 @@ def abonati():
               x[3],
               x[4],x[5])
         datele.append(list1)
+
+    tag='normal'
     for rand in datele: 
-        
-        tabel.insert('',END,values=rand)
+        tabel.insert('',END,values=rand,tags=tag)
+        if tag=="normal":
+            tag='gri'
+        else:
+            tag='normal'
 
     
             
