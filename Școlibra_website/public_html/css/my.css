@@ -1,0 +1,53 @@
+.modal-header {background:#D67B22;color:#fff;font-weight:800;}
+.modal-body{font-weight:800;}
+.modal-body ul{list-style:none;}
+.modal .btn {background:#D67B22;color:#fff;}
+.modal a{color:#D67B22;}
+.modal-backdrop {position:inherit !important;}
+#query_button {position:fixed;right:250px;bottom:5px;padding:10px 80px;
+                  background-color:#D67B22;color:#fff;border-color:#f05f40;border-radius:2px;}
+@media(max-width:767px){
+    #query_button {padding: 5px 20px;}
+}
+body {margin-top:60px;margin-left:4%;margin-right:4%;font-family:"Open sans";background: #F5F8F9;overflow-x:hidden;}
+#header{margin-top:20px;}
+#myCarousel {border:1px solid #ccc;margin-top:10px;margin-bottom:10px;}
+#top {border:1px solid #DEEAEE;background:#fff;border-radius:10px;}
+#category{list-style-type:none;overflow:hidden;width:100%; border:1px solid #ccc;background: #fff; border-bottom-right-radius:10px;border-bottom-left-radius: 10px;}
+#category li {display:block; font-weight:400; padding:10px; border-top: 1px solid #ccc;margin-left:-40px; }
+.book-block {margin-top:20px;padding:5px;background:#fff; border :1px solid #DEEAEE;border-radius:10px;}
+.tag {display:inline;padding:2px 5px;width:auto;background:#90e137;color:#fff;height:23px;float:left;}
+.tag-side{display:inline;float:left;}
+.book-center{max-width: 100%;}
+#author {margin-top:20px; background:#fff; border :1px solid #DE0000;border-radius:10px;}
+#author .row {margin-top: 20px; margin-bottom:20px;}
+#author h3{color:rgb(228, 55, 25);}
+footer {background:#101010!important;margin-top: 20px;border:1px solid #DEEAEE;border-radius:5px;color:#D67B22!important;}
+footer .row {padding:10px;}
+
+form.example input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  background: #f1f1f1;
+}
+
+form.example button {
+  float: left;
+  padding: 10px;
+  background: #2196F3;
+  color: yellow;
+  border-left: none;
+  cursor: pointer;
+}
+
+form.example button:hover {
+  background: #0b7dda;
+}
+
+form.example::after {
+  content: "";
+  clear: both;
+  display: table;
+}
