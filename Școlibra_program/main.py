@@ -20,12 +20,12 @@ mydb=mysql.connector.connect(
     host="localhost",
     user="root",
     password="1234",
-    database="BIBLIOTECA"
+    database="biblioteca"
 )
 cursor=mydb.cursor()
 
 #importare citate din baza de date in variabila citate
-sql="Select Citate from CITATE where Numar=%s"
+sql="Select Citate from citate where Numar=%s"
 cursor.execute(sql,[random.randrange(0,10)])
 citate=cursor.fetchall()    
 citate = ','.join(map(str, citate[0]))
