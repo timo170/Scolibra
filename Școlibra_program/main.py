@@ -217,18 +217,17 @@ def search():
 
     window=Tk()
     window.resizable(1,1)
-    window.iconbitmap('lista_carti.ico')
+    window.iconbitmap('Școlibra_program/lista_carti.ico')
     window.title('Listă cărți')
-    window.geometry('1500x1000') 
     
     window.configure(background="#c7d3d4")
     window.resizable(0,0)
 
-    w = 1500 
-    h = 1000
-
     ws = window.winfo_screenwidth() 
     hs = window.winfo_screenheight()
+
+    w = int(ws/1.24)
+    h = int(hs/1.08)
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
@@ -265,17 +264,15 @@ def search():
     caseta=Entry(window,font=("Helvetica",20),fg="black",width=93)  #bara de căutare
     caseta.pack(anchor=CENTER)
     
-    
-    
     global tree
     coloane=(1,2,3,4,5,6,7)
-    tree=ttk.Treeview(window,columns=coloane,height=43) #tabelul cu afișări
+    tree=ttk.Treeview(window,columns=coloane) #tabelul cu afișări
     
     
     # configurare Scrollbar
     scrollbar = Scrollbar(window,orient='vertical',command=tree.yview,width=20)
     scrollbar.pack(side=RIGHT,fill='y')
-    tree.pack(side=TOP,padx=30,anchor=N)
+    tree.place(relx=0.01,rely=0.08,relheight=0.91,relwidth=0.97)
     
     tree['yscrollcommand'] = scrollbar.set
     
@@ -666,15 +663,15 @@ def imprumut():
     
     window.resizable(0,0)
     window.config(background="#ece5e0")
-    window.iconbitmap('carti_i.ico')
+    window.iconbitmap('Școlibra_program/carti_i.ico')
     window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
-    
-    w = 1600 
-    h = 750
 
     ws = window.winfo_screenwidth() 
     hs = window.winfo_screenheight()
+
+    w = int(ws/1.16)
+    h = int(hs/1.44)
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
@@ -759,16 +756,17 @@ def abonati():
     window=Tk()
     
     window.resizable(0,0)
-    window.iconbitmap('lista_elevi.ico')
+    window.iconbitmap('Școlibra_program/lista_elevi.ico')
     window.title('Listă abonați')
     window.configure(background="#FFDFBA")
     window.lift()
 
-    w = 1500 
-    h = 1000
 
     ws = window.winfo_screenwidth() 
     hs = window.winfo_screenheight()
+
+    w = int(ws/1.20)
+    h = int(hs/1.08)
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
@@ -1073,11 +1071,11 @@ def abonati():
         win.configure(background="#FFDFBA")
         win.resizable(0,0)
 
-        w = 300
-        h = 150
-
         ws = root.winfo_screenwidth() 
         hs = root.winfo_screenheight()
+
+        w =300
+        h = 150
 
         x = (ws/2) - (w/2)
         y = (hs/2) - (h/2)
@@ -1177,17 +1175,17 @@ def link():
 #FEREASTRA PRINCIPALA
 
 root = Tk()
-root.geometry('1920x1080')
+
 root.title('Școlibra')
-root.iconbitmap('iconbitmap_principal.ico')
+root.iconbitmap('Școlibra_program/iconbitmap_principal.ico')
 root.resizable(0,0)
 
-w = 1920 
-h = 1080
+w = root.winfo_screenwidth() 
+h = root.winfo_screenheight()
 
 ws = root.winfo_screenwidth() 
 hs = root.winfo_screenheight()
-
+print(ws,hs)
 x = (ws/2) - (w/2)
 y = (hs/2) - (h/2)
 root.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -1195,52 +1193,52 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
 
 #imaginea pentru fundalul canvas_principala
-photo=Image.open("biblioteca1.jpeg")
-photo1=photo.resize((1920,1080))
+photo=Image.open("Școlibra_program/biblioteca1.jpeg")
+photo1=photo.resize((ws,hs))
 img=ImageTk.PhotoImage(photo1)
 
-canvas=Canvas(root,width=1920,height=1080)
-canvas.pack(expand=True,fill=BOTH)
+canvas=Canvas(root,)
+canvas.place(relx=0,rely=0,relheight=1,relwidth=1)
 canvas.create_image(0,0,image=img,anchor=NW)
 
-imglni=Image.open("lni.jpg")
-imglni=imglni.resize((800,400))
+imglni=Image.open("Școlibra_program/lni.jpg")
+imglni=imglni.resize((int(ws/2.5),int(hs/2.5)))
 imglni=ImageTk.PhotoImage(imglni)
 
 #câmpurile ferestrei
 
-frame0=Frame(canvas,height=390,width=780,bg="#F5EBE0")
-frame0.place(relx=0,rely=0,anchor=NW)
+frame0=Frame(canvas,bg="#F5EBE0")  #height=390,width=780,
+frame0.place(relx=0,rely=0,relheight=0.4,relwidth=0.4,anchor=NW)
 
 welcome=Label(frame0,image=imglni)
 welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
 
 
-frame=Frame(canvas,height=400,width=800,)
-frame.place(rely=0,relx=1,anchor=NE)
+frame=Frame(canvas,) #height=400,width=800,
+frame.place(rely=0,relx=1,relheight=0.4,relwidth=0.4,anchor=NE)
 
-citat=Label(frame,text=citate,height=400,width=800,font=("Comic Sans MS",16),bg="#F6E1B5",fg="#805E19", )               
-citat.place(relx=0.5,rely=0.5,anchor=CENTER)
+citat=Label(frame,text=citate,font=("Comic Sans MS",16),bg="#F6E1B5",fg="#805E19", ) #height=400,width=800         
+citat.place(relx=0.5,rely=0.5,relheight=1,relwidth=1,anchor=CENTER)
 
 
-frame1=Frame(canvas,width=780,height=400)
-frame1.place(relx=0.5,rely=0.79,anchor=CENTER)
+frame1=Frame(canvas,bg="#F6E1B5") #width=780,height=400
+frame1.place(relx=0.5,rely=0.79,relheight=0.4,relwidth=0.5,anchor=CENTER)
 
-imprumuturi=Button(frame1,text="Cărți împrumutate",width=70,height=6,bg="#F6E1B5" ,font=("Comic Sans",15),fg="#805E19",command=imprumut)
-imprumuturi.place(relx=0,rely=0,anchor=NW,)
+imprumuturi=Button(frame1,text="Cărți împrumutate",bg="#F6E1B5" ,font=("Comic Sans",17),fg="#805E19",command=imprumut)
+imprumuturi.place(relx=0,rely=0,relheight=0.33,relwidth=1, anchor=NW,)
 
-carti=Button(frame1,text="Listă cărți",width=70,height=6,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=search)
-carti.place(relx=0,rely=0.5,anchor=W,)
+carti=Button(frame1,text="Listă cărți",bg="#F6E1B5",font=("Comic Sans",17),fg="#805E19",command=search)
+carti.place(relx=0,rely=0.5,relheight=0.33,relwidth=1,anchor=W,)
 
-elevi=Button(frame1,text="Listă elevi",width=70,height=5,bg="#F6E1B5",font=("Comic Sans",15),fg="#805E19",command=abonati)
-elevi.place(relx=0,rely=1,anchor=SW)
+elevi=Button(frame1,text="Listă elevi",bg="#F6E1B5",font=("Comic Sans",17),fg="#805E19",command=abonati)
+elevi.place(relx=0,rely=1,relheight=0.33,relwidth=1,anchor=SW)
 
 data_azi=str(date.today())
-data_ora=Label(canvas,text=data_azi,width=10,height=3,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19")
-data_ora.place(relx=0.9,rely=0.99,anchor=SW,)
+data_ora=Label(canvas,text=data_azi,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19") #width=10,height=3,
+data_ora.place(relx=0.89,rely=0.92,relheight=0.1,relwidth=0.1,anchor=W,)
 
-link_buton=Button(canvas,text="Școlibra website",width=13,height=3,font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link)
-link_buton.place(relx=0.1,rely=0.99,anchor=SE,)
+link_buton=Button(canvas,text="Școlibra website",font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link) #width=13,height=3,
+link_buton.place(relx=0.13,rely=0.92,relheight=0.1,relwidth=0.12,anchor=E,)
 
 
 
