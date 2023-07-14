@@ -59,8 +59,7 @@
                         <li> <a href="Produs.php?value=Sociologie"> Sociologie </a> </li>
                         <li> <a href="Produs.php?value=Filozofie"> Filozofie </a> </li>
                         <li> <a href="Produs.php?value=Practice%20și%20timp%20liber"> Practice și timp liber </a> </li>
-                        <li> <a href="Produs.php?value=Business%20and%20Management"> Business & Management </a> </li>
-                        <li> <a href="Produs.php?value=Health%20and%20Cooking"> Health and Cooking </a> </li>
+                        <li> <a href="Produs.php?value=Religie"> Religie </a> </li>
                     </ul>
                 </div>
                 <div class="col-md-8 col-lg-8">
@@ -93,7 +92,7 @@
                                 <img src="img/carusel/5.jpg" class="d-block w-100 img-responsive">
                             </div>
                             <div class="carousel-item">
-                                <img src="img/carousel/6.jpg" class="d-block w-100 img-responsive">
+                                <img src="img/carusel/6.jpg" class="d-block w-100 img-responsive">
                             </div>
                         </div>
                         <!-- Left and right controls/icons -->
