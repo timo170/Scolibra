@@ -43,117 +43,6 @@ INSERT INTO `abonati` (`Cod_abonat`, `Nume`, `Prenume`, `Clasa`, `Data_abonarii`
 	(107, 'Popescu', 'Quineea', 'profesor geografie', '2023-06-04', '+40739 231 064');
 /*!40000 ALTER TABLE `abonati` ENABLE KEYS */;
 
--- Dumping structure for table biblioteca.carti
-CREATE TABLE IF NOT EXISTS `carti` (
-  `Cod` int(11) NOT NULL,
-  `Titlu` varchar(100) DEFAULT NULL,
-  `Autor` varchar(50) DEFAULT NULL,
-  `Editura` varchar(50) DEFAULT NULL,
-  `Anul_aparitiei` smallint(6) DEFAULT NULL,
-  `Pret` decimal(20,3) unsigned DEFAULT NULL,
-  `Stare` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`Cod`),
-  UNIQUE KEY `Cod` (`Cod`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Dumping data for table biblioteca.carti: ~92 rows (approximately)
-DELETE FROM `carti`;
-/*!40000 ALTER TABLE `carti` DISABLE KEYS */;
-INSERT INTO `carti` (`Cod`, `Titlu`, `Autor`, `Editura`, `Anul_aparitiei`, `Pret`, `Stare`) VALUES
-	(35608, 'Steaua Sudului', 'Jules Verne', 'Ion Creangă', 1984, 13.000, 'liberă'),
-	(39577, 'Tainele inimei', 'Cristian Teodorescu', 'Cartea Românească', 2005, 22.500, 'liberă'),
-	(39666, 'Cel mai iubit dintre pământeni vol.1', 'Marin Preda', 'Cartex', 2006, 32.348, 'liberă'),
-	(39667, 'Cel mai iubit dintre pământeni vol.2', 'Marin Preda', 'Cartex', 2006, 32.348, 'liberă'),
-	(39668, 'Cel mai iubit dintre pământeni vol.3', 'Marin Preda', 'Cartex', 2006, 32.348, 'liberă'),
-	(39694, 'Nuvele și povestiri', 'Vasile Voiculescu', 'Cartex', 2006, 9.027, 'liberă'),
-	(39724, 'Poezii', 'Mihai Eminescu', 'Cartex', 2006, 6.018, 'liberă'),
-	(39743, 'Maitrey', 'Mircea Eliade', 'Cartex', 2006, 10.908, 'liberă'),
-	(39764, 'La Țigănci', 'Mircea Eliade', 'Cartex', 2006, 10.908, 'liberă'),
-	(39773, 'Moromeții vol.1', 'Marin Preda', 'Cartex', 2006, 23.321, 'liberă'),
-	(39774, 'Moromeții vol.2', 'Marin Preda', 'Cartex', 2006, 23.321, 'liberă'),
-	(39839, 'Dicționar de antonime', 'Marin Buca', 'Vox', 2005, 4.810, 'liberă'),
-	(39841, 'Dicționar de expresii românești', 'Marin Buca', 'Vox', 2005, 5.500, 'liberă'),
-	(39855, 'Mara', 'Ioan Slavici', 'Vox', 2006, 3.096, 'liberă'),
-	(39899, 'Pagini alese', 'Mihai Eminescu', 'Vox', 2006, 3.096, 'liberă'),
-	(39918, 'Din marile legende ale lumii vol.1', 'Alexandru Mitru', 'Vox', 2012, 12.042, 'liberă'),
-	(40328, 'Educația Adulților', 'Adrian Neculau', 'Polirom', 2004, 17.900, 'liberă'),
-	(40329, 'Manual de creativitate', 'Robert J. Sternberg', 'Polirom', 2005, 20.710, 'liberă'),
-	(40330, 'Manual de creativitate', 'Robert J. Sternberg', 'Polirom', 2005, 20.710, 'liberă'),
-	(40331, 'Tehnici de comunicare', 'Andre de Peretti', 'Polirom', 2007, 32.900, 'liberă'),
-	(40332, 'Tehnici de comunicare', 'Andre de Peretti', 'Polirom', 2007, 32.900, 'liberă'),
-	(40335, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40336, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40337, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40338, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40339, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40340, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40341, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40342, 'Nuvele', 'Ioan Slavici', 'Corint', 2006, 11.990, 'liberă'),
-	(40345, 'Alexandru Lăpușneanu', 'Costache Negruzzi', 'Corint', 2007, 11.990, 'liberă'),
-	(40346, 'Alexandru Lăpușneanu', 'Costache Negruzzi', 'Corint', 2007, 11.990, 'liberă'),
-	(40347, 'Alexandru Lăpușneanu', 'Costache Negruzzi', 'Corint', 2007, 11.990, 'liberă'),
-	(40348, 'Alexandru Lăpușneanu', 'Costache Negruzzi', 'Corint', 2007, 11.990, 'liberă'),
-	(40355, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40356, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40357, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40358, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40359, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40360, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40361, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40362, 'Răzvan și Vidra', 'Bogdan Petriceicu Hașdeu', 'Corint', 2007, 24.500, 'liberă'),
-	(40444, 'Teatru', 'Marin Sorescu', 'Minerva', 2006, 13.900, 'liberă'),
-	(40474, 'Povești și povestiri', 'Ion Creanga', 'Corint', 2006, 11.000, 'liberă'),
-	(40503, 'Poezii', 'George Coșbuc', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40504, 'Poezii', 'George Coșbuc', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40505, 'Poezii', 'George Coșbuc', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40506, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40507, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40508, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40509, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40510, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40511, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40512, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40513, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40514, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40515, 'Poezii', 'Vasile Alecsandri', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40516, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40517, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40518, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40519, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40520, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40521, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40522, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40523, 'Balade vesele și triste', 'George Topîrceanu', 'Maxim Bit', 2006, 6.980, 'liberă'),
-	(40524, 'Aventurile lui Tom Sawyer', 'Mark Twain', 'Maxim Bit', 2004, 16.000, 'liberă'),
-	(40525, 'Aventurile lui Tom Sawyer', 'Mark Twain', 'Maxim Bit', 2004, 16.000, 'liberă'),
-	(40526, 'Vrăjitorul din Oz', 'Lyman Frank Baum', 'Național', 2004, 14.900, 'liberă'),
-	(40527, 'Vrăjitorul din Oz', 'Lyman Frank Baum', 'Național', 2004, 14.900, 'liberă'),
-	(40529, 'Robinson Crusoe', 'Daniel Defoe', 'Național', 2004, 17.900, 'liberă'),
-	(40530, 'Robinson Crusoe', 'Daniel Defoe', 'Național', 2004, 17.900, 'liberă'),
-	(40531, 'Plumb', 'George Bacovia', 'Humanitas', 2007, 19.000, 'liberă'),
-	(40532, 'Plumb', 'George Bacovia', 'Humanitas', 2007, 19.000, 'liberă'),
-	(40533, 'Plumb', 'George Bacovia', 'Humanitas', 2007, 19.000, 'liberă'),
-	(40534, 'Opera Poetică', 'Nichita Stănescu', 'Cartier', 2007, 21.000, 'liberă'),
-	(40535, 'De ce iubim femeile', 'Mircea Cărtărescu', 'Humanitas', 2006, 15.000, 'liberă'),
-	(40626, 'Invitație la vals', 'Alexandru Dumas', 'Art ', 2006, 11.920, 'liberă'),
-	(40638, 'Teatru', 'Vasile Alecsandri', 'Art ', 2006, 9.520, 'liberă'),
-	(40923, 'Moara cu noroc.Pădureanca', 'Ioan Slavici', 'Art ', 2006, 8.920, 'liberă'),
-	(40924, 'Nuvele si povestiri', 'Ion Luca Caragiale', 'Art ', 2006, 8.920, 'liberă'),
-	(40925, 'Cazul Magheru', 'Mihail Drumes', 'Art ', 2006, 11.490, 'împrumutată'),
-	(40926, 'Cazul Magheru', 'Mihail Drumes', 'Art ', 2006, 11.490, 'liberă'),
-	(40927, 'Cazul Magheru', 'Mihail Drumes', 'Art ', 2006, 11.490, 'liberă'),
-	(40928, 'Cazul Magheru', 'Mihail Drumes', 'Art ', 2006, 11.490, 'liberă'),
-	(40929, 'Cazul Magheru', 'Mihail Drumes', 'Art ', 2006, 11.490, 'liberă'),
-	(40930, 'Atlasul literaturii române', 'Adrian Costache', 'Cartographia', 2005, 15.300, 'liberă'),
-	(40931, 'Atlasul literaturii române', 'Adrian Costache', 'Cartographia', 2005, 15.300, 'liberă'),
-	(40932, 'Poate că da, poate că nu', 'Gabriele D\'Annunzio', 'Art ', 2008, 16.050, 'liberă'),
-	(40933, 'Poate că da, poate că nu', 'Gabriele D\'Annunzio', 'Art ', 2008, 16.050, 'liberă'),
-	(40934, 'Poate că da, poate că nu', 'Gabriele D\'Annunzio', 'Art ', 2008, 16.050, 'liberă'),
-	(40935, 'Poate că da, poate că nu', 'Gabriele D\'Annunzio', 'Art ', 2008, 16.050, 'liberă'),
-	(41090, 'Amintiri si povesti mai deocheate', 'Neagu Djuvara', 'Humanitas', 2009, 22.000, 'liberă'),
-	(41342, 'Jurnalul unui geniu', 'Salvador Dali', 'Humanitas', 2012, 32.000, 'liberă');
-/*!40000 ALTER TABLE `carti` ENABLE KEYS */;
-
 -- Dumping structure for table biblioteca.carticod
 CREATE TABLE IF NOT EXISTS `carticod` (
   `Cod` int(11) NOT NULL,
@@ -163,11 +52,11 @@ CREATE TABLE IF NOT EXISTS `carticod` (
   CONSTRAINT `carticod_ibfk_1` FOREIGN KEY (`Id`) REFERENCES `cartile` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.carticod: ~121 rows (approximately)
+-- Dumping data for table biblioteca.carticod: ~130 rows (approximately)
 DELETE FROM `carticod`;
 /*!40000 ALTER TABLE `carticod` DISABLE KEYS */;
 INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
-	(35608, 'liberă', 37),
+	(35608, 'împrumutată', 37),
 	(39577, 'liberă', 38),
 	(39666, 'liberă', 7),
 	(39667, 'liberă', 8),
@@ -184,7 +73,7 @@ INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
 	(39899, 'liberă', 28),
 	(39918, 'liberă', 13),
 	(40328, 'liberă', 14),
-	(40329, 'liberă', 19),
+	(40329, 'împrumutată', 19),
 	(40330, 'liberă', 19),
 	(40331, 'liberă', 41),
 	(40332, 'liberă', 41),
@@ -239,7 +128,7 @@ INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
 	(40535, 'liberă', 10),
 	(40626, 'liberă', 15),
 	(40638, 'liberă', 40),
-	(40923, 'liberă', 21),
+	(40923, 'împrumutată', 21),
 	(40924, 'liberă', 25),
 	(40925, 'împrumutată', 6),
 	(40926, 'liberă', 6),
@@ -264,7 +153,7 @@ INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
 	(17729, 'liberă', 45),
 	(17730, 'liberă', 45),
 	(17731, 'liberă', 45),
-	(40345, 'împrumutată', 1),
+	(40345, 'liberă', 1),
 	(17732, 'liberă', 46),
 	(17733, 'liberă', 46),
 	(17735, 'liberă', 46),
@@ -287,7 +176,16 @@ INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
 	(18221, 'liberă', 52),
 	(18222, 'liberă', 52),
 	(40526, 'liberă', 42),
-	(40527, 'liberă', 42);
+	(40527, 'liberă', 42),
+	(37159, 'liberă', 63),
+	(28915, 'liberă', 64),
+	(23299, 'liberă', 66),
+	(40255, 'liberă', 67),
+	(40256, 'liberă', 68),
+	(40257, 'liberă', 69),
+	(37279, 'liberă', 70),
+	(37261, 'liberă', 72),
+	(41100, 'liberă', 73);
 /*!40000 ALTER TABLE `carticod` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.cartile
@@ -299,9 +197,9 @@ CREATE TABLE IF NOT EXISTS `cartile` (
   `Anul_aparitiei` smallint(6) DEFAULT NULL,
   `Pret` decimal(20,3) unsigned DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.cartile: ~52 rows (approximately)
+-- Dumping data for table biblioteca.cartile: ~61 rows (approximately)
 DELETE FROM `cartile`;
 /*!40000 ALTER TABLE `cartile` DISABLE KEYS */;
 INSERT INTO `cartile` (`Id`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pret`) VALUES
@@ -356,7 +254,16 @@ INSERT INTO `cartile` (`Id`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pre
 	(49, 'Gabriel Liiceanu', 'Despre limită', 'Humanitas', 2005, 19.000),
 	(50, 'Gabriel Liiceanu', 'Despre minciună', 'Humanitas', 2006, 19.000),
 	(51, 'Adina Baran Pescaru', 'Parteneriat în educație', 'Minerva', 2005, 8.250),
-	(52, 'Florica Tibea', 'Anatomia omului, atlas școlar ', 'Corint', 2017, 12.790);
+	(52, 'Florica Tibea', 'Anatomia omului, atlas școlar ', 'Corint', 2017, 12.790),
+	(63, 'Sebastian Bonifaciu', 'Sportul în literatură', 'Sport-turism', 1990, 13.500),
+	(64, 'Gheorghe Popa', 'Piramide', 'Sport-turism', 1975, 5.250),
+	(66, 'N. Gh. Băiașu', 'Gimnastica', 'Stadion', 1972, 23.500),
+	(67, 'Dumitru Stăniloae', 'Teologia dogmatică ortodoxă vol.1', 'I.B.M.B.O.R.', 2003, 40.000),
+	(68, 'Dumitru Stăniloae', 'Teologia dogmatică ortodoxă vol.2', 'I.B.M.B.O.R.', 2003, 40.000),
+	(69, 'Dumitru Stăniloae', 'Teologia dogmatică ortodoxă vol.3', 'I.B.M.B.O.R.', 2003, 40.000),
+	(70, 'Emanuel Copăcianu', 'Iisus din Nazaret', 'Doris', 1990, 4.250),
+	(72, 'Emanuel Copăcianu', 'Maria Magdalena', 'Doris', 1990, 4.250),
+	(73, 'John Bowker', 'Istoria și ideile marilor religii', 'Didactică și pedagogică', 2007, 39.000);
 /*!40000 ALTER TABLE `cartile` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.citate
@@ -393,68 +300,17 @@ CREATE TABLE IF NOT EXISTS `imprumuturi` (
   `TELEFON` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`COD_IMPRUMUT`),
   UNIQUE KEY `COD_IMPRUMUT` (`COD_IMPRUMUT`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.imprumuturi: ~2 rows (approximately)
+-- Dumping data for table biblioteca.imprumuturi: ~4 rows (approximately)
 DELETE FROM `imprumuturi`;
 /*!40000 ALTER TABLE `imprumuturi` DISABLE KEYS */;
 INSERT INTO `imprumuturi` (`COD_IMPRUMUT`, `COD_ABONAT`, `NUME`, `CLASA`, `COD_CARTE`, `DATA_IMPRUMUT`, `DATA_RETURNARII`, `TELEFON`) VALUES
-	(17, 100, 'Moria', '9C', 40345, '2023-06-26', '2023-07-10', '+40731 321 321'),
-	(18, 106, 'Vranc', '9B', 40925, '2023-06-30', '2023-07-14', '+40723 124 567');
+	(18, 106, 'Vranc', '9B', 40925, '2023-06-30', '2023-07-14', '+40723 124 567'),
+	(21, 107, 'Popescu', 'profesor geografie', 40329, '2023-07-10', '2023-08-07', '+40739 231 064'),
+	(22, 103, 'Faur', '8D', 35608, '2023-07-10', '2023-08-07', '+40734 345 456'),
+	(23, 101, 'Conta', '9B', 40923, '2023-07-10', '2023-07-24', '+40738 231 065');
 /*!40000 ALTER TABLE `imprumuturi` ENABLE KEYS */;
-
--- Dumping structure for table biblioteca.test
-CREATE TABLE IF NOT EXISTS `test` (
-  `Nr` bigint(21) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Dumping data for table biblioteca.test: ~42 rows (approximately)
-DELETE FROM `test`;
-/*!40000 ALTER TABLE `test` DISABLE KEYS */;
-INSERT INTO `test` (`Nr`) VALUES
-	(9),
-	(1),
-	(2),
-	(2),
-	(8),
-	(5),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(1),
-	(2),
-	(1),
-	(1),
-	(1),
-	(1),
-	(8),
-	(1),
-	(1),
-	(1),
-	(1),
-	(3),
-	(9),
-	(3),
-	(1),
-	(9),
-	(1),
-	(8),
-	(2),
-	(1),
-	(1),
-	(1),
-	(1),
-	(2),
-	(2);
-/*!40000 ALTER TABLE `test` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
