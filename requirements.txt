@@ -1,0 +1,8 @@
+mysql-connector-python
+Pillow
+qrcode
+opencv-python
+pyzbar
+requests
+pywhatkit
+webbrowser
