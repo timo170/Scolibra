@@ -207,7 +207,17 @@ def search():
         window.lift()
     
     
+
+    
+    
+
+
+
+
+
     window=Tk()
+    window.resizable(1,1)
+    
     window.title('Listă cărți')
     
     window.configure(background="#c7d3d4")
@@ -217,7 +227,7 @@ def search():
     hs = window.winfo_screenheight()
 
     w = int(ws/1.24)
-    h = int(hs/1.1)
+    h = int(hs/1.08)
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
@@ -230,20 +240,21 @@ def search():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,width=10,height=1,text="Caută după:",font=("Helvetica",21),bg="#c7d3d4",fg="black")
+    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",21),bg="#c7d3d4",fg="black",anchor=E)
     label.pack(side=LEFT)
 
-    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16))  #filtru (caută după)
-    filtru.pack(padx=5,side=LEFT)
-
-    genqr=Button(frame3,width=15,text="Generează cod QR",command=generareQR,font=("Helvetica",12),bg="#A085C2",fg="black") #buton pentru generare QR
+    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru generare QR
     genqr.pack(side=RIGHT)
 
-    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",12),bg="#A085C2",fg="black") #buton pentru ștergere carte
+    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru ștergere carte
     sterge.pack(side=RIGHT)
 
-    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",12),bg="#A085C2",fg="black") #buton pentru inserare carte
+    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
+
+
+    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16))  #filtru (caută după)
+    filtru.pack(padx=5,side=RIGHT)
 
 
     valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","QR"]
@@ -262,7 +273,7 @@ def search():
     # configurare Scrollbar
     scrollbar = Scrollbar(window,orient='vertical',command=tree.yview,width=20)
     scrollbar.pack(side=RIGHT,fill='y')
-    tree.place(relx=0.005,rely=0.1,relheight=0.90,relwidth=0.98)
+    tree.place(relx=0.01,rely=0.08,relheight=0.91,relwidth=0.97)
     
     tree['yscrollcommand'] = scrollbar.set
     
@@ -283,13 +294,7 @@ def search():
     tree.tag_configure('porto',background="#FFC0A4",)
 
     tree.column('#0',minwidth=40,width=40,anchor=CENTER)
-    tree.column(1,minwidth=150,width=150,anchor=CENTER)
-    tree.column(2,minwidth=200,width=200,anchor=CENTER)
-    tree.column(3,minwidth=100,width=100,anchor=CENTER)
-    tree.column(4,minwidth=100,width=100,anchor=CENTER)
-    tree.column(5,minwidth=60,width=60,anchor=CENTER)
-    tree.column(6,minwidth=80,width=80,anchor=CENTER)
-    tree.column(7,minwidth=100,width=100,anchor=CENTER)
+    tree.column(1,minwidth=100,anchor=CENTER)
     
 
     q="Select * from cartile;"
@@ -660,7 +665,7 @@ def imprumut():
     
     window.resizable(0,0)
     window.config(background="#ece5e0")
-    
+    window.iconbitmap('../Scolibra/Școlibra_program/carti_i.ico')
     window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
 
@@ -673,21 +678,20 @@ def imprumut():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    window.iconbitmap('../Scolibra/Școlibra_program/carti_i.ico')
 
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6,7]
-    tabel=ttk.Treeview(window,columns=coloane,show="headings")
-    tabel.place(relx=0.01,rely=0.01,relheight=0.70,relwidth=0.98)
-    
+    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
+    tabel.pack()
+
     adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=returnata)
-    adus.place(relx=0.45,rely=0.71,relheight=0.05,relwidth=0.2)
+    adus.pack()
 
     msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=mesaj)
-    msj_elev.place(relx=0.45,rely=0.76,relheight=0.05,relwidth=0.2)
+    msj_elev.pack()
 
     prelung=Button(window,text="Prelungire",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=prelungire)
-    prelung.place(relx=0.45,rely=0.81,relheight=0.05,relwidth=0.2)
+    prelung.pack()
 
     tabel.heading(0,text='COD IMPRUMUT')
     tabel.heading(1,text='COD ABONAT')
@@ -700,15 +704,6 @@ def imprumut():
     tabel.tag_configure('limita',background='yellow',)
     tabel.tag_configure('trecut',background='red',foreground="white")
     tabel.tag_configure('gri',background='#EEE6DE')
-
-    tabel.column(0,minwidth=50,width=50,anchor=CENTER)
-    tabel.column(1,minwidth=80,width=80,anchor=CENTER)
-    tabel.column(2,minwidth=100,width=100,anchor=CENTER)
-    tabel.column(3,minwidth=100,width=100,anchor=CENTER)
-    tabel.column(4,minwidth=100,width=100,anchor=CENTER)
-    tabel.column(5,minwidth=80,width=80,anchor=CENTER)
-    tabel.column(6,minwidth=80,width=80,anchor=CENTER)
-    tabel.column(7,minwidth=100,width=100,anchor=CENTER)
     
    
     stergere_elemente_tabel()
@@ -1016,7 +1011,7 @@ def abonati():
 
     global tabel
     coloane=[0,1,2,3,4,5]
-    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30,)
+    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
     tabel.pack()
 
     tabel.heading(0,text='COD ABONAT')
@@ -1025,12 +1020,12 @@ def abonati():
     tabel.heading(3,text='CLASA')
     tabel.heading(4,text='DATA ABONARII')
     tabel.heading(5,text='TELEFON')
-    tabel.column(0,minwidth=80,width=80,anchor=CENTER)
-    tabel.column(1,minwidth=80,width=80, anchor=CENTER)
-    tabel.column(2,minwidth=80,width=80,anchor=CENTER)
-    tabel.column(3,minwidth=110,width=110,anchor=CENTER)
-    tabel.column(4,minwidth=100,width=100,anchor=CENTER)
-    tabel.column(5,minwidth=100,width=100,anchor=CENTER)
+    tabel.column(0,anchor=W)
+    tabel.column(1,anchor=W)
+    tabel.column(2,anchor=W)
+    tabel.column(3,anchor=W)
+    tabel.column(4,anchor=W)
+    tabel.column(5,anchor=W)
 
     tabel.tag_configure('gri',background="#EEE6DE")
     
@@ -1186,16 +1181,16 @@ root.resizable(1,1)
 ws = root.winfo_screenwidth() 
 hs = root.winfo_screenheight()
 root.geometry('%dx%d' % (ws, hs))
-root.iconbitmap('Școlibra_program/iconbitmap_principal.ico')
+root.iconbitmap('Scolibra_program/iconbitmap_principal.ico')
 
-photo=Image.open("Școlibra_program/biblioteca1.jpeg")
+photo=Image.open("Scolibra_program/biblioteca1.jpeg")
 photo1=photo.resize((ws,hs))
 img=ImageTk.PhotoImage(photo1)
 
 canvas=Canvas(root,width=ws,height=hs)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
-imglni=Image.open("Școlibra_program/lni.jpg")
+imglni=Image.open("Scolibra_program/lni.jpg")
 w_imglni=int(0.5*ws)
 h_imglni=int(0.5*hs)
 imglni=imglni.resize((w_imglni,h_imglni))
