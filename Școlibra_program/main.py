@@ -101,7 +101,46 @@ def search():
                     tag2='normal'
                 tree.insert(carte,END,values=("","","","","","",cod),tags=tag2)
             
+    #functia care sterge o carte din baza de date
+    def stergere():
+        try:
+            id_cod=tree.focus()
+            id_carte=tree.parent(id_cod)
+            id=tree.item(id_carte)["text"]
+            
+            valori=tree.item(id_cod)
+            cod=valori["values"][6]
+            parametri=(cod,)
+            sql="delete from carticod where Cod=%s;"
+            cursor.execute(sql,parametri)
+            mydb.commit()
+            
+            dic={'Id':id}
+            res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
+            print(res)
 
+            
+            
+            cod=str(cod)
+            showinfo("Info","Ați șters cartea cu codul "+cod )
+            
+        except:
+            id_carte=tree.focus()
+            id=tree.item(id_carte)["text"]
+            sql=f"Select Count(Cod) from carticod where Id={id};"
+            cursor.execute(sql)
+            nr=cursor.fetchall()
+            nr=nr[0]
+            nr=nr[0]
+            if nr==0:
+                sql=f"Delete from cartile where Id={id};"
+                cursor.execute(sql)
+                mydb.commit()
+                dic={'Id':id}
+                res=requests.post(url='https://scolibra.000webhostapp.com/stergcarte.php',json=dic)
+                id=str(id)
+                showinfo("Info","Ați șters cartea cu Id-ul "+id)
+        window.destroy()
         
     def cauta_QR():    #funcția care face căutarea în funcție de codul stocat în codul QR
         var=""
@@ -142,13 +181,11 @@ def search():
         nr=cursor.fetchall()
         nr=nr[0]
 
-        date=[]
         for rand in result:
-            list1=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
-            date.append(list1)
+            date=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
 
         
-            ID=tree.insert("",END,text=id,values=rand)
+            ID=tree.insert("",END,text=id,values=date)
         
         q=f"Select Cod from carticod where Id={id};"
         cursor.execute(q)
@@ -165,14 +202,7 @@ def search():
             else:
                 my_tag='normal'
                 
-
-
             tree.insert(ID,END,values=["","","","","","",co],tags=my_tag)
-        
-        
-        
-
-        
         
 
     global criteriu
@@ -222,7 +252,7 @@ def search():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    window.iconbitmap('../Scolibra/Școlibra_program/lista_carti.ico')
+    window.iconbitmap('Școlibra_program/lista_carti.ico')
 
 
 
@@ -256,13 +286,14 @@ def search():
     
     global tree
     coloane=(1,2,3,4,5,6,7)
-    tree=ttk.Treeview(window,columns=coloane) #tabelul cu afișări
+    tree=ttk.Treeview(window,columns=coloane,height=60) #tabelul cu afișări
     
     
     # configurare Scrollbar
     scrollbar = Scrollbar(window,orient='vertical',command=tree.yview,width=20)
     scrollbar.pack(side=RIGHT,fill='y')
-    tree.place(relx=0.005,rely=0.1,relheight=0.90,relwidth=0.98)
+    #tree.place(relx=0.005,rely=0.1,relheight=0.90,relwidth=0.98)
+    tree.pack(side=TOP,padx=10,anchor=N)
     
     tree['yscrollcommand'] = scrollbar.set
     
@@ -289,7 +320,7 @@ def search():
     tree.column(4,minwidth=100,width=100,anchor=CENTER)
     tree.column(5,minwidth=60,width=60,anchor=CENTER)
     tree.column(6,minwidth=80,width=80,anchor=CENTER)
-    tree.column(7,minwidth=100,width=100,anchor=CENTER)
+    tree.column(7,minwidth=100,width=110,anchor=CENTER)
     
 
     q="Select * from cartile;"
@@ -329,58 +360,13 @@ def search():
             else:
                 tag2='normal'
             
-
-    
+    tree.insert("",END,values=["","","","","","",""])
     
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
-   
+
+    
     window.mainloop()
-
-    
-
-    
-
-#functia care sterge o carte din baza de date
-def stergere():
-    try:
-        id_cod=tree.focus()
-        id_carte=tree.parent(id_cod)
-        id=tree.item(id_carte)["text"]
-        
-        valori=tree.item(id_cod)
-        cod=valori["values"][6]
-        parametri=(cod,)
-        print(cod)
-        sql="delete from carticod where Cod=%s;"
-        cursor.execute(sql,parametri)
-        mydb.commit()
-        
-        dic={'Id':id}
-        res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
-        print(res)
-
-        
-        
-        cod=str(cod)
-        showinfo("Info","Ați șters cartea cu codul "+cod )
-        
-    except:
-        id_carte=tree.focus()
-        id=tree.item(id_carte)["text"]
-        sql=f"Select Count(Cod) from carticod where Id={id};"
-        cursor.execute(sql)
-        nr=cursor.fetchall()
-        nr=nr[0]
-        nr=nr[0]
-        if nr==0:
-            sql=f"Delete from cartile where Id={id};"
-            cursor.execute(sql)
-            mydb.commit()
-            dic={'Id':id}
-            res=requests.post(url='https://scolibra.000webhostapp.com/stergcarte.php',json=dic)
-            id=str(id)
-            showinfo("Info","Ați șters cartea cu Id-ul "+id)
         
 
 
@@ -557,8 +543,6 @@ def inserare():
 
     preluare()
 
-
-
     geam.mainloop()
 
 
@@ -583,10 +567,12 @@ def imprumut():
         data_noua=str(data_returnarii +timedelta(days=14))
         try:
             query=f"Update imprumuturi set DATA_RETURNARII='{data_noua}' where COD_IMPRUMUT={cod_imprumut};"
+            cursor.execute(query)
             mydb.commit()
             showinfo(title="Info",message="Împrumutul a fost prelungit cu două săptămâni.")
         except:
             showerror(title="Eroare", message="Contactați creatorul aplicației !")
+        window.destroy()
         
 
 
@@ -673,7 +659,7 @@ def imprumut():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    window.iconbitmap('../Scolibra/Școlibra_program/carti_i.ico')
+    window.iconbitmap('Școlibra_program/carti_i.ico')
 
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6,7]
@@ -745,25 +731,15 @@ def imprumut():
                     my_tag='gri'
                 else:
                     my_tag="normal"
-                
-            
-        
         tabel.insert('',END,values=rand,tags=my_tag)
     
     
 
     
-    
-    
-
-    
-    
 #functia care deschide LISTA DE ELEVI (ABONAȚI la bibliotecă)
 def abonati():
     window=Tk()
-    
     window.resizable(0,0)
-    window.iconbitmap('../Scolibra/Școlibra_program/lista_elevi.ico')
     window.title('Listă abonați')
     window.configure(background="#FFDFBA")
     window.lift()
@@ -778,6 +754,7 @@ def abonati():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    window.iconbitmap('Școlibra_program/lista_elevi.ico')
 
     #funcția care generează un cod QR pentru elevul selectat
     def generareQR():
@@ -1004,8 +981,6 @@ def abonati():
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
     filtru.pack(side=LEFT)
 
-    
-
     valori=["Cod_abonat","Nume","Prenume","Clasa","QR"]
     filtru['values']=valori      
     filtru['state']='readonly'
@@ -1058,8 +1033,6 @@ def abonati():
             
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
-
-    
 
     def imprumut_nou(): #funcția care adaugă un împrumut nou
         ite=tabel.item(tabel.focus())
@@ -1224,5 +1197,4 @@ data_ora.grid(row=4,column=3)
 
 link_buton=Button(canvas,text="Școlibra website",font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link) #width=13,height=3,
 link_buton.grid(row=4,column=0)
-
 root.mainloop()

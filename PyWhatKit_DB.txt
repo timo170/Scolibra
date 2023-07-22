@@ -8,3 +8,13 @@ Time: 13:53
 Phone Number: +40738 231 065
 Message: Data limită împrumutului este 2023-07-24.
 --------------------
+Date: 22/7/2023
+Time: 17:24
+Phone Number: +40723 124 567
+Message: Împrumutul a depășit data limită 2023-07-14 . Vă rog să returnați cartea/țile la bibliotecă.
+--------------------
+Date: 22/7/2023
+Time: 17:25
+Phone Number: +40738 231 065
+Message: Data limită împrumutului este 2023-07-24.
+--------------------
