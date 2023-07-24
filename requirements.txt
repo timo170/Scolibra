@@ -5,4 +5,3 @@ opencv-python
 pyzbar
 requests
 pywhatkit
-webbrowser

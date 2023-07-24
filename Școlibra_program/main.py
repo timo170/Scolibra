@@ -3,13 +3,13 @@ from tkinter import *
 import random
 import mysql.connector
 from tkinter import ttk
-from PIL import Image,ImageTk
 from tkinter import messagebox
 from tkinter.messagebox import showinfo,showerror
 import qrcode
 import cv2
 import pywhatkit as kit
-from pyzbar.pyzbar import decode 
+from pyzbar.pyzbar import decode
+from PIL import Image,ImageTk
 from datetime import datetime,date,timedelta
 import requests
 import webbrowser
@@ -101,7 +101,46 @@ def search():
                     tag2='normal'
                 tree.insert(carte,END,values=("","","","","","",cod),tags=tag2)
             
+    #functia care sterge o carte din baza de date
+    def stergere():
+        try:
+            id_cod=tree.focus()
+            id_carte=tree.parent(id_cod)
+            id=tree.item(id_carte)["text"]
+            
+            valori=tree.item(id_cod)
+            cod=valori["values"][6]
+            parametri=(cod,)
+            sql="delete from carticod where Cod=%s;"
+            cursor.execute(sql,parametri)
+            mydb.commit()
+            
+            dic={'Id':id}
+            res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
+            print(res)
 
+            
+            
+            cod=str(cod)
+            showinfo("Info","Ați șters cartea cu codul "+cod )
+            
+        except:
+            id_carte=tree.focus()
+            id=tree.item(id_carte)["text"]
+            sql=f"Select Count(Cod) from carticod where Id={id};"
+            cursor.execute(sql)
+            nr=cursor.fetchall()
+            nr=nr[0]
+            nr=nr[0]
+            if nr==0:
+                sql=f"Delete from cartile where Id={id};"
+                cursor.execute(sql)
+                mydb.commit()
+                dic={'Id':id}
+                res=requests.post(url='https://scolibra.000webhostapp.com/stergcarte.php',json=dic)
+                id=str(id)
+                showinfo("Info","Ați șters cartea cu Id-ul "+id)
+        window.destroy()
         
     def cauta_QR():    #funcția care face căutarea în funcție de codul stocat în codul QR
         var=""
@@ -142,13 +181,11 @@ def search():
         nr=cursor.fetchall()
         nr=nr[0]
 
-        date=[]
         for rand in result:
-            list1=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
-            date.append(list1)
+            date=[rand[1],rand[2],rand[3],rand[4],rand[5],nr]
 
         
-            ID=tree.insert("",END,text=id,values=rand)
+            ID=tree.insert("",END,text=id,values=date)
         
         q=f"Select Cod from carticod where Id={id};"
         cursor.execute(q)
@@ -165,14 +202,7 @@ def search():
             else:
                 my_tag='normal'
                 
-
-
             tree.insert(ID,END,values=["","","","","","",co],tags=my_tag)
-        
-        
-        
-
-        
         
 
     global criteriu
@@ -207,18 +237,13 @@ def search():
         window.lift()
     
     
-
-    
-    
-
-
-
-
-
     window=Tk()
+<<<<<<< HEAD
     window.resizable(1,1)
     window.iconbitmap('../Scolibra/Școlibra_program/lista_carti.ico')
     window.iconbitmap('Scolibra/lista_carti.ico')
+=======
+>>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
     window.title('Listă cărți')
     
     window.configure(background="#c7d3d4")
@@ -228,11 +253,12 @@ def search():
     hs = window.winfo_screenheight()
 
     w = int(ws/1.24)
-    h = int(hs/1.08)
+    h = int(hs/1.1)
 
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    window.iconbitmap('../Școlibra_program/lista_carti.ico')
 
 
 
@@ -240,21 +266,20 @@ def search():
     frame3=Frame(window)
     frame3.pack(side=TOP)
 
-    label=Label(frame3,width=20,height=1,text="Caută după:",font=("Helvetica",21),bg="#c7d3d4",fg="black",anchor=E)
+    label=Label(frame3,width=10,height=1,text="Caută după:",font=("Helvetica",21),bg="#c7d3d4",fg="black")
     label.pack(side=LEFT)
 
-    genqr=Button(frame3,width=20,text="Generează cod QR",command=generareQR,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru generare QR
+    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16))  #filtru (caută după)
+    filtru.pack(padx=5,side=LEFT)
+
+    genqr=Button(frame3,width=15,text="Generează cod QR",command=generareQR,font=("Helvetica",12),bg="#A085C2",fg="black") #buton pentru generare QR
     genqr.pack(side=RIGHT)
 
-    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru ștergere carte
+    sterge=Button(frame3,width=15,text="Șterge carte",command=stergere,font=("Helvetica",12),bg="#A085C2",fg="black") #buton pentru ștergere carte
     sterge.pack(side=RIGHT)
 
-    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",14),bg="#A085C2",fg="black") #buton pentru inserare carte
+    adauga=Button(frame3,width=15,text="Adaugă carte",command=inserare,font=("Helvetica",12),bg="#A085C2",fg="black") #buton pentru inserare carte
     adauga.pack(side=RIGHT)
-
-
-    filtru=ttk.Combobox(frame3,height=30,font=("Helvetica",16))  #filtru (caută după)
-    filtru.pack(padx=5,side=RIGHT)
 
 
     valori=["Cod","Autor","Titlu","Editura","Anul_aparitiei","Pret","QR"]
@@ -267,13 +292,14 @@ def search():
     
     global tree
     coloane=(1,2,3,4,5,6,7)
-    tree=ttk.Treeview(window,columns=coloane) #tabelul cu afișări
+    tree=ttk.Treeview(window,columns=coloane,height=60) #tabelul cu afișări
     
     
     # configurare Scrollbar
     scrollbar = Scrollbar(window,orient='vertical',command=tree.yview,width=20)
     scrollbar.pack(side=RIGHT,fill='y')
-    tree.place(relx=0.01,rely=0.08,relheight=0.91,relwidth=0.97)
+    #tree.place(relx=0.005,rely=0.1,relheight=0.90,relwidth=0.98)
+    tree.pack(side=TOP,padx=10,anchor=N)
     
     tree['yscrollcommand'] = scrollbar.set
     
@@ -294,6 +320,13 @@ def search():
     tree.tag_configure('porto',background="#FFC0A4",)
 
     tree.column('#0',minwidth=40,width=40,anchor=CENTER)
+    tree.column(1,minwidth=150,width=150,anchor=CENTER)
+    tree.column(2,minwidth=200,width=200,anchor=CENTER)
+    tree.column(3,minwidth=100,width=100,anchor=CENTER)
+    tree.column(4,minwidth=100,width=100,anchor=CENTER)
+    tree.column(5,minwidth=60,width=60,anchor=CENTER)
+    tree.column(6,minwidth=80,width=80,anchor=CENTER)
+    tree.column(7,minwidth=100,width=110,anchor=CENTER)
     
 
     q="Select * from cartile;"
@@ -333,58 +366,13 @@ def search():
             else:
                 tag2='normal'
             
-
-    
+    tree.insert("",END,values=["","","","","","",""])
     
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
-   
+
+    
     window.mainloop()
-
-    
-
-    
-
-#functia care sterge o carte din baza de date
-def stergere():
-    try:
-        id_cod=tree.focus()
-        id_carte=tree.parent(id_cod)
-        id=tree.item(id_carte)["text"]
-        
-        valori=tree.item(id_cod)
-        cod=valori["values"][6]
-        parametri=(cod,)
-        print(cod)
-        sql="delete from carticod where Cod=%s;"
-        cursor.execute(sql,parametri)
-        mydb.commit()
-        
-        dic={'Id':id}
-        res=requests.post('https://scolibra.000webhostapp.com/stergbucata.php',json=dic)
-        print(res)
-
-        
-        
-        cod=str(cod)
-        showinfo("Info","Ați șters cartea cu codul "+cod )
-        
-    except:
-        id_carte=tree.focus()
-        id=tree.item(id_carte)["text"]
-        sql=f"Select Count(Cod) from carticod where Id={id};"
-        cursor.execute(sql)
-        nr=cursor.fetchall()
-        nr=nr[0]
-        nr=nr[0]
-        if nr==0:
-            sql=f"Delete from cartile where Id={id};"
-            cursor.execute(sql)
-            mydb.commit()
-            dic={'Id':id}
-            res=requests.post(url='https://scolibra.000webhostapp.com/stergcarte.php',json=dic)
-            id=str(id)
-            showinfo("Info","Ați șters cartea cu Id-ul "+id)
         
 
 
@@ -561,8 +549,6 @@ def inserare():
 
     preluare()
 
-
-
     geam.mainloop()
 
 
@@ -587,10 +573,12 @@ def imprumut():
         data_noua=str(data_returnarii +timedelta(days=14))
         try:
             query=f"Update imprumuturi set DATA_RETURNARII='{data_noua}' where COD_IMPRUMUT={cod_imprumut};"
+            cursor.execute(query)
             mydb.commit()
             showinfo(title="Info",message="Împrumutul a fost prelungit cu două săptămâni.")
         except:
             showerror(title="Eroare", message="Contactați creatorul aplicației !")
+        window.destroy()
         
 
 
@@ -664,8 +652,12 @@ def imprumut():
     
     window.resizable(0,0)
     window.config(background="#ece5e0")
+<<<<<<< HEAD
     window.iconbitmap('../Scolibra/Școlibra_program/carti_i.ico')
     window.iconbitmap('Scolibra/carti_i.ico')
+=======
+    
+>>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
     window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
 
@@ -678,20 +670,21 @@ def imprumut():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    window.iconbitmap('../Școlibra_program/carti_i.ico')
 
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6,7]
-    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30)
-    tabel.pack()
-
+    tabel=ttk.Treeview(window,columns=coloane,show="headings")
+    tabel.place(relx=0.01,rely=0.01,relheight=0.70,relwidth=0.98)
+    
     adus=Button(window,text="Returnată",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=returnata)
-    adus.pack()
+    adus.place(relx=0.45,rely=0.71,relheight=0.05,relwidth=0.2)
 
     msj_elev=Button(window,text="Notifică elevii",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=mesaj)
-    msj_elev.pack()
+    msj_elev.place(relx=0.45,rely=0.76,relheight=0.05,relwidth=0.2)
 
     prelung=Button(window,text="Prelungire",bg="#547F5D",fg="white",font=("Helvetica",18),width=10,height=1,command=prelungire)
-    prelung.pack()
+    prelung.place(relx=0.45,rely=0.81,relheight=0.05,relwidth=0.2)
 
     tabel.heading(0,text='COD IMPRUMUT')
     tabel.heading(1,text='COD ABONAT')
@@ -704,6 +697,15 @@ def imprumut():
     tabel.tag_configure('limita',background='yellow',)
     tabel.tag_configure('trecut',background='red',foreground="white")
     tabel.tag_configure('gri',background='#EEE6DE')
+
+    tabel.column(0,minwidth=50,width=50,anchor=CENTER)
+    tabel.column(1,minwidth=80,width=80,anchor=CENTER)
+    tabel.column(2,minwidth=100,width=100,anchor=CENTER)
+    tabel.column(3,minwidth=100,width=100,anchor=CENTER)
+    tabel.column(4,minwidth=100,width=100,anchor=CENTER)
+    tabel.column(5,minwidth=80,width=80,anchor=CENTER)
+    tabel.column(6,minwidth=80,width=80,anchor=CENTER)
+    tabel.column(7,minwidth=100,width=100,anchor=CENTER)
     
    
     stergere_elemente_tabel()
@@ -740,26 +742,20 @@ def imprumut():
                     my_tag='gri'
                 else:
                     my_tag="normal"
-                
-            
-        
         tabel.insert('',END,values=rand,tags=my_tag)
     
     
 
     
-    
-    
-
-    
-    
 #functia care deschide LISTA DE ELEVI (ABONAȚI la bibliotecă)
 def abonati():
     window=Tk()
-    
     window.resizable(0,0)
+<<<<<<< HEAD
     window.iconbitmap('../Scolibra/Școlibra_program/lista_elevi.ico')
     window.iconbitmap('Scolibra/lista_elevi.ico')
+=======
+>>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
     window.title('Listă abonați')
     window.configure(background="#FFDFBA")
     window.lift()
@@ -774,6 +770,7 @@ def abonati():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    window.iconbitmap('../Școlibra_program/lista_elevi.ico')
 
     #funcția care generează un cod QR pentru elevul selectat
     def generareQR():
@@ -1000,8 +997,6 @@ def abonati():
     filtru=ttk.Combobox(frame3,width=30,font=("Helvetica",16))  #filtru (caută după)
     filtru.pack(side=LEFT)
 
-    
-
     valori=["Cod_abonat","Nume","Prenume","Clasa","QR"]
     filtru['values']=valori      
     filtru['state']='readonly'
@@ -1012,7 +1007,7 @@ def abonati():
 
     global tabel
     coloane=[0,1,2,3,4,5]
-    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=43,)
+    tabel=ttk.Treeview(window,columns=coloane,show="headings",height=30,)
     tabel.pack()
 
     tabel.heading(0,text='COD ABONAT')
@@ -1021,12 +1016,12 @@ def abonati():
     tabel.heading(3,text='CLASA')
     tabel.heading(4,text='DATA ABONARII')
     tabel.heading(5,text='TELEFON')
-    tabel.column(0,anchor=W)
-    tabel.column(1,anchor=W)
-    tabel.column(2,anchor=W)
-    tabel.column(3,anchor=W)
-    tabel.column(4,anchor=W)
-    tabel.column(5,anchor=W)
+    tabel.column(0,minwidth=80,width=80,anchor=CENTER)
+    tabel.column(1,minwidth=80,width=80, anchor=CENTER)
+    tabel.column(2,minwidth=80,width=80,anchor=CENTER)
+    tabel.column(3,minwidth=110,width=110,anchor=CENTER)
+    tabel.column(4,minwidth=100,width=100,anchor=CENTER)
+    tabel.column(5,minwidth=100,width=100,anchor=CENTER)
 
     tabel.tag_configure('gri',background="#EEE6DE")
     
@@ -1054,8 +1049,6 @@ def abonati():
             
     caseta.bind( '<Return>',cauta)
     filtru.bind('<<ComboboxSelected>>',schimbare )
-
-    
 
     def imprumut_nou(): #funcția care adaugă un împrumut nou
         ite=tabel.item(tabel.focus())
@@ -1175,11 +1168,10 @@ def abonati():
 def link():
     return webbrowser.open("https://scolibra.000webhostapp.com/")
 
-#FEREASTRA PRINCIPALA
-
+# FEREASTRA PRINCIPALĂ
 root = Tk()
-
 root.title('Școlibra')
+<<<<<<< HEAD
 root.iconbitmap('../Scolibra/Școlibra_program/iconbitmap_principal.ico')
 
 root.iconbitmap("C:/Users/George/OneDrive/Documents/GitHub/Scolibra/iconbitmap_principal.ico")
@@ -1188,68 +1180,59 @@ root.resizable(0,0)
 w = root.winfo_screenwidth() 
 h = root.winfo_screenheight()
 
+=======
+root.resizable(1,1)
+>>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
 ws = root.winfo_screenwidth() 
 hs = root.winfo_screenheight()
+root.geometry('%dx%d' % (ws, hs))
+root.iconbitmap('../Școlibra_program/iconbitmap_principal.ico')
 
-x = (ws/2) - (w/2)
-y = (hs/2) - (h/2)
-root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-
-
-
-#imaginea pentru fundalul canvas_principala
-photo=Image.open("../Scolibra/Școlibra_program/biblioteca1.jpeg")
+photo=Image.open("../Școlibra_program/biblioteca1.jpeg")
 photo1=photo.resize((ws,hs))
 photo=Image.open("Scolibra/biblioteca1.jpeg")
 
 photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
-canvas=Canvas(root,)
-canvas.place(relx=0,rely=0,relheight=1,relwidth=1)
+canvas=Canvas(root,width=ws,height=hs)
+canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
+<<<<<<< HEAD
 
 imglni=Image.open("../Scolibra/Școlibra_program/lni.jpg")
 imglni=imglni.resize((int(ws/2.5),int(hs/2.5)))
 imglni=Image.open("educatie/lni.jpg")
 imglni=imglni.resize((800,400))
+=======
+imglni=Image.open("../Școlibra_program/lni.jpg")
+w_imglni=int(0.5*ws)
+h_imglni=int(0.5*hs)
+imglni=imglni.resize((w_imglni,h_imglni))
+>>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
 imglni=ImageTk.PhotoImage(imglni)
 
 #câmpurile ferestrei
 
-frame0=Frame(canvas,bg="#F5EBE0")  #height=390,width=780,
-frame0.place(relx=0,rely=0,relheight=0.4,relwidth=0.4,anchor=NW)
+Label(canvas,image=imglni).grid(row=0,column=0,columnspan=2,rowspan=3)
+citat=Label(canvas,text=citate,font=("Comic Sans MS",16),bg="#F6E1B5",fg="#805E19")
+citat.grid(row=0,column=2,columnspan=2,rowspan=3, padx = 15,ipadx=20)
+imprumuturi=Button(canvas,text="Cărți împrumutate",bg="#F6E1B5" ,font=("Comic Sans",16),fg="#805E19",command=imprumut)
+imprumuturi.config( height = 3, width = 30 )
+imprumuturi.grid(row=3,column=1,columnspan=2,pady=10)
 
-welcome=Label(frame0,image=imglni)
-welcome.place(relx=0.5,rely=0.5,anchor=CENTER)
+carti=Button(canvas,text="Listă cărți",bg="#F6E1B5",font=("Comic Sans",16),fg="#805E19",command=search)
+carti.config( height = 3, width = 30 )
+carti.grid(row=4,column=1,columnspan=2)
 
-
-frame=Frame(canvas,) #height=400,width=800,
-frame.place(rely=0,relx=1,relheight=0.4,relwidth=0.4,anchor=NE)
-
-citat=Label(frame,text=citate,font=("Comic Sans MS",16),bg="#F6E1B5",fg="#805E19", ) #height=400,width=800         
-citat.place(relx=0.5,rely=0.5,relheight=1,relwidth=1,anchor=CENTER)
-
-
-frame1=Frame(canvas,bg="#F6E1B5") #width=780,height=400
-frame1.place(relx=0.5,rely=0.79,relheight=0.4,relwidth=0.5,anchor=CENTER)
-
-imprumuturi=Button(frame1,text="Cărți împrumutate",bg="#F6E1B5" ,font=("Comic Sans",17),fg="#805E19",command=imprumut)
-imprumuturi.place(relx=0,rely=0,relheight=0.33,relwidth=1, anchor=NW,)
-
-carti=Button(frame1,text="Listă cărți",bg="#F6E1B5",font=("Comic Sans",17),fg="#805E19",command=search)
-carti.place(relx=0,rely=0.5,relheight=0.33,relwidth=1,anchor=W,)
-
-elevi=Button(frame1,text="Listă elevi",bg="#F6E1B5",font=("Comic Sans",17),fg="#805E19",command=abonati)
-elevi.place(relx=0,rely=1,relheight=0.33,relwidth=1,anchor=SW)
+elevi=Button(canvas,text="Listă elevi",bg="#F6E1B5",font=("Comic Sans",16),fg="#805E19",command=abonati)
+elevi.config( height = 3, width = 30 )
+elevi.grid(row=5,column=1,columnspan=2,pady=10)
 
 data_azi=str(date.today())
-data_ora=Label(canvas,text=data_azi,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19") #width=10,height=3,
-data_ora.place(relx=0.89,rely=0.92,relheight=0.1,relwidth=0.1,anchor=W,)
+data_ora=Label(canvas,text=data_azi,font=("Helvetica",20),bg="#F6E1B5",fg="#805E19")
+data_ora.grid(row=4,column=3)
 
 link_buton=Button(canvas,text="Școlibra website",font=("Helvetica",17),bg="#F6E1B5",fg="#805E19",command=link) #width=13,height=3,
-link_buton.place(relx=0.13,rely=0.92,relheight=0.1,relwidth=0.12,anchor=E,)
-
-
-
+link_buton.grid(row=4,column=0)
 root.mainloop()
