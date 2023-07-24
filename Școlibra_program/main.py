@@ -238,12 +238,6 @@ def search():
     
     
     window=Tk()
-<<<<<<< HEAD
-    window.resizable(1,1)
-    window.iconbitmap('../Scolibra/Școlibra_program/lista_carti.ico')
-    window.iconbitmap('Scolibra/lista_carti.ico')
-=======
->>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
     window.title('Listă cărți')
     
     window.configure(background="#c7d3d4")
@@ -652,12 +646,8 @@ def imprumut():
     
     window.resizable(0,0)
     window.config(background="#ece5e0")
-<<<<<<< HEAD
-    window.iconbitmap('../Scolibra/Școlibra_program/carti_i.ico')
-    window.iconbitmap('Scolibra/carti_i.ico')
-=======
     
->>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
+
     window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
 
@@ -751,16 +741,7 @@ def imprumut():
 def abonati():
     window=Tk()
     window.resizable(0,0)
-<<<<<<< HEAD
-    window.iconbitmap('../Scolibra/Școlibra_program/lista_elevi.ico')
-    window.iconbitmap('Scolibra/lista_elevi.ico')
-=======
->>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
-    window.title('Listă abonați')
-    window.configure(background="#FFDFBA")
-    window.lift()
-
-
+    
     ws = window.winfo_screenwidth() 
     hs = window.winfo_screenheight()
 
@@ -771,6 +752,8 @@ def abonati():
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
     window.iconbitmap('../Școlibra_program/lista_elevi.ico')
+    window.title('Listă abonați')
+    window.configure(background="#FFDFBA")
 
     #funcția care generează un cod QR pentru elevul selectat
     def generareQR():
@@ -1171,18 +1154,11 @@ def link():
 # FEREASTRA PRINCIPALĂ
 root = Tk()
 root.title('Școlibra')
-<<<<<<< HEAD
-root.iconbitmap('../Scolibra/Școlibra_program/iconbitmap_principal.ico')
-
-root.iconbitmap("C:/Users/George/OneDrive/Documents/GitHub/Scolibra/iconbitmap_principal.ico")
 root.resizable(0,0)
 
 w = root.winfo_screenwidth() 
 h = root.winfo_screenheight()
 
-=======
-root.resizable(1,1)
->>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
 ws = root.winfo_screenwidth() 
 hs = root.winfo_screenheight()
 root.geometry('%dx%d' % (ws, hs))
@@ -1190,26 +1166,15 @@ root.iconbitmap('../Școlibra_program/iconbitmap_principal.ico')
 
 photo=Image.open("../Școlibra_program/biblioteca1.jpeg")
 photo1=photo.resize((ws,hs))
-photo=Image.open("Scolibra/biblioteca1.jpeg")
 
-photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
 canvas=Canvas(root,width=ws,height=hs)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
-<<<<<<< HEAD
 
-imglni=Image.open("../Scolibra/Școlibra_program/lni.jpg")
-imglni=imglni.resize((int(ws/2.5),int(hs/2.5)))
-imglni=Image.open("educatie/lni.jpg")
-imglni=imglni.resize((800,400))
-=======
 imglni=Image.open("../Școlibra_program/lni.jpg")
-w_imglni=int(0.5*ws)
-h_imglni=int(0.5*hs)
-imglni=imglni.resize((w_imglni,h_imglni))
->>>>>>> d2c247f4d3e0128aa29df45cf80eb5a81a4ebe3e
+imglni=imglni.resize((int(ws/2.5),int(hs/2.5)))
 imglni=ImageTk.PhotoImage(imglni)
 
 #câmpurile ferestrei
