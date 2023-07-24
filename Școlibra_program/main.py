@@ -903,6 +903,8 @@ def abonati():
             criteriu=filtru.get()
             if criteriu=="QR":
                 cauta_QR()
+                cv2.destroyAllWindows()
+                
         
     
     def stergere_elemente_arbore():  #funcția care șterge toate rândurile din tabel
@@ -943,15 +945,19 @@ def abonati():
         cam.set(5, 640)
         cam.set(6, 480)
             
-        camera = True
-        while camera == True:
-            suceess, frame= cam.read()
+        camera = TRUE
+        while camera == TRUE:
+            suceess, frame=cam.read()
+            cv2.imshow("Camera",frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break 
             for i in decode(frame):
                 var=i.data.decode('utf-8')
-                camera=False
+            if(var !=''):
+                camera=FALSE
         
             
-    
+        
         Cod=int(var.split('/')[0])
         sql=f"SELECT * FROM abonati WHERE Cod_abonat={Cod};"
         cursor.execute(sql)
@@ -968,6 +974,7 @@ def abonati():
         
         for record in records:
             tabel.insert('', 0, values=record)
+        
 
     
 
@@ -1071,9 +1078,13 @@ def abonati():
 
             camera = True
             while camera == True:
-                suceess, frame= cam.read()
+                suceess, frame=cam.read()
+                cv2.imshow("Camera",frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break 
                 for i in decode(frame):
                     return i.data.decode('utf-8')
+            
         
             
         
@@ -1084,6 +1095,7 @@ def abonati():
                 var=reader_cam_qr()
                 cod_carte=int(var.split('/')[0])
                 Titlu_entry.insert(END,str(cod_carte))
+                cv2.destroyAllWindows()
     
             
         
