@@ -60,6 +60,8 @@
                         <li> <a href="Produs.php?value=Filozofie"> Filozofie </a> </li>
                         <li> <a href="Produs.php?value=Practice%20și%20timp%20liber"> Practice și timp liber </a> </li>
                         <li> <a href="Produs.php?value=Religie"> Religie </a> </li>
+                        <li> <a href="Produs.php?value=Matematică"> Matematică </a> </li>
+                        <li> <a href="Produs.php?value=Informatică"> Informatică </a> </li>
                     </ul>
                 </div>
                 <div class="col-md-8 col-lg-8">

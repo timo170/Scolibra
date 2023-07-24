@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `carticod` (
   CONSTRAINT `carticod_ibfk_1` FOREIGN KEY (`Id`) REFERENCES `cartile` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.carticod: ~129 rows (approximately)
+-- Dumping data for table biblioteca.carticod: ~135 rows (approximately)
 DELETE FROM `carticod`;
 /*!40000 ALTER TABLE `carticod` DISABLE KEYS */;
 INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
@@ -183,7 +183,13 @@ INSERT INTO `carticod` (`Cod`, `Stare`, `Id`) VALUES
 	(37279, 'liberă', 70),
 	(37261, 'liberă', 72),
 	(41100, 'liberă', 73),
-	(40037, 'liberă', 74);
+	(40037, 'liberă', 74),
+	(40393, 'liberă', 75),
+	(30330, 'liberă', 76),
+	(30331, 'liberă', 77),
+	(30332, 'liberă', 78),
+	(30333, 'liberă', 79),
+	(30334, 'liberă', 80);
 /*!40000 ALTER TABLE `carticod` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.cartile
@@ -195,9 +201,9 @@ CREATE TABLE IF NOT EXISTS `cartile` (
   `Anul_aparitiei` smallint(6) DEFAULT NULL,
   `Pret` decimal(20,3) unsigned DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table biblioteca.cartile: ~62 rows (approximately)
+-- Dumping data for table biblioteca.cartile: ~68 rows (approximately)
 DELETE FROM `cartile`;
 /*!40000 ALTER TABLE `cartile` DISABLE KEYS */;
 INSERT INTO `cartile` (`Id`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pret`) VALUES
@@ -262,7 +268,13 @@ INSERT INTO `cartile` (`Id`, `Autor`, `Titlu`, `Editura`, `Anul_aparitiei`, `Pre
 	(70, 'Emanuel Copăcianu', 'Iisus din Nazaret', 'Doris', 1990, 4.250),
 	(72, 'Emanuel Copăcianu', 'Maria Magdalena', 'Doris', 1990, 4.250),
 	(73, 'John Bowker', 'Istoria și ideile marilor religii', 'Didactică și pedagogică', 2007, 39.000),
-	(74, 'George Călinescu', 'Enigma Otiliei', 'Cartex', 2000, 25.000);
+	(74, 'George Călinescu', 'Enigma Otiliei', 'Cartex', 2000, 25.000),
+	(75, 'Anton,Maria Negrilă', 'Matematică,cls. 8 part.1', 'Paralela 45', 2022, 26.000),
+	(76, 'Radu Gologan', 'Bacalaureat 2023 Matematică', 'Corint', 2022, 32.170),
+	(77, 'Petre Nachila', 'Ora de matematică', 'Nomina', 2019, 26.250),
+	(78, 'Aurelian Laviniu', 'Proiectarea algoritmilor în limbajul Python', 'SITECH', 2020, 37.800),
+	(79, 'Cristian Teresneu', 'Lecții de Excel și AutoCAD', 'Matrix Rom București', 2017, 67.450),
+	(80, 'Julie C. Meloni', 'Învață singur PHP, MySQL și Apache', 'Corint', 2005, 47.500);
 /*!40000 ALTER TABLE `cartile` ENABLE KEYS */;
 
 -- Dumping structure for table biblioteca.citate

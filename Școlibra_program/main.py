@@ -3,13 +3,13 @@ from tkinter import *
 import random
 import mysql.connector
 from tkinter import ttk
-from PIL import Image,ImageTk
 from tkinter import messagebox
 from tkinter.messagebox import showinfo,showerror
 import qrcode
 import cv2
 import pywhatkit as kit
-from pyzbar.pyzbar import decode 
+from pyzbar.pyzbar import decode
+from PIL import Image,ImageTk
 from datetime import datetime,date,timedelta
 import requests
 import webbrowser
@@ -252,7 +252,7 @@ def search():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    window.iconbitmap('Școlibra_program/lista_carti.ico')
+    window.iconbitmap('../Școlibra_program/lista_carti.ico')
 
 
 
@@ -659,7 +659,7 @@ def imprumut():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    window.iconbitmap('Școlibra_program/carti_i.ico')
+    window.iconbitmap('../Școlibra_program/carti_i.ico')
 
     #câmpurile ferestrei
     coloane=[0,1,2,3,4,5,6,7]
@@ -754,7 +754,7 @@ def abonati():
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    window.iconbitmap('Școlibra_program/lista_elevi.ico')
+    window.iconbitmap('../Școlibra_program/lista_elevi.ico')
 
     #funcția care generează un cod QR pentru elevul selectat
     def generareQR():
@@ -1159,16 +1159,16 @@ root.resizable(1,1)
 ws = root.winfo_screenwidth() 
 hs = root.winfo_screenheight()
 root.geometry('%dx%d' % (ws, hs))
-root.iconbitmap('Școlibra_program/iconbitmap_principal.ico')
+root.iconbitmap('../Școlibra_program/iconbitmap_principal.ico')
 
-photo=Image.open("Școlibra_program/biblioteca1.jpeg")
+photo=Image.open("../Școlibra_program/biblioteca1.jpeg")
 photo1=photo.resize((ws,hs))
 img=ImageTk.PhotoImage(photo1)
 
 canvas=Canvas(root,width=ws,height=hs)
 canvas.pack(expand=True,fill=BOTH)
 canvas.create_image(0,0,image=img,anchor=NW)
-imglni=Image.open("Școlibra_program/lni.jpg")
+imglni=Image.open("../Școlibra_program/lni.jpg")
 w_imglni=int(0.5*ws)
 h_imglni=int(0.5*hs)
 imglni=imglni.resize((w_imglni,h_imglni))
