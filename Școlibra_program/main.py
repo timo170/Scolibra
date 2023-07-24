@@ -149,14 +149,16 @@ def search():
             cam =cv2.VideoCapture(0)
             cam.set(5, 640)
             cam.set(6, 480)
+            
 
             camera = True
             while camera == True:
+                
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
                 suceess, frame= cam.read()
-                cv2.imshow("DD",frame)
-                cv2.waitKeyEx(1) & 0xFF == 
+                cv2.imshow("Camera",frame)
+
                 
                 for i in decode(frame):
                     return i.data.decode('utf-8')
@@ -167,6 +169,7 @@ def search():
       
             
         var=reader_cam_qr()
+        cv2.destroyAllWindows()
         cod=int(var.split('/')[0])
         
         stergere_elemente_arbore()
