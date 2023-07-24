@@ -152,9 +152,8 @@ def search():
                      
             while TRUE:
                 suceess, frame= cam.read()
-                cv2.imshow("DD",frame)
-                cv2.waitKeyEx(1)
-                if cv2.waitKey(1) & 0xFF == ord('Return'):
+                cv2.imshow("Camera",frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
                     break 
                 
                 for i in decode(frame):
