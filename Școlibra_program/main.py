@@ -218,6 +218,7 @@ def search():
     window=Tk()
     window.resizable(1,1)
     window.iconbitmap('../Scolibra/Școlibra_program/lista_carti.ico')
+    window.iconbitmap('Scolibra/lista_carti.ico')
     window.title('Listă cărți')
     
     window.configure(background="#c7d3d4")
@@ -664,6 +665,7 @@ def imprumut():
     window.resizable(0,0)
     window.config(background="#ece5e0")
     window.iconbitmap('../Scolibra/Școlibra_program/carti_i.ico')
+    window.iconbitmap('Scolibra/carti_i.ico')
     window.configure(background="#DBFFE2")
     window.title('Cărți împrumutate')
 
@@ -757,6 +759,7 @@ def abonati():
     
     window.resizable(0,0)
     window.iconbitmap('../Scolibra/Școlibra_program/lista_elevi.ico')
+    window.iconbitmap('Scolibra/lista_elevi.ico')
     window.title('Listă abonați')
     window.configure(background="#FFDFBA")
     window.lift()
@@ -1178,6 +1181,8 @@ root = Tk()
 
 root.title('Școlibra')
 root.iconbitmap('../Scolibra/Școlibra_program/iconbitmap_principal.ico')
+
+root.iconbitmap("C:/Users/George/OneDrive/Documents/GitHub/Scolibra/iconbitmap_principal.ico")
 root.resizable(0,0)
 
 w = root.winfo_screenwidth() 
@@ -1195,6 +1200,9 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 #imaginea pentru fundalul canvas_principala
 photo=Image.open("../Scolibra/Școlibra_program/biblioteca1.jpeg")
 photo1=photo.resize((ws,hs))
+photo=Image.open("Scolibra/biblioteca1.jpeg")
+
+photo1=photo.resize((1920,1080))
 img=ImageTk.PhotoImage(photo1)
 
 canvas=Canvas(root,)
@@ -1203,6 +1211,8 @@ canvas.create_image(0,0,image=img,anchor=NW)
 
 imglni=Image.open("../Scolibra/Școlibra_program/lni.jpg")
 imglni=imglni.resize((int(ws/2.5),int(hs/2.5)))
+imglni=Image.open("educatie/lni.jpg")
+imglni=imglni.resize((800,400))
 imglni=ImageTk.PhotoImage(imglni)
 
 #câmpurile ferestrei
