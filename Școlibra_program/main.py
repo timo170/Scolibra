@@ -9,6 +9,7 @@ import qrcode
 import cv2
 import pywhatkit as kit
 from pyzbar.pyzbar import decode
+import numpy as np
 from PIL import Image,ImageTk
 from datetime import datetime,date,timedelta
 import requests
@@ -151,10 +152,19 @@ def search():
 
             camera = True
             while camera == True:
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
                 suceess, frame= cam.read()
+                cv2.imshow("DD",frame)
+                cv2.waitKeyEx(1) & 0xFF == 
+                
                 for i in decode(frame):
                     return i.data.decode('utf-8')
         
+                    
+                
+    
+      
             
         var=reader_cam_qr()
         cod=int(var.split('/')[0])
