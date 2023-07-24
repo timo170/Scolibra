@@ -149,29 +149,21 @@ def search():
             cam =cv2.VideoCapture(0)
             cam.set(5, 640)
             cam.set(6, 480)
-            
-
-            camera = True
-            while camera == True:
-                
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
+                     
+            while TRUE:
                 suceess, frame= cam.read()
                 cv2.imshow("Camera",frame)
-
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break 
                 
                 for i in decode(frame):
                     return i.data.decode('utf-8')
-        
-                    
                 
-    
       
             
         var=reader_cam_qr()
         cv2.destroyAllWindows()
         cod=int(var.split('/')[0])
-        
         stergere_elemente_arbore()
 
         sql=f"SELECT Id FROM carticod WHERE Cod={cod};"
@@ -629,30 +621,27 @@ def imprumut():
         ora = now.strftime("%H")
         
         
-        print(numere0)
-        print(numere1)
-
-        for i in range(len(numere0)):
-            try:
-                kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
-                minut=int(minut)+1
-                
-
-            except:
-                
-                showerror(title='Eroare', message='A apărut o eroare la împrumuturile trecute de termen!')
+        trimis=FALSE
+        if(len(numere0)>0):
+            for i in range(len(numere0)):
+                try:
+                    kit.sendwhatmsg(numere0[i][0],f"Împrumutul a depășit data limită {numere0[i][1]} . Vă rog să returnați cartea/țile la bibliotecă.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
+                    minut=int(minut)+1
+                    trimis=TRUE
+                except:
+                    showerror(title='Eroare', message='A apărut o eroare la împrumuturile trecute de termen!')
         
-        for i in range(len(numere1)):
-            try:
-                kit.sendwhatmsg(numere1[i][0],f"Data limită împrumutului este {numere1[i][1]}.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
-                minut=int(minut)+1
-                
-
-            except:
-                
-                showerror(title='Eroare', message='A apărut o eroare la împrumuturile în perioadă!')
+        if(len(numere1)>0):
+            for i in range(len(numere1)):
+                try:
+                    kit.sendwhatmsg(numere1[i][0],f"Data limită împrumutului este {numere1[i][1]}.",int(ora),int(minut),wait_time=14,tab_close=True,close_time=2)
+                    minut=int(minut)+1
+                    trimis=TRUE
+                except:
+                    showerror(title='Eroare', message='A apărut o eroare la împrumuturile în perioadă!')
         
-        showinfo(title="Info",message="Abonații au fost notificați.") 
+        if(trimis==TRUE):
+            showinfo(title="Info",message="Abonații au fost notificați.") 
         
 
     window=Tk()
