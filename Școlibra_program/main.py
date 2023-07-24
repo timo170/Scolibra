@@ -149,8 +149,7 @@ def search():
             cam =cv2.VideoCapture(0)
             cam.set(5, 640)
             cam.set(6, 480)
-
-           
+                     
             while TRUE:
                 suceess, frame= cam.read()
                 cv2.imshow("DD",frame)
@@ -161,10 +160,6 @@ def search():
                 for i in decode(frame):
                     return i.data.decode('utf-8')
                 
-        
-                    
-                
-    
       
             
         var=reader_cam_qr()
